@@ -1,7 +1,6 @@
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
-import { AuthMailService } from '@/lib/mail/services/auth-mail.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { AuthUtilsService } from '@/lib/utils/services/auth-utils.service';
 import { Injectable } from '@nestjs/common';
@@ -11,7 +10,6 @@ import { LoginDto } from '../dto/login.dto';
 export class AuthLoginService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly authMailService: AuthMailService,
     private readonly utils: AuthUtilsService,
   ) {}
 
@@ -24,7 +22,10 @@ export class AuthLoginService {
     });
 
     if (!user.password) {
-      throw new AppError(400, 'Invalid password');
+      throw new AppError(
+        400,
+        'Password is not set for this user. Try social login.',
+      );
     }
     const isPasswordCorrect = await this.utils.compare(password, user.password);
     if (!isPasswordCorrect) {
@@ -37,6 +38,9 @@ export class AuthLoginService {
       data: {
         lastLoginAt: new Date(),
         lastActiveAt: new Date(),
+        fcmTokens: dto.fcmToken
+          ? this.utils.addFcmToken(user.fcmTokens, dto.fcmToken)
+          : user.fcmTokens,
       },
     });
 

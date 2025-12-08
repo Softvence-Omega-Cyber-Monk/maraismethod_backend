@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SocialLoginDto {
   @ApiProperty({
@@ -9,4 +9,12 @@ export class SocialLoginDto {
   @IsString()
   @IsNotEmpty()
   idToken: string;
+
+  @ApiPropertyOptional({
+    description: 'FCM Token for push notifications',
+    example: 'dGhpcy1pcz1hLXRlc3QtZmNtLXRva2Vu',
+  })
+  @IsString()
+  @IsOptional()
+  fcmToken?: string;
 }

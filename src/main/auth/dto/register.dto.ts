@@ -11,13 +11,6 @@ export class RegisterDto {
   email: string;
 
   @ApiProperty({
-    example: 'johndeo',
-    description: 'Name',
-  })
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({
     example: 'strongPassword123',
     description: 'Password (min 6 characters)',
   })

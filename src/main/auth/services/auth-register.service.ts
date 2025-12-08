@@ -17,7 +17,7 @@ export class AuthRegisterService {
 
   @HandleError('Registration failed', 'User')
   async register(dto: RegisterDto): Promise<TResponse<any>> {
-    const { email, password, name } = dto;
+    const { email, password } = dto;
 
     // Check if user email already exists
     const existingUser = await this.prisma.client.user.findUnique({
@@ -28,37 +28,18 @@ export class AuthRegisterService {
     }
 
     // Create new user
-    const newUser = await this.prisma.client.user.create({
+    await this.prisma.client.user.create({
       data: {
         email,
-        name,
-        username: await this.utils.generateUniqueUsername(
-          name || email.split('@')[0],
-        ),
         password: await this.utils.hash(password),
+        isVerified: true,
       },
     });
 
-    // Generate OTP and save
-    const otp = await this.utils.generateOTPAndSave(newUser.id, 'VERIFICATION');
-
-    // Send verification email
-    await this.authMailService.sendVerificationCodeEmail(
-      email,
-      otp.toString(),
-      {
-        subject: 'Verify your email',
-        message:
-          'Welcome to our platform! Your account has been successfully created.',
-      },
-    );
-
     // Return sanitized response
     return successResponse(
-      {
-        email: newUser.email,
-      },
-      `Registration successful. A verification email has been sent to ${newUser.email}.`,
+      { email },
+      `Registration successful. Please login to continue.`,
     );
   }
 }

@@ -10,7 +10,10 @@ export class UserResponseDto {
   name: string;
 
   @Expose()
-  email: string;
+  email?: string;
+
+  @Expose()
+  username?: string;
 
   // ===== Settings =====
   @Expose()

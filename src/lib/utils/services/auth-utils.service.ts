@@ -170,4 +170,10 @@ export class AuthUtilsService {
     }
     return username;
   }
+
+  addFcmToken(existingTokens: string[] | null, newToken: string): string[] {
+    const tokensSet = new Set(existingTokens || []);
+    tokensSet.add(newToken);
+    return Array.from(tokensSet);
+  }
 }

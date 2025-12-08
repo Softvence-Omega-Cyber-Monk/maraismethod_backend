@@ -44,6 +44,9 @@ export class AuthSocialService {
           profilePictureURL: user.profilePictureURL || picture,
           lastLoginAt: new Date(),
           lastActiveAt: new Date(),
+          fcmTokens: dto.fcmToken
+            ? this.utils.addFcmToken(user.fcmTokens, dto.fcmToken)
+            : user.fcmTokens,
         },
       });
     } else {
@@ -59,6 +62,7 @@ export class AuthSocialService {
           profilePictureURL: picture,
           lastLoginAt: new Date(),
           lastActiveAt: new Date(),
+          fcmTokens: dto?.fcmToken ? [dto.fcmToken] : [],
         },
       });
     }
