@@ -8,10 +8,13 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Advertisement'
 export type * from './models/UserOtp'
 export type * from './models/RefreshToken'
 export type * from './models/FileInstance'
 export type * from './models/Notification'
 export type * from './models/UserNotification'
 export type * from './models/User'
+export type * from './models/Venue'
+export type * from './models/Votes'
 export type * from './commonInputTypes'

@@ -151,4 +151,23 @@ export class AuthUtilsService {
   async compare(value: string, hash: string): Promise<boolean> {
     return bcrypt.compare(value, hash);
   }
+
+  async generateUniqueUsername(baseName: string): Promise<string> {
+    let username = baseName.toLowerCase().replace(/\s+/g, '');
+    let counter = 1;
+    let exists = true;
+
+    while (exists) {
+      const count = await this.prisma.client.user.count({
+        where: { username },
+      });
+      if (count === 0) {
+        exists = false;
+      } else {
+        username = `${baseName.toLowerCase().replace(/\s+/g, '')}${counter}`;
+        counter++;
+      }
+    }
+    return username;
+  }
 }

@@ -1,0 +1,43 @@
+model Venue {
+  id String @id @default(uuid())
+
+  name String
+
+  catgegory String
+  subcategory String
+
+  location String
+  latitude Float
+  longitude Float
+
+  description String?
+
+  imageId String? @unique
+  imageUrl String?
+  image   FileInstance? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  votes Votes[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("venues")
+}
+
+model Votes {
+  id String @id @default(uuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  venueId String
+  venue Venue @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  isOpen Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([userId, venueId])
+  @@map("votes")
+}

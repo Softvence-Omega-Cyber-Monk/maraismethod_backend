@@ -256,7 +256,9 @@ export type FileInstanceWhereInput = {
   size?: Prisma.IntFilter<"FileInstance"> | number
   createdAt?: Prisma.DateTimeFilter<"FileInstance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileInstance"> | Date | string
-  users?: Prisma.UserListRelationFilter
+  users?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  venues?: Prisma.XOR<Prisma.VenueNullableScalarRelationFilter, Prisma.VenueWhereInput> | null
+  advertisements?: Prisma.XOR<Prisma.AdvertisementNullableScalarRelationFilter, Prisma.AdvertisementWhereInput> | null
 }
 
 export type FileInstanceOrderByWithRelationInput = {
@@ -270,7 +272,9 @@ export type FileInstanceOrderByWithRelationInput = {
   size?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  users?: Prisma.UserOrderByRelationAggregateInput
+  users?: Prisma.UserOrderByWithRelationInput
+  venues?: Prisma.VenueOrderByWithRelationInput
+  advertisements?: Prisma.AdvertisementOrderByWithRelationInput
 }
 
 export type FileInstanceWhereUniqueInput = Prisma.AtLeast<{
@@ -287,7 +291,9 @@ export type FileInstanceWhereUniqueInput = Prisma.AtLeast<{
   size?: Prisma.IntFilter<"FileInstance"> | number
   createdAt?: Prisma.DateTimeFilter<"FileInstance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileInstance"> | Date | string
-  users?: Prisma.UserListRelationFilter
+  users?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  venues?: Prisma.XOR<Prisma.VenueNullableScalarRelationFilter, Prisma.VenueWhereInput> | null
+  advertisements?: Prisma.XOR<Prisma.AdvertisementNullableScalarRelationFilter, Prisma.AdvertisementWhereInput> | null
 }, "id">
 
 export type FileInstanceOrderByWithAggregationInput = {
@@ -335,7 +341,9 @@ export type FileInstanceCreateInput = {
   size: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutProfilePictureInput
+  users?: Prisma.UserCreateNestedOneWithoutProfilePictureInput
+  venues?: Prisma.VenueCreateNestedOneWithoutImageInput
+  advertisements?: Prisma.AdvertisementCreateNestedOneWithoutFileInput
 }
 
 export type FileInstanceUncheckedCreateInput = {
@@ -349,7 +357,9 @@ export type FileInstanceUncheckedCreateInput = {
   size: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutProfilePictureInput
+  users?: Prisma.UserUncheckedCreateNestedOneWithoutProfilePictureInput
+  venues?: Prisma.VenueUncheckedCreateNestedOneWithoutImageInput
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedOneWithoutFileInput
 }
 
 export type FileInstanceUpdateInput = {
@@ -363,7 +373,9 @@ export type FileInstanceUpdateInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutProfilePictureNestedInput
+  users?: Prisma.UserUpdateOneWithoutProfilePictureNestedInput
+  venues?: Prisma.VenueUpdateOneWithoutImageNestedInput
+  advertisements?: Prisma.AdvertisementUpdateOneWithoutFileNestedInput
 }
 
 export type FileInstanceUncheckedUpdateInput = {
@@ -377,7 +389,9 @@ export type FileInstanceUncheckedUpdateInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutProfilePictureNestedInput
+  users?: Prisma.UserUncheckedUpdateOneWithoutProfilePictureNestedInput
+  venues?: Prisma.VenueUncheckedUpdateOneWithoutImageNestedInput
+  advertisements?: Prisma.AdvertisementUncheckedUpdateOneWithoutFileNestedInput
 }
 
 export type FileInstanceCreateManyInput = {
@@ -417,6 +431,11 @@ export type FileInstanceUncheckedUpdateManyInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FileInstanceNullableScalarRelationFilter = {
+  is?: Prisma.FileInstanceWhereInput | null
+  isNot?: Prisma.FileInstanceWhereInput | null
 }
 
 export type FileInstanceCountOrderByAggregateInput = {
@@ -466,21 +485,24 @@ export type FileInstanceSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
 }
 
-export type FileInstanceNullableScalarRelationFilter = {
-  is?: Prisma.FileInstanceWhereInput | null
-  isNot?: Prisma.FileInstanceWhereInput | null
+export type FileInstanceCreateNestedOneWithoutAdvertisementsInput = {
+  create?: Prisma.XOR<Prisma.FileInstanceCreateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedCreateWithoutAdvertisementsInput>
+  connectOrCreate?: Prisma.FileInstanceCreateOrConnectWithoutAdvertisementsInput
+  connect?: Prisma.FileInstanceWhereUniqueInput
+}
+
+export type FileInstanceUpdateOneWithoutAdvertisementsNestedInput = {
+  create?: Prisma.XOR<Prisma.FileInstanceCreateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedCreateWithoutAdvertisementsInput>
+  connectOrCreate?: Prisma.FileInstanceCreateOrConnectWithoutAdvertisementsInput
+  upsert?: Prisma.FileInstanceUpsertWithoutAdvertisementsInput
+  disconnect?: Prisma.FileInstanceWhereInput | boolean
+  delete?: Prisma.FileInstanceWhereInput | boolean
+  connect?: Prisma.FileInstanceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FileInstanceUpdateToOneWithWhereWithoutAdvertisementsInput, Prisma.FileInstanceUpdateWithoutAdvertisementsInput>, Prisma.FileInstanceUncheckedUpdateWithoutAdvertisementsInput>
 }
 
 export type EnumFileTypeFieldUpdateOperationsInput = {
   set?: $Enums.FileType
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type FileInstanceCreateNestedOneWithoutUsersInput = {
@@ -499,6 +521,98 @@ export type FileInstanceUpdateOneWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FileInstanceUpdateToOneWithWhereWithoutUsersInput, Prisma.FileInstanceUpdateWithoutUsersInput>, Prisma.FileInstanceUncheckedUpdateWithoutUsersInput>
 }
 
+export type FileInstanceCreateNestedOneWithoutVenuesInput = {
+  create?: Prisma.XOR<Prisma.FileInstanceCreateWithoutVenuesInput, Prisma.FileInstanceUncheckedCreateWithoutVenuesInput>
+  connectOrCreate?: Prisma.FileInstanceCreateOrConnectWithoutVenuesInput
+  connect?: Prisma.FileInstanceWhereUniqueInput
+}
+
+export type FileInstanceUpdateOneWithoutVenuesNestedInput = {
+  create?: Prisma.XOR<Prisma.FileInstanceCreateWithoutVenuesInput, Prisma.FileInstanceUncheckedCreateWithoutVenuesInput>
+  connectOrCreate?: Prisma.FileInstanceCreateOrConnectWithoutVenuesInput
+  upsert?: Prisma.FileInstanceUpsertWithoutVenuesInput
+  disconnect?: Prisma.FileInstanceWhereInput | boolean
+  delete?: Prisma.FileInstanceWhereInput | boolean
+  connect?: Prisma.FileInstanceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FileInstanceUpdateToOneWithWhereWithoutVenuesInput, Prisma.FileInstanceUpdateWithoutVenuesInput>, Prisma.FileInstanceUncheckedUpdateWithoutVenuesInput>
+}
+
+export type FileInstanceCreateWithoutAdvertisementsInput = {
+  id?: string
+  filename: string
+  originalFilename: string
+  path: string
+  url: string
+  fileType?: $Enums.FileType
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedOneWithoutProfilePictureInput
+  venues?: Prisma.VenueCreateNestedOneWithoutImageInput
+}
+
+export type FileInstanceUncheckedCreateWithoutAdvertisementsInput = {
+  id?: string
+  filename: string
+  originalFilename: string
+  path: string
+  url: string
+  fileType?: $Enums.FileType
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedOneWithoutProfilePictureInput
+  venues?: Prisma.VenueUncheckedCreateNestedOneWithoutImageInput
+}
+
+export type FileInstanceCreateOrConnectWithoutAdvertisementsInput = {
+  where: Prisma.FileInstanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.FileInstanceCreateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedCreateWithoutAdvertisementsInput>
+}
+
+export type FileInstanceUpsertWithoutAdvertisementsInput = {
+  update: Prisma.XOR<Prisma.FileInstanceUpdateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedUpdateWithoutAdvertisementsInput>
+  create: Prisma.XOR<Prisma.FileInstanceCreateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedCreateWithoutAdvertisementsInput>
+  where?: Prisma.FileInstanceWhereInput
+}
+
+export type FileInstanceUpdateToOneWithWhereWithoutAdvertisementsInput = {
+  where?: Prisma.FileInstanceWhereInput
+  data: Prisma.XOR<Prisma.FileInstanceUpdateWithoutAdvertisementsInput, Prisma.FileInstanceUncheckedUpdateWithoutAdvertisementsInput>
+}
+
+export type FileInstanceUpdateWithoutAdvertisementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateOneWithoutProfilePictureNestedInput
+  venues?: Prisma.VenueUpdateOneWithoutImageNestedInput
+}
+
+export type FileInstanceUncheckedUpdateWithoutAdvertisementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateOneWithoutProfilePictureNestedInput
+  venues?: Prisma.VenueUncheckedUpdateOneWithoutImageNestedInput
+}
+
 export type FileInstanceCreateWithoutUsersInput = {
   id?: string
   filename: string
@@ -510,6 +624,8 @@ export type FileInstanceCreateWithoutUsersInput = {
   size: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  venues?: Prisma.VenueCreateNestedOneWithoutImageInput
+  advertisements?: Prisma.AdvertisementCreateNestedOneWithoutFileInput
 }
 
 export type FileInstanceUncheckedCreateWithoutUsersInput = {
@@ -523,6 +639,8 @@ export type FileInstanceUncheckedCreateWithoutUsersInput = {
   size: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  venues?: Prisma.VenueUncheckedCreateNestedOneWithoutImageInput
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedOneWithoutFileInput
 }
 
 export type FileInstanceCreateOrConnectWithoutUsersInput = {
@@ -552,6 +670,8 @@ export type FileInstanceUpdateWithoutUsersInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  venues?: Prisma.VenueUpdateOneWithoutImageNestedInput
+  advertisements?: Prisma.AdvertisementUpdateOneWithoutFileNestedInput
 }
 
 export type FileInstanceUncheckedUpdateWithoutUsersInput = {
@@ -565,37 +685,86 @@ export type FileInstanceUncheckedUpdateWithoutUsersInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  venues?: Prisma.VenueUncheckedUpdateOneWithoutImageNestedInput
+  advertisements?: Prisma.AdvertisementUncheckedUpdateOneWithoutFileNestedInput
 }
 
-
-/**
- * Count Type FileInstanceCountOutputType
- */
-
-export type FileInstanceCountOutputType = {
-  users: number
+export type FileInstanceCreateWithoutVenuesInput = {
+  id?: string
+  filename: string
+  originalFilename: string
+  path: string
+  url: string
+  fileType?: $Enums.FileType
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedOneWithoutProfilePictureInput
+  advertisements?: Prisma.AdvertisementCreateNestedOneWithoutFileInput
 }
 
-export type FileInstanceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  users?: boolean | FileInstanceCountOutputTypeCountUsersArgs
+export type FileInstanceUncheckedCreateWithoutVenuesInput = {
+  id?: string
+  filename: string
+  originalFilename: string
+  path: string
+  url: string
+  fileType?: $Enums.FileType
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedOneWithoutProfilePictureInput
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedOneWithoutFileInput
 }
 
-/**
- * FileInstanceCountOutputType without action
- */
-export type FileInstanceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FileInstanceCountOutputType
-   */
-  select?: Prisma.FileInstanceCountOutputTypeSelect<ExtArgs> | null
+export type FileInstanceCreateOrConnectWithoutVenuesInput = {
+  where: Prisma.FileInstanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.FileInstanceCreateWithoutVenuesInput, Prisma.FileInstanceUncheckedCreateWithoutVenuesInput>
 }
 
-/**
- * FileInstanceCountOutputType without action
- */
-export type FileInstanceCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserWhereInput
+export type FileInstanceUpsertWithoutVenuesInput = {
+  update: Prisma.XOR<Prisma.FileInstanceUpdateWithoutVenuesInput, Prisma.FileInstanceUncheckedUpdateWithoutVenuesInput>
+  create: Prisma.XOR<Prisma.FileInstanceCreateWithoutVenuesInput, Prisma.FileInstanceUncheckedCreateWithoutVenuesInput>
+  where?: Prisma.FileInstanceWhereInput
 }
+
+export type FileInstanceUpdateToOneWithWhereWithoutVenuesInput = {
+  where?: Prisma.FileInstanceWhereInput
+  data: Prisma.XOR<Prisma.FileInstanceUpdateWithoutVenuesInput, Prisma.FileInstanceUncheckedUpdateWithoutVenuesInput>
+}
+
+export type FileInstanceUpdateWithoutVenuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateOneWithoutProfilePictureNestedInput
+  advertisements?: Prisma.AdvertisementUpdateOneWithoutFileNestedInput
+}
+
+export type FileInstanceUncheckedUpdateWithoutVenuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  fileType?: Prisma.EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateOneWithoutProfilePictureNestedInput
+  advertisements?: Prisma.AdvertisementUncheckedUpdateOneWithoutFileNestedInput
+}
+
 
 
 export type FileInstanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -610,7 +779,8 @@ export type FileInstanceSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.FileInstance$usersArgs<ExtArgs>
-  _count?: boolean | Prisma.FileInstanceCountOutputTypeDefaultArgs<ExtArgs>
+  venues?: boolean | Prisma.FileInstance$venuesArgs<ExtArgs>
+  advertisements?: boolean | Prisma.FileInstance$advertisementsArgs<ExtArgs>
 }, ExtArgs["result"]["fileInstance"]>
 
 export type FileInstanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -655,7 +825,8 @@ export type FileInstanceSelectScalar = {
 export type FileInstanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "originalFilename" | "path" | "url" | "fileType" | "mimeType" | "size" | "createdAt" | "updatedAt", ExtArgs["result"]["fileInstance"]>
 export type FileInstanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.FileInstance$usersArgs<ExtArgs>
-  _count?: boolean | Prisma.FileInstanceCountOutputTypeDefaultArgs<ExtArgs>
+  venues?: boolean | Prisma.FileInstance$venuesArgs<ExtArgs>
+  advertisements?: boolean | Prisma.FileInstance$advertisementsArgs<ExtArgs>
 }
 export type FileInstanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 export type FileInstanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -663,7 +834,9 @@ export type FileInstanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types
 export type $FileInstancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FileInstance"
   objects: {
-    users: Prisma.$UserPayload<ExtArgs>[]
+    users: Prisma.$UserPayload<ExtArgs> | null
+    venues: Prisma.$VenuePayload<ExtArgs> | null
+    advertisements: Prisma.$AdvertisementPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1070,7 +1243,9 @@ readonly fields: FileInstanceFieldRefs;
  */
 export interface Prisma__FileInstanceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  users<T extends Prisma.FileInstance$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileInstance$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  users<T extends Prisma.FileInstance$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileInstance$usersArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  venues<T extends Prisma.FileInstance$venuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileInstance$venuesArgs<ExtArgs>>): Prisma.Prisma__VenueClient<runtime.Types.Result.GetResult<Prisma.$VenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  advertisements<T extends Prisma.FileInstance$advertisementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileInstance$advertisementsArgs<ExtArgs>>): Prisma.Prisma__AdvertisementClient<runtime.Types.Result.GetResult<Prisma.$AdvertisementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1514,11 +1689,44 @@ export type FileInstance$usersArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
-  cursor?: Prisma.UserWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * FileInstance.venues
+ */
+export type FileInstance$venuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Venue
+   */
+  select?: Prisma.VenueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Venue
+   */
+  omit?: Prisma.VenueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VenueInclude<ExtArgs> | null
+  where?: Prisma.VenueWhereInput
+}
+
+/**
+ * FileInstance.advertisements
+ */
+export type FileInstance$advertisementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Advertisement
+   */
+  select?: Prisma.AdvertisementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Advertisement
+   */
+  omit?: Prisma.AdvertisementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdvertisementInclude<ExtArgs> | null
+  where?: Prisma.AdvertisementWhereInput
 }
 
 /**

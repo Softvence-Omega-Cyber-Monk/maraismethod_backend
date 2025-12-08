@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const AdvertisementStatus = {
+  RUNNING: 'RUNNING',
+  STOPPED: 'STOPPED'
+} as const
+
+export type AdvertisementStatus = (typeof AdvertisementStatus)[keyof typeof AdvertisementStatus]
+
+
 export const OtpType = {
   VERIFICATION: 'VERIFICATION',
   RESET: 'RESET'

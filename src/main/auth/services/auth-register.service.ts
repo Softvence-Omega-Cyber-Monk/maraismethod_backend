@@ -32,6 +32,9 @@ export class AuthRegisterService {
       data: {
         email,
         name,
+        username: await this.utils.generateUniqueUsername(
+          name || email.split('@')[0],
+        ),
         password: await this.utils.hash(password),
       },
     });

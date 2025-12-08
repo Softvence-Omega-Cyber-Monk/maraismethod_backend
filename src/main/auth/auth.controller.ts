@@ -26,6 +26,7 @@ import {
   ResetPasswordDto,
 } from './dto/password.dto';
 import { RegisterDto } from './dto/register.dto';
+import { SocialLoginDto } from './dto/social-login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthGetProfileService } from './services/auth-get-profile.service';
 import { AuthLoginService } from './services/auth-login.service';
@@ -33,6 +34,7 @@ import { AuthLogoutService } from './services/auth-logout.service';
 import { AuthOtpService } from './services/auth-otp.service';
 import { AuthPasswordService } from './services/auth-password.service';
 import { AuthRegisterService } from './services/auth-register.service';
+import { AuthSocialService } from './services/auth-social.service';
 import { AuthUpdateProfileService } from './services/auth-update-profile.service';
 
 @ApiTags('Auth')
@@ -46,12 +48,19 @@ export class AuthController {
     private readonly authPasswordService: AuthPasswordService,
     private readonly authGetProfileService: AuthGetProfileService,
     private readonly authUpdateProfileService: AuthUpdateProfileService,
+    private readonly authSocialService: AuthSocialService,
   ) {}
 
   @ApiOperation({ summary: 'User Registration with Email' })
   @Post('register')
   async register(@Body() body: RegisterDto) {
     return this.authRegisterService.register(body);
+  }
+
+  @ApiOperation({ summary: 'Social Login (Google/Facebook)' })
+  @Post('social-login')
+  async socialLogin(@Body() body: SocialLoginDto) {
+    return this.authSocialService.socialLogin(body);
   }
 
   @ApiOperation({ summary: 'Verify OTP after Registration or Login' })

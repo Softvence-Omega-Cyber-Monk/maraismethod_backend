@@ -23,24 +23,12 @@ export class AuthLoginService {
       where: { email },
     });
 
+    if (!user.password) {
+      throw new AppError(400, 'Invalid password');
+    }
     const isPasswordCorrect = await this.utils.compare(password, user.password);
     if (!isPasswordCorrect) {
       throw new AppError(400, 'Invalid password');
-    }
-
-    // 1. Email verification
-    if (!user.isVerified) {
-      const otp = await this.utils.generateOTPAndSave(user.id, 'VERIFICATION');
-
-      await this.authMailService.sendVerificationCodeEmail(
-        user.email,
-        otp.toString(),
-      );
-
-      return successResponse(
-        { email: user.email },
-        'Your email is not verified. A new OTP has been sent to your email.',
-      );
     }
 
     // 2. Regular login

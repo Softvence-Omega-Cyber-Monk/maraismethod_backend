@@ -2,7 +2,7 @@ model User {
   id String @id @default(uuid())
 
   // Identity
-  username String @unique
+  username String? @unique
   name     String @default("Unnamed User")
 
   // Authentication
@@ -23,12 +23,13 @@ model User {
   lastActiveAt DateTime?
 
   // Avatar
-  profilePictureId  String?
+  profilePictureId  String? @unique
   profilePictureURL String?
   profilePicture    FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
 
   // Notifications
   notifications UserNotification[]
+  votes Votes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

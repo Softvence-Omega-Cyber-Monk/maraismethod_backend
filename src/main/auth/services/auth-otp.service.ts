@@ -129,7 +129,7 @@ export class AuthOtpService {
     // 5. Generate token
     const token = await this.utils.generateTokenPairAndSave({
       sub: updatedUser.id,
-      email: updatedUser.email,
+      email: updatedUser.email!,
       role: updatedUser.role,
     });
 
