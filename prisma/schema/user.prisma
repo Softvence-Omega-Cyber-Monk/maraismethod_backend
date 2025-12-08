@@ -24,22 +24,6 @@ model User {
   refreshTokens RefreshToken[]
   otps          UserOtp[]
 
-  // CHAT & CALL RELATIONS
-  conversationsInitiated PrivateConversation[] @relation("ConversationInitiator")
-  conversationsReceived  PrivateConversation[] @relation("ConversationReceiver")
-
-  /// All messages user has sent
-  messagesSent PrivateMessage[]
-
-  /// Message delivery/read statuses
-  messageStatuses PrivateMessageStatus[]
-
-  /// Calls user has initiated
-  callsInitiated PrivateCall[] @relation("CallInitiator")
-
-  /// Calls user participated in
-  callParticipants PrivateCallParticipant[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 

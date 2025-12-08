@@ -43,31 +43,6 @@ export type Notification = Prisma.NotificationModel
  */
 export type UserNotification = Prisma.UserNotificationModel
 /**
- * Model PrivateCall
- * 
- */
-export type PrivateCall = Prisma.PrivateCallModel
-/**
- * Model PrivateCallParticipant
- * 
- */
-export type PrivateCallParticipant = Prisma.PrivateCallParticipantModel
-/**
- * Model PrivateConversation
- * 
- */
-export type PrivateConversation = Prisma.PrivateConversationModel
-/**
- * Model PrivateMessage
- * 
- */
-export type PrivateMessage = Prisma.PrivateMessageModel
-/**
- * Model PrivateMessageStatus
- * 
- */
-export type PrivateMessageStatus = Prisma.PrivateMessageStatusModel
-/**
  * Model User
  * 
  */

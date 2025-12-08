@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.0.1
- * Query Engine version: f09f2815f091dbba658cdcd2264306d88bb5bda6
+ * Prisma Client JS version: 7.1.0
+ * Query Engine version: ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.0.1",
-  engine: "f09f2815f091dbba658cdcd2264306d88bb5bda6"
+  client: "7.1.0",
+  engine: "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba"
 }
 
 /**
@@ -389,11 +389,6 @@ export const ModelName = {
   FileInstance: 'FileInstance',
   Notification: 'Notification',
   UserNotification: 'UserNotification',
-  PrivateCall: 'PrivateCall',
-  PrivateCallParticipant: 'PrivateCallParticipant',
-  PrivateConversation: 'PrivateConversation',
-  PrivateMessage: 'PrivateMessage',
-  PrivateMessageStatus: 'PrivateMessageStatus',
   User: 'User'
 } as const
 
@@ -410,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "privateCall" | "privateCallParticipant" | "privateConversation" | "privateMessage" | "privateMessageStatus" | "user"
+    modelProps: "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -784,376 +779,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    PrivateCall: {
-      payload: Prisma.$PrivateCallPayload<ExtArgs>
-      fields: Prisma.PrivateCallFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PrivateCallFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PrivateCallFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        findFirst: {
-          args: Prisma.PrivateCallFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PrivateCallFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        findMany: {
-          args: Prisma.PrivateCallFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>[]
-        }
-        create: {
-          args: Prisma.PrivateCallCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        createMany: {
-          args: Prisma.PrivateCallCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PrivateCallCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>[]
-        }
-        delete: {
-          args: Prisma.PrivateCallDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        update: {
-          args: Prisma.PrivateCallUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        deleteMany: {
-          args: Prisma.PrivateCallDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PrivateCallUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PrivateCallUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>[]
-        }
-        upsert: {
-          args: Prisma.PrivateCallUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallPayload>
-        }
-        aggregate: {
-          args: Prisma.PrivateCallAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivateCall>
-        }
-        groupBy: {
-          args: Prisma.PrivateCallGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateCallGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PrivateCallCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateCallCountAggregateOutputType> | number
-        }
-      }
-    }
-    PrivateCallParticipant: {
-      payload: Prisma.$PrivateCallParticipantPayload<ExtArgs>
-      fields: Prisma.PrivateCallParticipantFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PrivateCallParticipantFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PrivateCallParticipantFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        findFirst: {
-          args: Prisma.PrivateCallParticipantFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PrivateCallParticipantFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        findMany: {
-          args: Prisma.PrivateCallParticipantFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>[]
-        }
-        create: {
-          args: Prisma.PrivateCallParticipantCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        createMany: {
-          args: Prisma.PrivateCallParticipantCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PrivateCallParticipantCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>[]
-        }
-        delete: {
-          args: Prisma.PrivateCallParticipantDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        update: {
-          args: Prisma.PrivateCallParticipantUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        deleteMany: {
-          args: Prisma.PrivateCallParticipantDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PrivateCallParticipantUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PrivateCallParticipantUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>[]
-        }
-        upsert: {
-          args: Prisma.PrivateCallParticipantUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateCallParticipantPayload>
-        }
-        aggregate: {
-          args: Prisma.PrivateCallParticipantAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivateCallParticipant>
-        }
-        groupBy: {
-          args: Prisma.PrivateCallParticipantGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateCallParticipantGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PrivateCallParticipantCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateCallParticipantCountAggregateOutputType> | number
-        }
-      }
-    }
-    PrivateConversation: {
-      payload: Prisma.$PrivateConversationPayload<ExtArgs>
-      fields: Prisma.PrivateConversationFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PrivateConversationFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PrivateConversationFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        findFirst: {
-          args: Prisma.PrivateConversationFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PrivateConversationFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        findMany: {
-          args: Prisma.PrivateConversationFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>[]
-        }
-        create: {
-          args: Prisma.PrivateConversationCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        createMany: {
-          args: Prisma.PrivateConversationCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PrivateConversationCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>[]
-        }
-        delete: {
-          args: Prisma.PrivateConversationDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        update: {
-          args: Prisma.PrivateConversationUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        deleteMany: {
-          args: Prisma.PrivateConversationDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PrivateConversationUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PrivateConversationUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>[]
-        }
-        upsert: {
-          args: Prisma.PrivateConversationUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateConversationPayload>
-        }
-        aggregate: {
-          args: Prisma.PrivateConversationAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivateConversation>
-        }
-        groupBy: {
-          args: Prisma.PrivateConversationGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateConversationGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PrivateConversationCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateConversationCountAggregateOutputType> | number
-        }
-      }
-    }
-    PrivateMessage: {
-      payload: Prisma.$PrivateMessagePayload<ExtArgs>
-      fields: Prisma.PrivateMessageFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PrivateMessageFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PrivateMessageFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        findFirst: {
-          args: Prisma.PrivateMessageFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PrivateMessageFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        findMany: {
-          args: Prisma.PrivateMessageFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>[]
-        }
-        create: {
-          args: Prisma.PrivateMessageCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        createMany: {
-          args: Prisma.PrivateMessageCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PrivateMessageCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>[]
-        }
-        delete: {
-          args: Prisma.PrivateMessageDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        update: {
-          args: Prisma.PrivateMessageUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        deleteMany: {
-          args: Prisma.PrivateMessageDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PrivateMessageUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PrivateMessageUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>[]
-        }
-        upsert: {
-          args: Prisma.PrivateMessageUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessagePayload>
-        }
-        aggregate: {
-          args: Prisma.PrivateMessageAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivateMessage>
-        }
-        groupBy: {
-          args: Prisma.PrivateMessageGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateMessageGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PrivateMessageCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateMessageCountAggregateOutputType> | number
-        }
-      }
-    }
-    PrivateMessageStatus: {
-      payload: Prisma.$PrivateMessageStatusPayload<ExtArgs>
-      fields: Prisma.PrivateMessageStatusFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PrivateMessageStatusFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PrivateMessageStatusFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        findFirst: {
-          args: Prisma.PrivateMessageStatusFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PrivateMessageStatusFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        findMany: {
-          args: Prisma.PrivateMessageStatusFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>[]
-        }
-        create: {
-          args: Prisma.PrivateMessageStatusCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        createMany: {
-          args: Prisma.PrivateMessageStatusCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PrivateMessageStatusCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>[]
-        }
-        delete: {
-          args: Prisma.PrivateMessageStatusDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        update: {
-          args: Prisma.PrivateMessageStatusUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        deleteMany: {
-          args: Prisma.PrivateMessageStatusDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PrivateMessageStatusUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PrivateMessageStatusUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>[]
-        }
-        upsert: {
-          args: Prisma.PrivateMessageStatusUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivateMessageStatusPayload>
-        }
-        aggregate: {
-          args: Prisma.PrivateMessageStatusAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivateMessageStatus>
-        }
-        groupBy: {
-          args: Prisma.PrivateMessageStatusGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateMessageStatusGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PrivateMessageStatusCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PrivateMessageStatusCountAggregateOutputType> | number
-        }
-      }
-    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1333,72 +958,6 @@ export const UserNotificationScalarFieldEnum = {
 export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
 
 
-export const PrivateCallScalarFieldEnum = {
-  id: 'id',
-  conversationId: 'conversationId',
-  initiatorId: 'initiatorId',
-  type: 'type',
-  status: 'status',
-  startedAt: 'startedAt',
-  endedAt: 'endedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type PrivateCallScalarFieldEnum = (typeof PrivateCallScalarFieldEnum)[keyof typeof PrivateCallScalarFieldEnum]
-
-
-export const PrivateCallParticipantScalarFieldEnum = {
-  id: 'id',
-  callId: 'callId',
-  userId: 'userId',
-  status: 'status',
-  joinedAt: 'joinedAt',
-  leftAt: 'leftAt',
-  createdAt: 'createdAt'
-} as const
-
-export type PrivateCallParticipantScalarFieldEnum = (typeof PrivateCallParticipantScalarFieldEnum)[keyof typeof PrivateCallParticipantScalarFieldEnum]
-
-
-export const PrivateConversationScalarFieldEnum = {
-  id: 'id',
-  initiatorId: 'initiatorId',
-  receiverId: 'receiverId',
-  lastMessageId: 'lastMessageId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PrivateConversationScalarFieldEnum = (typeof PrivateConversationScalarFieldEnum)[keyof typeof PrivateConversationScalarFieldEnum]
-
-
-export const PrivateMessageScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  type: 'type',
-  fileId: 'fileId',
-  conversationId: 'conversationId',
-  senderId: 'senderId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PrivateMessageScalarFieldEnum = (typeof PrivateMessageScalarFieldEnum)[keyof typeof PrivateMessageScalarFieldEnum]
-
-
-export const PrivateMessageStatusScalarFieldEnum = {
-  id: 'id',
-  messageId: 'messageId',
-  userId: 'userId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PrivateMessageStatusScalarFieldEnum = (typeof PrivateMessageStatusScalarFieldEnum)[keyof typeof PrivateMessageStatusScalarFieldEnum]
-
-
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1555,90 +1114,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'CallType'
- */
-export type EnumCallTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallType'>
-    
-
-
-/**
- * Reference to a field of type 'CallType[]'
- */
-export type ListEnumCallTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallType[]'>
-    
-
-
-/**
- * Reference to a field of type 'CallStatus'
- */
-export type EnumCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallStatus'>
-    
-
-
-/**
- * Reference to a field of type 'CallStatus[]'
- */
-export type ListEnumCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'CallParticipantStatus'
- */
-export type EnumCallParticipantStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallParticipantStatus'>
-    
-
-
-/**
- * Reference to a field of type 'CallParticipantStatus[]'
- */
-export type ListEnumCallParticipantStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallParticipantStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'ConversationStatus'
- */
-export type EnumConversationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationStatus'>
-    
-
-
-/**
- * Reference to a field of type 'ConversationStatus[]'
- */
-export type ListEnumConversationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'MessageType'
- */
-export type EnumMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageType'>
-    
-
-
-/**
- * Reference to a field of type 'MessageType[]'
- */
-export type ListEnumMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageType[]'>
-    
-
-
-/**
- * Reference to a field of type 'MessageDeliveryStatus'
- */
-export type EnumMessageDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageDeliveryStatus'>
-    
-
-
-/**
- * Reference to a field of type 'MessageDeliveryStatus[]'
- */
-export type ListEnumMessageDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageDeliveryStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'UserRole'
  */
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -1728,7 +1203,7 @@ export type PrismaClientOptions = ({
    *  { emit: 'stdout', level: 'error' }
    * 
    * ```
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
+   * Read more in our [docs](https://pris.ly/d/logging).
    */
   log?: (LogLevel | LogDefinition)[]
   /**
@@ -1756,6 +1231,22 @@ export type PrismaClientOptions = ({
    * ```
    */
   omit?: GlobalOmitConfig
+  /**
+   * SQL commenter plugins that add metadata to SQL queries as comments.
+   * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   comments: [
+   *     traceContext(),
+   *     queryInsights(),
+   *   ],
+   * })
+   * ```
+   */
+  comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
   userOtp?: Prisma.UserOtpOmit
@@ -1763,11 +1254,6 @@ export type GlobalOmitConfig = {
   fileInstance?: Prisma.FileInstanceOmit
   notification?: Prisma.NotificationOmit
   userNotification?: Prisma.UserNotificationOmit
-  privateCall?: Prisma.PrivateCallOmit
-  privateCallParticipant?: Prisma.PrivateCallParticipantOmit
-  privateConversation?: Prisma.PrivateConversationOmit
-  privateMessage?: Prisma.PrivateMessageOmit
-  privateMessageStatus?: Prisma.PrivateMessageStatusOmit
   user?: Prisma.UserOmit
 }
 
