@@ -38,6 +38,8 @@ model Votes {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@unique([userId, venueId])
+  @@index([venueId, createdAt(sort: Desc)])
+  @@index([userId, venueId, createdAt(sort: Desc)])
   @@map("votes")
 }
+
