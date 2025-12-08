@@ -110,7 +110,7 @@ export class AuthLoginService {
       );
     }
 
-    // 2FA not enabled, proceed with normal login
+    // Proceed with normal login (no 2FA)
     const updatedUser = await this.prisma.client.user.update({
       where: { email },
       data: {
