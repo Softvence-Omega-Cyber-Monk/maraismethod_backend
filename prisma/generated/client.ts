@@ -43,6 +43,11 @@ export { Prisma }
  */
 export type Advertisement = Prisma.AdvertisementModel
 /**
+ * Model AdvertisementAnalytics
+ * 
+ */
+export type AdvertisementAnalytics = Prisma.AdvertisementAnalyticsModel
+/**
  * Model UserOtp
  * 
  */

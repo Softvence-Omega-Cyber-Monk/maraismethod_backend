@@ -9,8 +9,8 @@ model FileInstance {
   mimeType         String
   size             Int
 
-  users User?
-  venues Venue?
+  users          User?
+  venues         Venue?
   advertisements Advertisement?
 
   createdAt DateTime @default(now())

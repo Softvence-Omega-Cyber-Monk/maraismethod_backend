@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Advertisement: 'Advertisement',
+  AdvertisementAnalytics: 'AdvertisementAnalytics',
   UserOtp: 'UserOtp',
   RefreshToken: 'RefreshToken',
   FileInstance: 'FileInstance',
@@ -95,6 +96,18 @@ export const AdvertisementScalarFieldEnum = {
 } as const
 
 export type AdvertisementScalarFieldEnum = (typeof AdvertisementScalarFieldEnum)[keyof typeof AdvertisementScalarFieldEnum]
+
+
+export const AdvertisementAnalyticsScalarFieldEnum = {
+  id: 'id',
+  impressions: 'impressions',
+  clicks: 'clicks',
+  advertisementId: 'advertisementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertisementAnalyticsScalarFieldEnum = (typeof AdvertisementAnalyticsScalarFieldEnum)[keyof typeof AdvertisementAnalyticsScalarFieldEnum]
 
 
 export const UserOtpScalarFieldEnum = {
@@ -174,6 +187,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   status: 'status',
   isVerified: 'isVerified',
+  isTFAEnabled: 'isTFAEnabled',
   lastLoginAt: 'lastLoginAt',
   lastActiveAt: 'lastActiveAt',
   profilePictureId: 'profilePictureId',

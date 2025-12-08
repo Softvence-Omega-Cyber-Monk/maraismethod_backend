@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Advertisement: 'Advertisement',
+  AdvertisementAnalytics: 'AdvertisementAnalytics',
   UserOtp: 'UserOtp',
   RefreshToken: 'RefreshToken',
   FileInstance: 'FileInstance',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "advertisement" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "user" | "venue" | "votes"
+    modelProps: "advertisement" | "advertisementAnalytics" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "user" | "venue" | "votes"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,6 +484,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AdvertisementCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AdvertisementCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdvertisementAnalytics: {
+      payload: Prisma.$AdvertisementAnalyticsPayload<ExtArgs>
+      fields: Prisma.AdvertisementAnalyticsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdvertisementAnalyticsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdvertisementAnalyticsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        findFirst: {
+          args: Prisma.AdvertisementAnalyticsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdvertisementAnalyticsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        findMany: {
+          args: Prisma.AdvertisementAnalyticsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>[]
+        }
+        create: {
+          args: Prisma.AdvertisementAnalyticsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        createMany: {
+          args: Prisma.AdvertisementAnalyticsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdvertisementAnalyticsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>[]
+        }
+        delete: {
+          args: Prisma.AdvertisementAnalyticsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        update: {
+          args: Prisma.AdvertisementAnalyticsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdvertisementAnalyticsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdvertisementAnalyticsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdvertisementAnalyticsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdvertisementAnalyticsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdvertisementAnalyticsPayload>
+        }
+        aggregate: {
+          args: Prisma.AdvertisementAnalyticsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdvertisementAnalytics>
+        }
+        groupBy: {
+          args: Prisma.AdvertisementAnalyticsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdvertisementAnalyticsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdvertisementAnalyticsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdvertisementAnalyticsCountAggregateOutputType> | number
         }
       }
     }
@@ -1136,6 +1211,18 @@ export const AdvertisementScalarFieldEnum = {
 export type AdvertisementScalarFieldEnum = (typeof AdvertisementScalarFieldEnum)[keyof typeof AdvertisementScalarFieldEnum]
 
 
+export const AdvertisementAnalyticsScalarFieldEnum = {
+  id: 'id',
+  impressions: 'impressions',
+  clicks: 'clicks',
+  advertisementId: 'advertisementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertisementAnalyticsScalarFieldEnum = (typeof AdvertisementAnalyticsScalarFieldEnum)[keyof typeof AdvertisementAnalyticsScalarFieldEnum]
+
+
 export const UserOtpScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -1213,6 +1300,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   status: 'status',
   isVerified: 'isVerified',
+  isTFAEnabled: 'isTFAEnabled',
   lastLoginAt: 'lastLoginAt',
   lastActiveAt: 'lastActiveAt',
   profilePictureId: 'profilePictureId',
@@ -1528,6 +1616,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   advertisement?: Prisma.AdvertisementOmit
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsOmit
   userOtp?: Prisma.UserOtpOmit
   refreshToken?: Prisma.RefreshTokenOmit
   fileInstance?: Prisma.FileInstanceOmit

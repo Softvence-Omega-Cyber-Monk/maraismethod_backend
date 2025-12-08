@@ -289,6 +289,7 @@ export type AdvertisementWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   file?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
+  advertisementAnalytics?: Prisma.XOR<Prisma.AdvertisementAnalyticsNullableScalarRelationFilter, Prisma.AdvertisementAnalyticsWhereInput> | null
 }
 
 export type AdvertisementOrderByWithRelationInput = {
@@ -306,6 +307,7 @@ export type AdvertisementOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   file?: Prisma.FileInstanceOrderByWithRelationInput
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsOrderByWithRelationInput
 }
 
 export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
@@ -326,6 +328,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   file?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
+  advertisementAnalytics?: Prisma.XOR<Prisma.AdvertisementAnalyticsNullableScalarRelationFilter, Prisma.AdvertisementAnalyticsWhereInput> | null
 }, "id" | "fileId">
 
 export type AdvertisementOrderByWithAggregationInput = {
@@ -382,6 +385,7 @@ export type AdvertisementCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   file?: Prisma.FileInstanceCreateNestedOneWithoutAdvertisementsInput
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsCreateNestedOneWithoutAdvertisementInput
 }
 
 export type AdvertisementUncheckedCreateInput = {
@@ -398,6 +402,7 @@ export type AdvertisementUncheckedCreateInput = {
   fileUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedCreateNestedOneWithoutAdvertisementInput
 }
 
 export type AdvertisementUpdateInput = {
@@ -414,6 +419,7 @@ export type AdvertisementUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   file?: Prisma.FileInstanceUpdateOneWithoutAdvertisementsNestedInput
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUpdateOneWithoutAdvertisementNestedInput
 }
 
 export type AdvertisementUncheckedUpdateInput = {
@@ -430,6 +436,7 @@ export type AdvertisementUncheckedUpdateInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedUpdateOneWithoutAdvertisementNestedInput
 }
 
 export type AdvertisementCreateManyInput = {
@@ -539,6 +546,11 @@ export type AdvertisementSumOrderByAggregateInput = {
   adShowRangeInKm?: Prisma.SortOrder
 }
 
+export type AdvertisementScalarRelationFilter = {
+  is?: Prisma.AdvertisementWhereInput
+  isNot?: Prisma.AdvertisementWhereInput
+}
+
 export type AdvertisementNullableScalarRelationFilter = {
   is?: Prisma.AdvertisementWhereInput | null
   isNot?: Prisma.AdvertisementWhereInput | null
@@ -570,6 +582,20 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type AdvertisementCreateNestedOneWithoutAdvertisementAnalyticsInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput>
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutAdvertisementAnalyticsInput
+  connect?: Prisma.AdvertisementWhereUniqueInput
+}
+
+export type AdvertisementUpdateOneRequiredWithoutAdvertisementAnalyticsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput>
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutAdvertisementAnalyticsInput
+  upsert?: Prisma.AdvertisementUpsertWithoutAdvertisementAnalyticsInput
+  connect?: Prisma.AdvertisementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdvertisementUpdateToOneWithWhereWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUpdateWithoutAdvertisementAnalyticsInput>, Prisma.AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput>
 }
 
 export type AdvertisementCreateNestedOneWithoutFileInput = {
@@ -604,6 +630,86 @@ export type AdvertisementUncheckedUpdateOneWithoutFileNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdvertisementUpdateToOneWithWhereWithoutFileInput, Prisma.AdvertisementUpdateWithoutFileInput>, Prisma.AdvertisementUncheckedUpdateWithoutFileInput>
 }
 
+export type AdvertisementCreateWithoutAdvertisementAnalyticsInput = {
+  id?: string
+  title: string
+  description: string
+  location: string
+  latitude: number
+  longitude: number
+  adShowRangeInKm: number
+  startDate: Date | string
+  endDate: Date | string
+  fileUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  file?: Prisma.FileInstanceCreateNestedOneWithoutAdvertisementsInput
+}
+
+export type AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput = {
+  id?: string
+  title: string
+  description: string
+  location: string
+  latitude: number
+  longitude: number
+  adShowRangeInKm: number
+  startDate: Date | string
+  endDate: Date | string
+  fileId?: string | null
+  fileUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdvertisementCreateOrConnectWithoutAdvertisementAnalyticsInput = {
+  where: Prisma.AdvertisementWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdvertisementCreateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput>
+}
+
+export type AdvertisementUpsertWithoutAdvertisementAnalyticsInput = {
+  update: Prisma.XOR<Prisma.AdvertisementUpdateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput>
+  create: Prisma.XOR<Prisma.AdvertisementCreateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput>
+  where?: Prisma.AdvertisementWhereInput
+}
+
+export type AdvertisementUpdateToOneWithWhereWithoutAdvertisementAnalyticsInput = {
+  where?: Prisma.AdvertisementWhereInput
+  data: Prisma.XOR<Prisma.AdvertisementUpdateWithoutAdvertisementAnalyticsInput, Prisma.AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput>
+}
+
+export type AdvertisementUpdateWithoutAdvertisementAnalyticsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  file?: Prisma.FileInstanceUpdateOneWithoutAdvertisementsNestedInput
+}
+
+export type AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type AdvertisementCreateWithoutFileInput = {
   id?: string
   title: string
@@ -617,6 +723,7 @@ export type AdvertisementCreateWithoutFileInput = {
   fileUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsCreateNestedOneWithoutAdvertisementInput
 }
 
 export type AdvertisementUncheckedCreateWithoutFileInput = {
@@ -632,6 +739,7 @@ export type AdvertisementUncheckedCreateWithoutFileInput = {
   fileUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedCreateNestedOneWithoutAdvertisementInput
 }
 
 export type AdvertisementCreateOrConnectWithoutFileInput = {
@@ -663,6 +771,7 @@ export type AdvertisementUpdateWithoutFileInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUpdateOneWithoutAdvertisementNestedInput
 }
 
 export type AdvertisementUncheckedUpdateWithoutFileInput = {
@@ -678,6 +787,7 @@ export type AdvertisementUncheckedUpdateWithoutFileInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedUpdateOneWithoutAdvertisementNestedInput
 }
 
 
@@ -697,6 +807,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
+  advertisementAnalytics?: boolean | Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs>
 }, ExtArgs["result"]["advertisement"]>
 
 export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -752,6 +863,7 @@ export type AdvertisementSelectScalar = {
 export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "latitude" | "longitude" | "adShowRangeInKm" | "startDate" | "endDate" | "fileId" | "fileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
 export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
+  advertisementAnalytics?: boolean | Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs>
 }
 export type AdvertisementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
@@ -764,6 +876,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "Advertisement"
   objects: {
     file: Prisma.$FileInstancePayload<ExtArgs> | null
+    advertisementAnalytics: Prisma.$AdvertisementAnalyticsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1174,6 +1287,7 @@ readonly fields: AdvertisementFieldRefs;
 export interface Prisma__AdvertisementClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   file<T extends Prisma.Advertisement$fileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$fileArgs<ExtArgs>>): Prisma.Prisma__FileInstanceClient<runtime.Types.Result.GetResult<Prisma.$FileInstancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  advertisementAnalytics<T extends Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs>>): Prisma.Prisma__AdvertisementAnalyticsClient<runtime.Types.Result.GetResult<Prisma.$AdvertisementAnalyticsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1628,6 +1742,25 @@ export type Advertisement$fileArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.FileInstanceInclude<ExtArgs> | null
   where?: Prisma.FileInstanceWhereInput
+}
+
+/**
+ * Advertisement.advertisementAnalytics
+ */
+export type Advertisement$advertisementAnalyticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdvertisementAnalytics
+   */
+  select?: Prisma.AdvertisementAnalyticsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdvertisementAnalytics
+   */
+  omit?: Prisma.AdvertisementAnalyticsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdvertisementAnalyticsInclude<ExtArgs> | null
+  where?: Prisma.AdvertisementAnalyticsWhereInput
 }
 
 /**

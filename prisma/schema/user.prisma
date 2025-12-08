@@ -3,7 +3,7 @@ model User {
 
   // Identity
   username String? @unique
-  name     String @default("Unnamed User")
+  name     String  @default("Unnamed User")
 
   // Authentication
   email         String?        @unique
@@ -14,22 +14,23 @@ model User {
   fcmTokens     String[]       @default([])
 
   // Settings
-  role       UserRole   @default(USER)
-  status     UserStatus @default(ACTIVE)
-  isVerified Boolean    @default(false)
+  role         UserRole   @default(USER)
+  status       UserStatus @default(ACTIVE)
+  isVerified   Boolean    @default(false)
+  isTFAEnabled Boolean    @default(false)
 
   // Activity
   lastLoginAt  DateTime?
   lastActiveAt DateTime?
 
   // Avatar
-  profilePictureId  String? @unique
+  profilePictureId  String?       @unique
   profilePictureURL String?
   profilePicture    FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
 
   // Notifications
   notifications UserNotification[]
-  votes Votes[]
+  votes         Votes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

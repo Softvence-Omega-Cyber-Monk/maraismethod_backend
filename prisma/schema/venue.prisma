@@ -3,18 +3,18 @@ model Venue {
 
   name String
 
-  catgegory String
+  catgegory   String
   subcategory String
 
-  location String
-  latitude Float
+  location  String
+  latitude  Float
   longitude Float
 
   description String?
 
-  imageId String? @unique
+  imageId  String?       @unique
   imageUrl String?
-  image   FileInstance? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  image    FileInstance? @relation(fields: [imageId], references: [id], onDelete: SetNull)
 
   votes Votes[]
 
@@ -28,10 +28,10 @@ model Votes {
   id String @id @default(uuid())
 
   userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   venueId String
-  venue Venue @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  venue   Venue  @relation(fields: [venueId], references: [id], onDelete: Cascade)
 
   isOpen Boolean
 

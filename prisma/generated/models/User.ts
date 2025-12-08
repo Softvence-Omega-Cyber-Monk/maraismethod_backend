@@ -34,6 +34,7 @@ export type UserMinAggregateOutputType = {
   role: $Enums.UserRole | null
   status: $Enums.UserStatus | null
   isVerified: boolean | null
+  isTFAEnabled: boolean | null
   lastLoginAt: Date | null
   lastActiveAt: Date | null
   profilePictureId: string | null
@@ -52,6 +53,7 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.UserRole | null
   status: $Enums.UserStatus | null
   isVerified: boolean | null
+  isTFAEnabled: boolean | null
   lastLoginAt: Date | null
   lastActiveAt: Date | null
   profilePictureId: string | null
@@ -71,6 +73,7 @@ export type UserCountAggregateOutputType = {
   role: number
   status: number
   isVerified: number
+  isTFAEnabled: number
   lastLoginAt: number
   lastActiveAt: number
   profilePictureId: number
@@ -91,6 +94,7 @@ export type UserMinAggregateInputType = {
   role?: true
   status?: true
   isVerified?: true
+  isTFAEnabled?: true
   lastLoginAt?: true
   lastActiveAt?: true
   profilePictureId?: true
@@ -109,6 +113,7 @@ export type UserMaxAggregateInputType = {
   role?: true
   status?: true
   isVerified?: true
+  isTFAEnabled?: true
   lastLoginAt?: true
   lastActiveAt?: true
   profilePictureId?: true
@@ -128,6 +133,7 @@ export type UserCountAggregateInputType = {
   role?: true
   status?: true
   isVerified?: true
+  isTFAEnabled?: true
   lastLoginAt?: true
   lastActiveAt?: true
   profilePictureId?: true
@@ -220,6 +226,7 @@ export type UserGroupByOutputType = {
   role: $Enums.UserRole
   status: $Enums.UserStatus
   isVerified: boolean
+  isTFAEnabled: boolean
   lastLoginAt: Date | null
   lastActiveAt: Date | null
   profilePictureId: string | null
@@ -260,6 +267,7 @@ export type UserWhereInput = {
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   isVerified?: Prisma.BoolFilter<"User"> | boolean
+  isTFAEnabled?: Prisma.BoolFilter<"User"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastActiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profilePictureId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -284,6 +292,7 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
+  isTFAEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,6 +321,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   isVerified?: Prisma.BoolFilter<"User"> | boolean
+  isTFAEnabled?: Prisma.BoolFilter<"User"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastActiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profilePictureURL?: Prisma.StringNullableFilter<"User"> | string | null
@@ -335,6 +345,7 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
+  isTFAEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +371,7 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  isTFAEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastActiveAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   profilePictureId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -379,6 +391,7 @@ export type UserCreateInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -402,6 +415,7 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -425,6 +439,7 @@ export type UserUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -448,6 +463,7 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -471,6 +487,7 @@ export type UserCreateManyInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -490,6 +507,7 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -508,6 +526,7 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -545,6 +564,7 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
+  isTFAEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   profilePictureId?: Prisma.SortOrder
@@ -563,6 +583,7 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
+  isTFAEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   profilePictureId?: Prisma.SortOrder
@@ -581,6 +602,7 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
+  isTFAEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   profilePictureId?: Prisma.SortOrder
@@ -709,6 +731,7 @@ export type UserCreateWithoutOtpsInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -731,6 +754,7 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -769,6 +793,7 @@ export type UserUpdateWithoutOtpsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -791,6 +816,7 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -813,6 +839,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -835,6 +862,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -873,6 +901,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -895,6 +924,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -917,6 +947,7 @@ export type UserCreateWithoutProfilePictureInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -939,6 +970,7 @@ export type UserUncheckedCreateWithoutProfilePictureInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -977,6 +1009,7 @@ export type UserUpdateWithoutProfilePictureInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -999,6 +1032,7 @@ export type UserUncheckedUpdateWithoutProfilePictureInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1021,6 +1055,7 @@ export type UserCreateWithoutNotificationsInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -1043,6 +1078,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -1081,6 +1117,7 @@ export type UserUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1103,6 +1140,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1125,6 +1163,7 @@ export type UserCreateWithoutVotesInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureURL?: string | null
@@ -1147,6 +1186,7 @@ export type UserUncheckedCreateWithoutVotesInput = {
   role?: $Enums.UserRole
   status?: $Enums.UserStatus
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: Date | string | null
   lastActiveAt?: Date | string | null
   profilePictureId?: string | null
@@ -1185,6 +1225,7 @@ export type UserUpdateWithoutVotesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1207,6 +1248,7 @@ export type UserUncheckedUpdateWithoutVotesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profilePictureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1287,6 +1329,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   status?: boolean
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: boolean
   lastActiveAt?: boolean
   profilePictureId?: boolean
@@ -1312,6 +1355,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   status?: boolean
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: boolean
   lastActiveAt?: boolean
   profilePictureId?: boolean
@@ -1332,6 +1376,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   status?: boolean
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: boolean
   lastActiveAt?: boolean
   profilePictureId?: boolean
@@ -1352,6 +1397,7 @@ export type UserSelectScalar = {
   role?: boolean
   status?: boolean
   isVerified?: boolean
+  isTFAEnabled?: boolean
   lastLoginAt?: boolean
   lastActiveAt?: boolean
   profilePictureId?: boolean
@@ -1360,7 +1406,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "name" | "email" | "password" | "firebaseUid" | "fcmTokens" | "role" | "status" | "isVerified" | "lastLoginAt" | "lastActiveAt" | "profilePictureId" | "profilePictureURL" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "name" | "email" | "password" | "firebaseUid" | "fcmTokens" | "role" | "status" | "isVerified" | "isTFAEnabled" | "lastLoginAt" | "lastActiveAt" | "profilePictureId" | "profilePictureURL" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
@@ -1396,6 +1442,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.UserRole
     status: $Enums.UserStatus
     isVerified: boolean
+    isTFAEnabled: boolean
     lastLoginAt: Date | null
     lastActiveAt: Date | null
     profilePictureId: string | null
@@ -1840,6 +1887,7 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly isTFAEnabled: Prisma.FieldRef<"User", 'Boolean'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastActiveAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly profilePictureId: Prisma.FieldRef<"User", 'String'>

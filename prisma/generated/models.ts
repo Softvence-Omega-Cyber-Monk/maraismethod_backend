@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Advertisement'
+export type * from './models/AdvertisementAnalytics'
 export type * from './models/UserOtp'
 export type * from './models/RefreshToken'
 export type * from './models/FileInstance'

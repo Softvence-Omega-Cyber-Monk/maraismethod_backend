@@ -4,8 +4,8 @@ model Advertisement {
   title       String
   description String
 
-  location String
-  latitude Float
+  location  String
+  latitude  Float
   longitude Float
 
   adShowRangeInKm Int
@@ -13,9 +13,11 @@ model Advertisement {
   startDate DateTime
   endDate   DateTime
 
-  fileId String? @unique
+  fileId  String?       @unique
   fileUrl String?
-  file   FileInstance? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  file    FileInstance? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+
+  advertisementAnalytics AdvertisementAnalytics?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -26,4 +28,19 @@ model Advertisement {
 enum AdvertisementStatus {
   RUNNING
   STOPPED
+}
+
+model AdvertisementAnalytics {
+  id String @id @default(uuid())
+
+  impressions Int @default(0)
+  clicks      Int @default(0)
+
+  advertisementId String        @unique
+  advertisement   Advertisement @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("advertisement_analytics")
 }
