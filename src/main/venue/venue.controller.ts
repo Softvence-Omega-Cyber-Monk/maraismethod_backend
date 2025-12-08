@@ -1,4 +1,4 @@
-import { ValidateAdmin, ValidateAuth } from '@/core/jwt/jwt.decorator';
+import { Public, ValidateAdmin, ValidateAuth } from '@/core/jwt/jwt.decorator';
 import {
   Body,
   Controller,
@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,7 +20,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateVenueDto } from './dto/create-venue.dto';
+import { GetVenuesDto } from './dto/get-venues.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
+import { GetVenuesService } from './services/get-venues.service';
 import { VenuePublicService } from './services/venue-public.service';
 import { VenueService } from './services/venue.service';
 
@@ -31,6 +34,7 @@ export class VenueController {
   constructor(
     private readonly venueService: VenueService,
     private readonly venuePublicService: VenuePublicService,
+    private readonly getVenuesService: GetVenuesService,
   ) {}
 
   @Post()
@@ -67,15 +71,30 @@ export class VenueController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all venues (Public)' })
   findAll() {
     return this.venuePublicService.findAll();
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a venue by ID (Public)' })
   @ApiParam({ name: 'id', description: 'Venue ID' })
   findOne(@Param('id') id: string) {
     return this.venuePublicService.findOne(id);
+  }
+
+  @Get('admin/list')
+  @ApiOperation({ summary: 'Get venues with filters (Admin)' })
+  async getVenuesAdmin(@Query() dto: GetVenuesDto) {
+    return this.getVenuesService.getAllVenues(dto);
+  }
+
+  @Get('admin/:id')
+  @ApiOperation({ summary: 'Get a single venue by ID (Admin)' })
+  @ApiParam({ name: 'id', description: 'Venue ID' })
+  async getSingleVenueAdmin(@Param('id') id: string) {
+    return this.getVenuesService.getSingleVenue(id);
   }
 }
