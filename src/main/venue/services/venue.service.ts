@@ -2,6 +2,7 @@ import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { S3Service } from '@/lib/file/services/s3.service';
+import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { FileInstance } from '@prisma';
@@ -13,6 +14,7 @@ export class VenueService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly s3: S3Service,
+    private readonly googleMaps: GoogleMapsService,
   ) {}
 
   @HandleError('Failed to create venue')
@@ -20,6 +22,19 @@ export class VenueService {
     dto: CreateVenueDto,
     file?: Express.Multer.File,
   ): Promise<TResponse<any>> {
+    // Validate coordinates using Google Maps
+    const isValidCoordinates = await this.googleMaps.validateCoordinates(
+      dto.latitude,
+      dto.longitude,
+    );
+
+    if (!isValidCoordinates) {
+      throw new AppError(
+        400,
+        'Invalid coordinates. Please provide valid latitude and longitude.',
+      );
+    }
+
     // * if image is provided, upload to S3 and update user
     let fileInstance: FileInstance | undefined;
     if (file) {
@@ -51,57 +66,6 @@ export class VenueService {
     return successResponse(venue, 'Venue created successfully');
   }
 
-  @HandleError('Failed to get all venues')
-  async findAll(): Promise<TResponse<any>> {
-    const venues = await this.prisma.client.venue.findMany({
-      include: {
-        image: true,
-        _count: {
-          select: {
-            votes: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    return successResponse(venues, 'Venues retrieved successfully');
-  }
-
-  @HandleError('Failed to get venue')
-  async findOne(id: string): Promise<TResponse<any>> {
-    const venue = await this.prisma.client.venue.findUnique({
-      where: { id },
-      include: {
-        image: true,
-        votes: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        _count: {
-          select: {
-            votes: true,
-          },
-        },
-      },
-    });
-
-    if (!venue) {
-      throw new AppError(404, 'Venue not found');
-    }
-
-    return successResponse(venue, 'Venue retrieved successfully');
-  }
-
   @HandleError('Failed to update venue')
   async update(
     id: string,
@@ -112,6 +76,21 @@ export class VenueService {
     const venueExists = await this.prisma.client.venue.findUniqueOrThrow({
       where: { id },
     });
+
+    // Validate coordinates if provided
+    if (dto.latitude !== undefined && dto.longitude !== undefined) {
+      const isValidCoordinates = await this.googleMaps.validateCoordinates(
+        dto.latitude,
+        dto.longitude,
+      );
+
+      if (!isValidCoordinates) {
+        throw new AppError(
+          400,
+          'Invalid coordinates. Please provide valid latitude and longitude.',
+        );
+      }
+    }
 
     // * if image is provided, upload to S3 and update user
     let fileInstance: FileInstance | undefined;

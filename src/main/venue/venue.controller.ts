@@ -20,14 +20,18 @@ import {
 } from '@nestjs/swagger';
 import { CreateVenueDto } from './dto/create-venue.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
-import { VenueService } from './venue.service';
+import { VenuePublicService } from './services/venue-public.service';
+import { VenueService } from './services/venue.service';
 
 @ApiTags('Venue (Admin)')
 @Controller('venue')
 @ApiBearerAuth()
 @ValidateAdmin()
 export class VenueController {
-  constructor(private readonly venueService: VenueService) {}
+  constructor(
+    private readonly venueService: VenueService,
+    private readonly venuePublicService: VenuePublicService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new venue' })
@@ -39,19 +43,6 @@ export class VenueController {
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.venueService.create(createVenueDto, file);
-  }
-
-  @Get()
-  @ApiOperation({ summary: 'Get all venues' })
-  findAll() {
-    return this.venueService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a venue by ID' })
-  @ApiParam({ name: 'id', description: 'Venue ID' })
-  findOne(@Param('id') id: string) {
-    return this.venueService.findOne(id);
   }
 
   @Patch(':id')
@@ -73,5 +64,18 @@ export class VenueController {
   @ApiParam({ name: 'id', description: 'Venue ID' })
   remove(@Param('id') id: string) {
     return this.venueService.remove(id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all venues (Public)' })
+  findAll() {
+    return this.venuePublicService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a venue by ID (Public)' })
+  @ApiParam({ name: 'id', description: 'Venue ID' })
+  findOne(@Param('id') id: string) {
+    return this.venuePublicService.findOne(id);
   }
 }

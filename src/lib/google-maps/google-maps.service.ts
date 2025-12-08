@@ -22,4 +22,23 @@ export class GoogleMapsService {
   getApiKey(): string {
     return this.apiKey;
   }
+
+  async validateCoordinates(
+    latitude: number,
+    longitude: number,
+  ): Promise<boolean> {
+    try {
+      const response = await this.client.reverseGeocode({
+        params: {
+          latlng: { lat: latitude, lng: longitude },
+          key: this.apiKey,
+        },
+      });
+
+      return response.data.status === 'OK' && response.data.results.length > 0;
+    } catch (error) {
+      console.error('Google Maps validation error:', error);
+      return false;
+    }
+  }
 }
