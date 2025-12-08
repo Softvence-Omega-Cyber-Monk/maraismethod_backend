@@ -29,21 +29,34 @@ export class GetVenuesService {
         { name: { contains: q, mode: 'insensitive' } },
         { description: { contains: q, mode: 'insensitive' } },
         { location: { contains: q, mode: 'insensitive' } },
+        { catgegory: { contains: q, mode: 'insensitive' } },
+        { subcategory: { contains: q, mode: 'insensitive' } },
       ];
     }
 
-    const [venues, total] = await this.prisma.client.$transaction([
-      this.prisma.client.venue.findMany({
-        where: venueWhere,
-        skip,
-        take: limit,
-        include: { votes: true },
-      }),
-      this.prisma.client.venue.count(),
-    ]);
+    // Step 1: fetch all candidate venues matching category/search filters
+    let candidateVenues = await this.prisma.client.venue.findMany({
+      where: venueWhere,
+      include: { votes: true },
+    });
 
+    // Step 2: apply boatCount filter if provided
+    if (dto.boatCount) {
+      const minBoatCount = Number(dto.boatCount);
+      candidateVenues = candidateVenues.filter(
+        (v) => (v.votes?.length ?? 0) >= minBoatCount,
+      );
+    }
+
+    // Step 3: total count after filters
+    const total = candidateVenues.length;
+
+    // Step 4: apply pagination
+    const paginatedVenues = candidateVenues.slice(skip, skip + limit);
+
+    // Step 5: transform each venue with stats
     const transformedVenues = await Promise.all(
-      venues.map((venue) => this.transformVenueWithStats(venue)),
+      paginatedVenues.map((venue) => this.transformVenueWithStats(venue)),
     );
 
     return successPaginatedResponse(

@@ -1,4 +1,4 @@
-import { Public, ValidateAdmin, ValidateAuth } from '@/core/jwt/jwt.decorator';
+import { ValidateAdmin, ValidateAuth } from '@/core/jwt/jwt.decorator';
 import {
   Body,
   Controller,
@@ -19,12 +19,11 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateVenueDto } from './dto/create-venue.dto';
-import { GetVenuesDto } from './dto/get-venues.dto';
-import { UpdateVenueDto } from './dto/update-venue.dto';
-import { GetVenuesService } from './services/get-venues.service';
-import { VenuePublicService } from './services/venue-public.service';
-import { VenueService } from './services/venue.service';
+import { CreateVenueDto } from '../dto/create-venue.dto';
+import { GetVenuesDto } from '../dto/get-venues.dto';
+import { UpdateVenueDto } from '../dto/update-venue.dto';
+import { GetVenuesService } from '../services/get-venues.service';
+import { VenueService } from '../services/venue.service';
 
 @ApiTags('Venue (Admin)')
 @Controller('venue')
@@ -33,7 +32,6 @@ import { VenueService } from './services/venue.service';
 export class VenueController {
   constructor(
     private readonly venueService: VenueService,
-    private readonly venuePublicService: VenuePublicService,
     private readonly getVenuesService: GetVenuesService,
   ) {}
 
@@ -68,21 +66,6 @@ export class VenueController {
   @ApiParam({ name: 'id', description: 'Venue ID' })
   remove(@Param('id') id: string) {
     return this.venueService.remove(id);
-  }
-
-  @Get()
-  @Public()
-  @ApiOperation({ summary: 'Get all venues (Public)' })
-  findAll() {
-    return this.venuePublicService.findAll();
-  }
-
-  @Get(':id')
-  @Public()
-  @ApiOperation({ summary: 'Get a venue by ID (Public)' })
-  @ApiParam({ name: 'id', description: 'Venue ID' })
-  findOne(@Param('id') id: string) {
-    return this.venuePublicService.findOne(id);
   }
 
   @Get('admin/list')
