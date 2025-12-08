@@ -1,9 +1,9 @@
-import { GetUser, ValidateAuth } from '@/core/jwt/jwt.decorator';
-import { MulterService } from '@/lib/file/services/multer.service';
+import { GetUser, ValidateAdmin, ValidateAuth } from '@/core/jwt/jwt.decorator';
 import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   UploadedFile,
@@ -14,10 +14,10 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileType } from '@prisma';
-import { LoginDto } from './dto/login.dto';
+import { AdminLoginDto, LoginDto } from './dto/login.dto';
 import { LogoutDto, RefreshTokenDto } from './dto/logout.dto';
 import { ResendOtpDto, VerifyOTPDto } from './dto/otp.dto';
 import {
@@ -26,6 +26,8 @@ import {
   ResetPasswordDto,
 } from './dto/password.dto';
 import { RegisterDto } from './dto/register.dto';
+import { SocialLoginDto } from './dto/social-login.dto';
+import { UpdateAdminSettingDto } from './dto/update-admin-setting.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthGetProfileService } from './services/auth-get-profile.service';
 import { AuthLoginService } from './services/auth-login.service';
@@ -33,6 +35,8 @@ import { AuthLogoutService } from './services/auth-logout.service';
 import { AuthOtpService } from './services/auth-otp.service';
 import { AuthPasswordService } from './services/auth-password.service';
 import { AuthRegisterService } from './services/auth-register.service';
+import { AuthSettingService } from './services/auth-setting.service';
+import { AuthSocialService } from './services/auth-social.service';
 import { AuthUpdateProfileService } from './services/auth-update-profile.service';
 
 @ApiTags('Auth')
@@ -46,6 +50,8 @@ export class AuthController {
     private readonly authPasswordService: AuthPasswordService,
     private readonly authGetProfileService: AuthGetProfileService,
     private readonly authUpdateProfileService: AuthUpdateProfileService,
+    private readonly authSocialService: AuthSocialService,
+    private readonly authSettingService: AuthSettingService,
   ) {}
 
   @ApiOperation({ summary: 'User Registration with Email' })
@@ -54,7 +60,13 @@ export class AuthController {
     return this.authRegisterService.register(body);
   }
 
-  @ApiOperation({ summary: 'Verify OTP after Registration or Login' })
+  @ApiOperation({ summary: 'Social Login (Google/Facebook)' })
+  @Post('social-login')
+  async socialLogin(@Body() body: SocialLoginDto) {
+    return this.authSocialService.socialLogin(body);
+  }
+
+  @ApiOperation({ summary: 'Verify OTP' })
   @Post('verify-otp')
   async verifyEmail(@Body() body: VerifyOTPDto) {
     return this.authOtpService.verifyOTP(body);
@@ -70,6 +82,12 @@ export class AuthController {
   @Post('login')
   async login(@Body() body: LoginDto) {
     return this.authLoginService.login(body);
+  }
+
+  @ApiOperation({ summary: 'Admin Login (with optional 2FA)' })
+  @Post('admin/login')
+  async adminLogin(@Body() body: AdminLoginDto) {
+    return this.authLoginService.adminLogin(body);
   }
 
   @ApiOperation({ summary: 'User Logout' })
@@ -118,20 +136,49 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Update profile' })
   @ApiBearerAuth()
-  @Patch(':id')
+  @Patch()
   @ValidateAuth()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FileInterceptor(
-      'image',
-      new MulterService().createMulterOptions('./temp', 'temp', FileType.image),
-    ),
-  )
+  @UseInterceptors(FileInterceptor('image'))
   update(
     @GetUser('sub') id: string,
     @Body() dto: UpdateProfileDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.authUpdateProfileService.updateProfile(id, dto, file);
+  }
+
+  @Get('get-settings')
+  @ApiOperation({ summary: 'Get admin settings' })
+  getSettings() {
+    return this.authSettingService.getSettings();
+  }
+
+  @Patch('update-settings')
+  @ApiBearerAuth()
+  @ValidateAdmin()
+  @ApiOperation({ summary: 'Update admin settings (partial update)' })
+  updateSettings(@Body() dto: UpdateAdminSettingDto) {
+    return this.authSettingService.updateSettings(dto);
+  }
+
+  @Patch('toggle/:key')
+  @ApiBearerAuth()
+  @ValidateAdmin()
+  @ApiParam({
+    name: 'key',
+    enum: ['pushNotificationsEnabled', 'showSearchBarInApp'],
+  })
+  @ApiOperation({ summary: 'Toggle a single admin setting by key' })
+  toggleSetting(@Param('key') key: keyof UpdateAdminSettingDto) {
+    return this.authSettingService.toggle(key);
+  }
+
+  @Patch('toggle-2fa')
+  @ApiBearerAuth()
+  @ValidateAdmin()
+  @ApiOperation({ summary: 'Toggle 2FA for current admin user' })
+  toggle2FA(@GetUser('sub') userId: string) {
+    return this.authSettingService.toggle2FA(userId);
   }
 }

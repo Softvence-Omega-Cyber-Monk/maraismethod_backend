@@ -115,6 +115,10 @@ export function simplifyError(
         throw new NotFoundException(error.message);
       case 409:
         throw new ConflictException(error.message);
+      case 422:
+        throw new UnprocessableEntityException(error.message);
+      case 429:
+        throw new ConflictException(error.message);
       default:
         throw new InternalServerErrorException(error.message);
     }

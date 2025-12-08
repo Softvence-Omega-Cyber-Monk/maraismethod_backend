@@ -62,7 +62,7 @@ export class AuthLogoutService {
     // Generate new access + refresh tokens
     const tokenPair = await this.utils.generateTokenPairAndSave({
       sub: user.id,
-      email: user.email,
+      email: user.email!,
       role: user.role,
     });
 

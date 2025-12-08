@@ -51,17 +51,17 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Advertisement: 'Advertisement',
+  AdvertisementAnalytics: 'AdvertisementAnalytics',
   UserOtp: 'UserOtp',
   RefreshToken: 'RefreshToken',
   FileInstance: 'FileInstance',
   Notification: 'Notification',
   UserNotification: 'UserNotification',
-  PrivateCall: 'PrivateCall',
-  PrivateCallParticipant: 'PrivateCallParticipant',
-  PrivateConversation: 'PrivateConversation',
-  PrivateMessage: 'PrivateMessage',
-  PrivateMessageStatus: 'PrivateMessageStatus',
-  User: 'User'
+  AdminSetting: 'AdminSetting',
+  User: 'User',
+  Venue: 'Venue',
+  Votes: 'Votes'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -78,6 +78,37 @@ export const TransactionIsolationLevel = {
 } as const
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AdvertisementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  adShowRangeInKm: 'adShowRangeInKm',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  fileId: 'fileId',
+  fileUrl: 'fileUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertisementScalarFieldEnum = (typeof AdvertisementScalarFieldEnum)[keyof typeof AdvertisementScalarFieldEnum]
+
+
+export const AdvertisementAnalyticsScalarFieldEnum = {
+  id: 'id',
+  impressions: 'impressions',
+  clicks: 'clicks',
+  advertisementId: 'advertisementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertisementAnalyticsScalarFieldEnum = (typeof AdvertisementAnalyticsScalarFieldEnum)[keyof typeof AdvertisementAnalyticsScalarFieldEnum]
 
 
 export const UserOtpScalarFieldEnum = {
@@ -146,88 +177,69 @@ export const UserNotificationScalarFieldEnum = {
 export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
 
 
-export const PrivateCallScalarFieldEnum = {
+export const AdminSettingScalarFieldEnum = {
   id: 'id',
-  conversationId: 'conversationId',
-  initiatorId: 'initiatorId',
-  type: 'type',
-  status: 'status',
-  startedAt: 'startedAt',
-  endedAt: 'endedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type PrivateCallScalarFieldEnum = (typeof PrivateCallScalarFieldEnum)[keyof typeof PrivateCallScalarFieldEnum]
-
-
-export const PrivateCallParticipantScalarFieldEnum = {
-  id: 'id',
-  callId: 'callId',
-  userId: 'userId',
-  status: 'status',
-  joinedAt: 'joinedAt',
-  leftAt: 'leftAt',
-  createdAt: 'createdAt'
-} as const
-
-export type PrivateCallParticipantScalarFieldEnum = (typeof PrivateCallParticipantScalarFieldEnum)[keyof typeof PrivateCallParticipantScalarFieldEnum]
-
-
-export const PrivateConversationScalarFieldEnum = {
-  id: 'id',
-  initiatorId: 'initiatorId',
-  receiverId: 'receiverId',
-  lastMessageId: 'lastMessageId',
-  status: 'status',
+  pushNotificationsEnabled: 'pushNotificationsEnabled',
+  adminLoginTFAEnabled: 'adminLoginTFAEnabled',
+  showSearchBarInApp: 'showSearchBarInApp',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type PrivateConversationScalarFieldEnum = (typeof PrivateConversationScalarFieldEnum)[keyof typeof PrivateConversationScalarFieldEnum]
-
-
-export const PrivateMessageScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  type: 'type',
-  fileId: 'fileId',
-  conversationId: 'conversationId',
-  senderId: 'senderId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PrivateMessageScalarFieldEnum = (typeof PrivateMessageScalarFieldEnum)[keyof typeof PrivateMessageScalarFieldEnum]
-
-
-export const PrivateMessageStatusScalarFieldEnum = {
-  id: 'id',
-  messageId: 'messageId',
-  userId: 'userId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PrivateMessageStatusScalarFieldEnum = (typeof PrivateMessageStatusScalarFieldEnum)[keyof typeof PrivateMessageStatusScalarFieldEnum]
+export type AdminSettingScalarFieldEnum = (typeof AdminSettingScalarFieldEnum)[keyof typeof AdminSettingScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  username: 'username',
   name: 'name',
   email: 'email',
   password: 'password',
+  firebaseUid: 'firebaseUid',
+  fcmTokens: 'fcmTokens',
   role: 'role',
   status: 'status',
   isVerified: 'isVerified',
+  isTFAEnabled: 'isTFAEnabled',
   lastLoginAt: 'lastLoginAt',
   lastActiveAt: 'lastActiveAt',
   profilePictureId: 'profilePictureId',
+  profilePictureURL: 'profilePictureURL',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const VenueScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  catgegory: 'catgegory',
+  subcategory: 'subcategory',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  description: 'description',
+  imageId: 'imageId',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VenueScalarFieldEnum = (typeof VenueScalarFieldEnum)[keyof typeof VenueScalarFieldEnum]
+
+
+export const VotesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  venueId: 'venueId',
+  isOpen: 'isOpen',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VotesScalarFieldEnum = (typeof VotesScalarFieldEnum)[keyof typeof VotesScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -253,6 +265,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull',
@@ -260,12 +280,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

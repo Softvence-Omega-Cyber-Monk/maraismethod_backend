@@ -2,43 +2,35 @@ model User {
   id String @id @default(uuid())
 
   // Identity
-  name     String @default("Unnamed User")
-  email    String @unique
-  password String // hashed password
+  username String? @unique
+  name     String  @default("Unnamed User")
+
+  // Authentication
+  email         String?        @unique
+  password      String? // hashed password
+  firebaseUid   String?        @unique
+  refreshTokens RefreshToken[]
+  otps          UserOtp[]
+  fcmTokens     String[]       @default([])
 
   // Settings
-  role       UserRole   @default(USER)
-  status     UserStatus @default(ACTIVE)
-  isVerified Boolean    @default(false)
+  role         UserRole   @default(USER)
+  status       UserStatus @default(ACTIVE)
+  isVerified   Boolean    @default(false)
+  isTFAEnabled Boolean    @default(false)
 
   // Activity
   lastLoginAt  DateTime?
   lastActiveAt DateTime?
 
   // Avatar
-  profilePictureId String?
-  profilePicture   FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
+  profilePictureId  String?       @unique
+  profilePictureURL String?
+  profilePicture    FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
 
-  // Notifications & Auth
+  // Notifications
   notifications UserNotification[]
-  refreshTokens RefreshToken[]
-  otps          UserOtp[]
-
-  // CHAT & CALL RELATIONS
-  conversationsInitiated PrivateConversation[] @relation("ConversationInitiator")
-  conversationsReceived  PrivateConversation[] @relation("ConversationReceiver")
-
-  /// All messages user has sent
-  messagesSent PrivateMessage[]
-
-  /// Message delivery/read statuses
-  messageStatuses PrivateMessageStatus[]
-
-  /// Calls user has initiated
-  callsInitiated PrivateCall[] @relation("CallInitiator")
-
-  /// Calls user participated in
-  callParticipants PrivateCallParticipant[]
+  votes         Votes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

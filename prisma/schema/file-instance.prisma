@@ -9,8 +9,9 @@ model FileInstance {
   mimeType         String
   size             Int
 
-  users           User[]
-  privateMessages PrivateMessage[]
+  users          User?
+  venues         Venue?
+  advertisements Advertisement?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

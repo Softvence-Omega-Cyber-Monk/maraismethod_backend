@@ -30,6 +30,17 @@ export class AuthUpdateProfileService {
       throw new AppError(404, 'User not found');
     }
 
+    // * if username is provided, check if it's taken
+    if (dto.username?.trim()) {
+      const existingUser = await this.prisma.client.user.findUnique({
+        where: { username: dto.username.trim() },
+      });
+
+      if (existingUser && existingUser.id !== userId) {
+        throw new AppError(400, 'Username is already taken');
+      }
+    }
+
     // * if image is provided, upload to S3 and update user
     let fileInstance: FileInstance | undefined;
     if (file) {
@@ -37,6 +48,11 @@ export class AuthUpdateProfileService {
 
       if (uploadFile) {
         fileInstance = uploadFile;
+      }
+
+      // * if user has existing profile picture, delete it
+      if (user.profilePictureId) {
+        await this.s3.deleteFile(user.profilePictureId);
       }
     }
 
@@ -48,7 +64,9 @@ export class AuthUpdateProfileService {
           profilePicture: {
             connect: fileInstance,
           },
+          profilePictureURL: fileInstance.url,
         }),
+        username: dto.username?.trim() ? dto.username.trim() : user.username,
       },
       include: { profilePicture: true },
     });

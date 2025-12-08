@@ -18,6 +18,16 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model Advertisement
+ * 
+ */
+export type Advertisement = Prisma.AdvertisementModel
+/**
+ * Model AdvertisementAnalytics
+ * 
+ */
+export type AdvertisementAnalytics = Prisma.AdvertisementAnalyticsModel
+/**
  * Model UserOtp
  * 
  */
@@ -43,32 +53,22 @@ export type Notification = Prisma.NotificationModel
  */
 export type UserNotification = Prisma.UserNotificationModel
 /**
- * Model PrivateCall
+ * Model AdminSetting
  * 
  */
-export type PrivateCall = Prisma.PrivateCallModel
-/**
- * Model PrivateCallParticipant
- * 
- */
-export type PrivateCallParticipant = Prisma.PrivateCallParticipantModel
-/**
- * Model PrivateConversation
- * 
- */
-export type PrivateConversation = Prisma.PrivateConversationModel
-/**
- * Model PrivateMessage
- * 
- */
-export type PrivateMessage = Prisma.PrivateMessageModel
-/**
- * Model PrivateMessageStatus
- * 
- */
-export type PrivateMessageStatus = Prisma.PrivateMessageStatusModel
+export type AdminSetting = Prisma.AdminSettingModel
 /**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Venue
+ * 
+ */
+export type Venue = Prisma.VenueModel
+/**
+ * Model Votes
+ * 
+ */
+export type Votes = Prisma.VotesModel

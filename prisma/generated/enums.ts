@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const AdvertisementStatus = {
+  RUNNING: 'RUNNING',
+  STOPPED: 'STOPPED'
+} as const
+
+export type AdvertisementStatus = (typeof AdvertisementStatus)[keyof typeof AdvertisementStatus]
+
+
 export const OtpType = {
   VERIFICATION: 'VERIFICATION',
   RESET: 'RESET'
@@ -28,63 +36,6 @@ export const FileType = {
 } as const
 
 export type FileType = (typeof FileType)[keyof typeof FileType]
-
-
-export const CallType = {
-  AUDIO: 'AUDIO',
-  VIDEO: 'VIDEO'
-} as const
-
-export type CallType = (typeof CallType)[keyof typeof CallType]
-
-
-export const CallStatus = {
-  INITIATED: 'INITIATED',
-  ONGOING: 'ONGOING',
-  ENDED: 'ENDED',
-  MISSED: 'MISSED'
-} as const
-
-export type CallStatus = (typeof CallStatus)[keyof typeof CallStatus]
-
-
-export const CallParticipantStatus = {
-  JOINED: 'JOINED',
-  LEFT: 'LEFT',
-  MISSED: 'MISSED'
-} as const
-
-export type CallParticipantStatus = (typeof CallParticipantStatus)[keyof typeof CallParticipantStatus]
-
-
-export const ConversationStatus = {
-  ACTIVE: 'ACTIVE',
-  ARCHIVED: 'ARCHIVED',
-  BLOCKED: 'BLOCKED'
-} as const
-
-export type ConversationStatus = (typeof ConversationStatus)[keyof typeof ConversationStatus]
-
-
-export const MessageType = {
-  TEXT: 'TEXT',
-  IMAGE: 'IMAGE',
-  VIDEO: 'VIDEO',
-  AUDIO: 'AUDIO',
-  FILE: 'FILE',
-  CALL_EVENT: 'CALL_EVENT'
-} as const
-
-export type MessageType = (typeof MessageType)[keyof typeof MessageType]
-
-
-export const MessageDeliveryStatus = {
-  SENT: 'SENT',
-  DELIVERED: 'DELIVERED',
-  READ: 'READ'
-} as const
-
-export type MessageDeliveryStatus = (typeof MessageDeliveryStatus)[keyof typeof MessageDeliveryStatus]
 
 
 export const UserRole = {

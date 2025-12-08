@@ -8,15 +8,15 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Advertisement'
+export type * from './models/AdvertisementAnalytics'
 export type * from './models/UserOtp'
 export type * from './models/RefreshToken'
 export type * from './models/FileInstance'
 export type * from './models/Notification'
 export type * from './models/UserNotification'
-export type * from './models/PrivateCall'
-export type * from './models/PrivateCallParticipant'
-export type * from './models/PrivateConversation'
-export type * from './models/PrivateMessage'
-export type * from './models/PrivateMessageStatus'
+export type * from './models/AdminSetting'
 export type * from './models/User'
+export type * from './models/Venue'
+export type * from './models/Votes'
 export type * from './commonInputTypes'
