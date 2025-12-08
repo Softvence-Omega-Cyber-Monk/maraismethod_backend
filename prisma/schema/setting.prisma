@@ -1,0 +1,12 @@
+model AdminSetting {
+  id String @id @default(uuid())
+
+  pushNotificationsEnabled Boolean @default(true)
+  adminLoginTFAEnabled     Boolean @default(false)
+  showSearchBarInApp      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("admin_settings")
+}

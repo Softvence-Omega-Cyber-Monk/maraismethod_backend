@@ -15,7 +15,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
+import { AdminLoginDto, LoginDto } from './dto/login.dto';
 import { LogoutDto, RefreshTokenDto } from './dto/logout.dto';
 import { ResendOtpDto, VerifyOTPDto } from './dto/otp.dto';
 import {
@@ -77,6 +77,12 @@ export class AuthController {
   @Post('login')
   async login(@Body() body: LoginDto) {
     return this.authLoginService.login(body);
+  }
+
+  @ApiOperation({ summary: 'Admin Login (with optional 2FA)' })
+  @Post('admin/login')
+  async adminLogin(@Body() body: AdminLoginDto) {
+    return this.authLoginService.adminLogin(body);
   }
 
   @ApiOperation({ summary: 'User Logout' })

@@ -391,6 +391,7 @@ export const ModelName = {
   FileInstance: 'FileInstance',
   Notification: 'Notification',
   UserNotification: 'UserNotification',
+  AdminSetting: 'AdminSetting',
   User: 'User',
   Venue: 'Venue',
   Votes: 'Votes'
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "advertisement" | "advertisementAnalytics" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "user" | "venue" | "votes"
+    modelProps: "advertisement" | "advertisementAnalytics" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "adminSetting" | "user" | "venue" | "votes"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -931,6 +932,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminSetting: {
+      payload: Prisma.$AdminSettingPayload<ExtArgs>
+      fields: Prisma.AdminSettingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminSettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminSettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminSettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminSettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        findMany: {
+          args: Prisma.AdminSettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>[]
+        }
+        create: {
+          args: Prisma.AdminSettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        createMany: {
+          args: Prisma.AdminSettingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminSettingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminSettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        update: {
+          args: Prisma.AdminSettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminSettingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminSettingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminSettingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminSettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminSettingPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminSettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminSetting>
+        }
+        groupBy: {
+          args: Prisma.AdminSettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminSettingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminSettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminSettingCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1289,6 +1364,18 @@ export const UserNotificationScalarFieldEnum = {
 export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
 
 
+export const AdminSettingScalarFieldEnum = {
+  id: 'id',
+  pushNotificationsEnabled: 'pushNotificationsEnabled',
+  adminLoginTFAEnabled: 'adminLoginTFAEnabled',
+  showSearchBarInApp: 'showSearchBarInApp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminSettingScalarFieldEnum = (typeof AdminSettingScalarFieldEnum)[keyof typeof AdminSettingScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -1622,6 +1709,7 @@ export type GlobalOmitConfig = {
   fileInstance?: Prisma.FileInstanceOmit
   notification?: Prisma.NotificationOmit
   userNotification?: Prisma.UserNotificationOmit
+  adminSetting?: Prisma.AdminSettingOmit
   user?: Prisma.UserOmit
   venue?: Prisma.VenueOmit
   votes?: Prisma.VotesOmit

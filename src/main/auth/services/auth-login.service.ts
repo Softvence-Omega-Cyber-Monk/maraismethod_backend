@@ -5,7 +5,7 @@ import { AuthMailService } from '@/lib/mail/services/auth-mail.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { AuthUtilsService } from '@/lib/utils/services/auth-utils.service';
 import { Injectable } from '@nestjs/common';
-import { LoginDto } from '../dto/login.dto';
+import { AdminLoginDto, LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class AuthLoginService {
@@ -68,7 +68,7 @@ export class AuthLoginService {
   }
 
   @HandleError('Admin login failed', 'User')
-  async adminLogin(dto: LoginDto): Promise<TResponse<any>> {
+  async adminLogin(dto: AdminLoginDto): Promise<TResponse<any>> {
     const { email, password } = dto;
 
     const user = await this.prisma.client.user.findUniqueOrThrow({
@@ -116,9 +116,6 @@ export class AuthLoginService {
       data: {
         lastLoginAt: new Date(),
         lastActiveAt: new Date(),
-        fcmTokens: dto.fcmToken
-          ? this.utils.addFcmToken(user.fcmTokens, dto.fcmToken)
-          : user.fcmTokens,
       },
     });
 

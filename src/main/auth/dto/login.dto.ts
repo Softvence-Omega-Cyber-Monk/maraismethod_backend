@@ -25,3 +25,21 @@ export class LoginDto {
   })
   fcmToken?: string;
 }
+
+export class AdminLoginDto {
+  @ApiProperty({
+    example: 'admin@example.com',
+    description: 'Admin email address',
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({
+    example: 'strongPassword123',
+    description: 'Admin password (min 6 characters)',
+  })
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
+}

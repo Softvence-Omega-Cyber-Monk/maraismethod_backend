@@ -58,6 +58,7 @@ export const ModelName = {
   FileInstance: 'FileInstance',
   Notification: 'Notification',
   UserNotification: 'UserNotification',
+  AdminSetting: 'AdminSetting',
   User: 'User',
   Venue: 'Venue',
   Votes: 'Votes'
@@ -174,6 +175,18 @@ export const UserNotificationScalarFieldEnum = {
 } as const
 
 export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
+
+
+export const AdminSettingScalarFieldEnum = {
+  id: 'id',
+  pushNotificationsEnabled: 'pushNotificationsEnabled',
+  adminLoginTFAEnabled: 'adminLoginTFAEnabled',
+  showSearchBarInApp: 'showSearchBarInApp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminSettingScalarFieldEnum = (typeof AdminSettingScalarFieldEnum)[keyof typeof AdminSettingScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
