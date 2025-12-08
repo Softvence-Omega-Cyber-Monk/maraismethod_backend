@@ -149,8 +149,6 @@ export class AuthController {
   }
 
   @Get('get-settings')
-  @ApiBearerAuth()
-  @ValidateAdmin()
   @ApiOperation({ summary: 'Get admin settings' })
   getSettings() {
     return this.authSettingService.getSettings();

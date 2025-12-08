@@ -259,8 +259,8 @@ export class VenuePublicService {
         imageUrl: venue.imageUrl,
         image: venue.image,
         distance,
-        status: venueStatus,
-        lastVoteUpdate,
+        status: venueStatus ?? 'Not Voted',
+        lastVoteUpdate: lastVoteUpdate ?? 'No votes yet',
         voteStats: {
           total: venue._count.votes,
           open: openVotes,
