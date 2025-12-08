@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { FileModule } from './file/file.module';
+import { FirebaseModule } from './firebase/firebase.module';
 import { MailModule } from './mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { QueueModule } from './queue/queue.module';
@@ -14,6 +15,7 @@ import { UtilsModule } from './utils/utils.module';
     SeedModule,
     UtilsModule,
     QueueModule,
+    FirebaseModule,
   ],
   exports: [],
   providers: [],

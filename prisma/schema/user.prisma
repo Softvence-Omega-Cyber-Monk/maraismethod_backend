@@ -2,9 +2,16 @@ model User {
   id String @id @default(uuid())
 
   // Identity
+  username String @unique
   name     String @default("Unnamed User")
-  email    String @unique
-  password String // hashed password
+
+  // Authentication
+  email         String?        @unique
+  password      String? // hashed password
+  firebaseUid   String?        @unique
+  refreshTokens RefreshToken[]
+  otps          UserOtp[]
+  fcmTokens     String[]       @default([])
 
   // Settings
   role       UserRole   @default(USER)
@@ -16,13 +23,12 @@ model User {
   lastActiveAt DateTime?
 
   // Avatar
-  profilePictureId String?
-  profilePicture   FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
+  profilePictureId  String?
+  profilePictureURL String?
+  profilePicture    FileInstance? @relation(fields: [profilePictureId], references: [id], onDelete: SetNull)
 
-  // Notifications & Auth
+  // Notifications
   notifications UserNotification[]
-  refreshTokens RefreshToken[]
-  otps          UserOtp[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

@@ -9,7 +9,7 @@ model FileInstance {
   mimeType         String
   size             Int
 
-  users           User[]
+  users User[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
