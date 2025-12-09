@@ -22,4 +22,14 @@ export class UpdateProfileDto {
   })
   @IsOptional()
   image?: Express.Multer.File;
+
+  @ApiPropertyOptional({ example: 'strongPassword123' })
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @ApiPropertyOptional({ example: 'newStrongPassword123' })
+  @IsOptional()
+  @IsString()
+  newPassword?: string;
 }
