@@ -13,6 +13,8 @@ model Advertisement {
   startDate DateTime
   endDate   DateTime
 
+  status AdvertisementStatus @default(RUNNING)
+
   fileId  String?       @unique
   fileUrl String?
   file    FileInstance? @relation(fields: [fileId], references: [id], onDelete: SetNull)
