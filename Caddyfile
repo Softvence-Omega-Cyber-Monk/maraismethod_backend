@@ -1,6 +1,4 @@
-api.nestjsstarter.com {
-  tls internal # TODO: remove in production
-
+api.fohyou.com {
   reverse_proxy /socket.io* api:3000
 
   @api {

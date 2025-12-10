@@ -30,6 +30,7 @@ import { SocialLoginDto } from './dto/social-login.dto';
 import { UpdateAdminSettingDto } from './dto/update-admin-setting.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthGetProfileService } from './services/auth-get-profile.service';
+import { AuthGuestService } from './services/auth-guest.service';
 import { AuthLoginService } from './services/auth-login.service';
 import { AuthLogoutService } from './services/auth-logout.service';
 import { AuthOtpService } from './services/auth-otp.service';
@@ -49,6 +50,7 @@ export class AuthController {
     private readonly authOtpService: AuthOtpService,
     private readonly authPasswordService: AuthPasswordService,
     private readonly authGetProfileService: AuthGetProfileService,
+    private readonly authGuestService: AuthGuestService,
     private readonly authUpdateProfileService: AuthUpdateProfileService,
     private readonly authSocialService: AuthSocialService,
     private readonly authSettingService: AuthSettingService,
@@ -88,6 +90,12 @@ export class AuthController {
   @Post('admin/login')
   async adminLogin(@Body() body: AdminLoginDto) {
     return this.authLoginService.adminLogin(body);
+  }
+
+  @ApiOperation({ summary: 'Login as Guest (no credentials required)' })
+  @Post('guest-login')
+  async guestLogin() {
+    return this.authGuestService.guestLogin();
   }
 
   @ApiOperation({ summary: 'User Logout' })

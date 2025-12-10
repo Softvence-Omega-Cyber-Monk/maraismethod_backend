@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthGetProfileService } from './services/auth-get-profile.service';
+import { AuthGuestService } from './services/auth-guest.service';
 import { AuthLoginService } from './services/auth-login.service';
 import { AuthLogoutService } from './services/auth-logout.service';
 import { AuthOtpService } from './services/auth-otp.service';
@@ -20,6 +21,7 @@ import { AuthUpdateProfileService } from './services/auth-update-profile.service
     AuthOtpService,
     AuthPasswordService,
     AuthGetProfileService,
+    AuthGuestService,
     AuthUpdateProfileService,
     AuthSocialService,
     AuthSettingService,

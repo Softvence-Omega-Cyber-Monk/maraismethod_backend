@@ -21,6 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JWTPayload) {
+    // Allow guest tokens without DB lookup
+    if (payload.role === 'GUEST' && payload.sub?.startsWith('guest-')) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
     const user = await this.prisma.client.user.findUnique({
       where: { id: payload.sub },
     });

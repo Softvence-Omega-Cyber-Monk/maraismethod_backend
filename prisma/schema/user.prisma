@@ -42,6 +42,7 @@ enum UserRole {
   SUPER_ADMIN
   ADMIN
   USER
+  GUEST
 }
 
 enum UserStatus {
