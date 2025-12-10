@@ -2,14 +2,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AdvertisementStatus } from '@prisma';
 import { Type } from 'class-transformer';
 import {
-  IsEnum,
-  IsInt,
-  IsISO8601,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Min,
+    IsEnum,
+    IsInt,
+    IsISO8601,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    Min,
 } from 'class-validator';
 
 export class CreateAdDto {
@@ -72,7 +72,7 @@ export class CreateAdDto {
   })
   @IsEnum(AdvertisementStatus)
   @IsNotEmpty()
-  status: string;
+  status: AdvertisementStatus;
 
   @ApiProperty({
     example: '2024-01-01T00:00:00.000Z',

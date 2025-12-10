@@ -90,6 +90,7 @@ export const AdvertisementScalarFieldEnum = {
   adShowRangeInKm: 'adShowRangeInKm',
   startDate: 'startDate',
   endDate: 'endDate',
+  status: 'status',
   fileId: 'fileId',
   fileUrl: 'fileUrl',
   createdAt: 'createdAt',

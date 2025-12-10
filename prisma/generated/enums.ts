@@ -41,7 +41,8 @@ export type FileType = (typeof FileType)[keyof typeof FileType]
 export const UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
-  USER: 'USER'
+  USER: 'USER',
+  GUEST: 'GUEST'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]

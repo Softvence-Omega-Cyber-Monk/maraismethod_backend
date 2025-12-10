@@ -1277,6 +1277,7 @@ export const AdvertisementScalarFieldEnum = {
   adShowRangeInKm: 'adShowRangeInKm',
   startDate: 'startDate',
   endDate: 'endDate',
+  status: 'status',
   fileId: 'fileId',
   fileUrl: 'fileUrl',
   createdAt: 'createdAt',
@@ -1528,6 +1529,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AdvertisementStatus'
+ */
+export type EnumAdvertisementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AdvertisementStatus[]'
+ */
+export type ListEnumAdvertisementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementStatus[]'>
     
 
 

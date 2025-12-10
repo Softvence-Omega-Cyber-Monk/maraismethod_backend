@@ -12,6 +12,15 @@ import { GetAdsDto } from '../dto/get-ads.dto';
 export class GetAdsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Calculate CTR (Click-Through Rate) as a percentage
+   * CTR = (clicks / impressions) * 100
+   */
+  private calculateCTR(clicks: number, impressions: number): number {
+    if (impressions === 0) return 0;
+    return parseFloat(((clicks / impressions) * 100).toFixed(2));
+  }
+
   @HandleError('Failed to get advertisements')
   async getAllAds(dto: GetAdsDto) {
     const page = dto.page && dto.page > 0 ? dto.page : 1;
@@ -40,7 +49,7 @@ export class GetAdsService {
       }
     }
 
-    const [advertisements, total] = await Promise.all([
+    const [advertisements, total] = await this.prisma.client.$transaction([
       this.prisma.client.advertisement.findMany({
         where: adWhere,
         include: {
@@ -54,12 +63,23 @@ export class GetAdsService {
       this.prisma.client.advertisement.count({ where: adWhere }),
     ]);
 
-    // Transform with status
+    // Transform with status and CTR
     const now = new Date();
-    const transformedAds = advertisements.map((ad) => ({
-      ...ad,
-      isActive: now >= ad.startDate && now <= ad.endDate,
-    }));
+    const transformedAds = advertisements.map((ad) => {
+      const impressions = ad.advertisementAnalytics?.impressions ?? 0;
+      const clicks = ad.advertisementAnalytics?.clicks ?? 0;
+      const ctr = this.calculateCTR(clicks, impressions);
+
+      return {
+        ...ad,
+        isActive: now >= ad.startDate && now <= ad.endDate,
+        analytics: {
+          impressions,
+          clicks,
+          ctr,
+        },
+      };
+    });
 
     return successPaginatedResponse(
       transformedAds,
@@ -80,9 +100,18 @@ export class GetAdsService {
       });
 
     const now = new Date();
+    const impressions = advertisement.advertisementAnalytics?.impressions ?? 0;
+    const clicks = advertisement.advertisementAnalytics?.clicks ?? 0;
+    const ctr = this.calculateCTR(clicks, impressions);
+
     const transformedAd = {
       ...advertisement,
       isActive: now >= advertisement.startDate && now <= advertisement.endDate,
+      analytics: {
+        impressions,
+        clicks,
+        ctr,
+      },
     };
 
     return successResponse(transformedAd, 'Advertisement found');

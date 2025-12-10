@@ -5,7 +5,7 @@ import { S3Service } from '@/lib/file/services/s3.service';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { FileInstance } from '@prisma';
+import { AdvertisementStatus, FileInstance } from '@prisma';
 import { CreateAdDto } from '../dto/create-ad.dto';
 import { UpdateAdDto } from '../dto/update-ad.dto';
 
@@ -62,6 +62,7 @@ export class AdsService {
         latitude: dto.latitude,
         longitude: dto.longitude,
         adShowRangeInKm: dto.adShowRangeInKm,
+        status: dto.status as AdvertisementStatus,
         startDate,
         endDate,
         ...(fileInstance && {
@@ -147,6 +148,7 @@ export class AdsService {
         latitude: dto.latitude,
         longitude: dto.longitude,
         adShowRangeInKm: dto.adShowRangeInKm,
+        status: dto.status as AdvertisementStatus,
         startDate: dto.startDate ? new Date(dto.startDate) : undefined,
         endDate: dto.endDate ? new Date(dto.endDate) : undefined,
         ...(fileInstance && {
