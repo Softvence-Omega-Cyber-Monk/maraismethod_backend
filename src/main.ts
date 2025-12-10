@@ -18,9 +18,12 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-      'http://localhost:3002',
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://13.51.189.236:3000',
+      'http://13.51.189.236:4173',
+      'http://13.51.189.236:4174',
+      'https://fohyou.com',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
