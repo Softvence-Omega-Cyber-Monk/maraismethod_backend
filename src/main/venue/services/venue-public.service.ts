@@ -1,12 +1,16 @@
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
+import { GooglePlaceResult } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { GetVenuesDto, VenueStatusEnum } from '../dto/get-venues.dto';
+import {
+  GetPublicVenuesDto,
+  GetSingleVenueDto,
+  VenueStatusEnum,
+} from '../dto/get-venues.dto';
 import { VoteVenueDto } from '../dto/vote-venue.dto';
 import { VenueCacheService } from './venue-cache.service';
-import { GooglePlaceResult } from '@/lib/google-maps/google-maps.service';
 
 // Common venue response interface for both DB and Google Places venues
 interface VenueResponse {
@@ -143,39 +147,11 @@ export class VenuePublicService {
   }
 
   @HandleError('Failed to get venues')
-  async getVenuesByLocation(
-    userLatitude: number,
-    userLongitude: number,
-    dto: GetVenuesDto,
-  ): Promise<TResponse<any>> {
-    const {
-      search,
-      category,
-      subcategory,
-      status,
-      boatCount,
-      page = 1,
-      limit = 10,
-    } = dto;
+  async getVenuesByLocation(dto: GetPublicVenuesDto): Promise<TResponse<any>> {
+    const { page = 1, limit = 20 } = dto;
 
     // Build where clause for DB venues
     const where: any = {};
-
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { location: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    if (category) {
-      where.catgegory = { contains: category, mode: 'insensitive' };
-    }
-
-    if (subcategory) {
-      where.subcategory = { contains: subcategory, mode: 'insensitive' };
-    }
 
     // Step 1: Get DB venues with votes
     const dbVenues = await this.prisma.client.venue.findMany({
@@ -193,10 +169,13 @@ export class VenuePublicService {
       },
     });
 
+    const userLatitude = dto.latitude;
+    const userLongitude = dto.longitude;
+
     // Step 2: Get cached Google Places results
     const googlePlaces = await this.venueCacheService.getCachedPlaces(
-      userLatitude,
-      userLongitude,
+      dto.latitude,
+      dto.longitude,
     );
 
     // Step 3: Create a set of googlePlaceIds from DB venues for deduplication
@@ -255,48 +234,12 @@ export class VenuePublicService {
     );
 
     // Step 6: Transform Google Places to venue format
-    let googleVenues: VenueResponse[] = filteredGooglePlaces.map((place) =>
+    const googleVenues: VenueResponse[] = filteredGooglePlaces.map((place) =>
       this.transformGooglePlaceToVenue(place, userLatitude, userLongitude),
     );
 
-    // Apply search filter to Google venues
-    if (search) {
-      const searchLower = search.toLowerCase();
-      googleVenues = googleVenues.filter(
-        (v) =>
-          v.name.toLowerCase().includes(searchLower) ||
-          v.location.toLowerCase().includes(searchLower),
-      );
-    }
-
-    // Apply category filter to Google venues
-    if (category) {
-      const categoryLower = category.toLowerCase();
-      googleVenues = googleVenues.filter((v) =>
-        v.category.toLowerCase().includes(categoryLower),
-      );
-    }
-
-    if (subcategory) {
-      const subcategoryLower = subcategory.toLowerCase();
-      googleVenues = googleVenues.filter((v) =>
-        v.subcategory.toLowerCase().includes(subcategoryLower),
-      );
-    }
-
     // Step 7: Merge DB and Google venues
-    let allVenues = [...processedDbVenues, ...googleVenues];
-
-    // Apply status filter
-    if (status) {
-      allVenues = allVenues.filter((v) => v.status === status);
-    }
-
-    // Apply boat count filter
-    if (boatCount) {
-      const minBoats = parseInt(boatCount);
-      allVenues = allVenues.filter((v) => v.voteStats.total >= minBoats);
-    }
+    const allVenues = [...processedDbVenues, ...googleVenues];
 
     // Sort by distance (closest first)
     allVenues.sort((a, b) => a.distance - b.distance);
@@ -330,8 +273,7 @@ export class VenuePublicService {
   @HandleError('Failed to get venue details')
   async getVenueById(
     venueId: string,
-    userLatitude?: number,
-    userLongitude?: number,
+    dto: GetSingleVenueDto,
   ): Promise<TResponse<any>> {
     const venue = await this.prisma.client.venue.findUnique({
       where: { id: venueId },
@@ -358,6 +300,9 @@ export class VenuePublicService {
 
     const openVotes = venue.votes.filter((v) => v.isOpen).length;
     const closedVotes = venue.votes.filter((v) => !v.isOpen).length;
+
+    const userLatitude = dto.latitude;
+    const userLongitude = dto.longitude;
 
     let distance: number | null = null;
     if (userLatitude && userLongitude) {

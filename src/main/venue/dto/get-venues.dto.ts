@@ -1,6 +1,13 @@
 import { PaginationDto } from '@/common/dto/pagination.dto';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsEnum,
+  IsNumber,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export enum VenueStatusEnum {
   OPEN = 'OPEN',
@@ -41,17 +48,40 @@ export class GetVenuesDto extends PaginationDto {
   @IsOptional()
   @IsNumberString()
   boatCount?: string;
+}
 
-  // @ApiPropertyOptional({
-  //   description: 'Sort by createdAt or votes',
-  //   example: 'createdAt',
-  // })
-  // @IsOptional()
-  // @IsString()
-  // sortBy?: string;
+export class GetPublicVenuesDto extends PaginationDto {
+  @ApiProperty({
+    description: 'User latitude for distance calculation',
+    example: 40.7128,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  latitude: number;
 
-  // @ApiPropertyOptional({ description: 'Sort direction', example: 'desc' })
-  // @IsOptional()
-  // @IsString()
-  // sortOrder?: 'asc' | 'desc';
+  @ApiProperty({
+    description: 'User longitude for distance calculation',
+    example: -74.006,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  longitude: number;
+}
+
+export class GetSingleVenueDto {
+  @ApiProperty({
+    description: 'User latitude for distance calculation',
+    example: 40.7128,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  latitude: number;
+
+  @ApiProperty({
+    description: 'User longitude for distance calculation',
+    example: -74.006,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  longitude: number;
 }
