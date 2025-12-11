@@ -5,8 +5,8 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-// Cache TTL in milliseconds (15 minutes)
-const CACHE_TTL_MS = 15 * 60 * 1000;
+// Cache TTL in milliseconds (7 days)
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Grid size for location-based caching (0.01 degrees ≈ 1.1km)
 const GRID_SIZE = 0.01;
