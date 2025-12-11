@@ -80,8 +80,9 @@ export class VenueHelperService {
       latitude: place.latitude,
       longitude: place.longitude,
       distance: parseFloat(distance.toFixed(2)),
-      status: null,
-      lastVoteUpdate: null,
+      status: 'N/A',
+      imageUrl: place.imageUrl,
+      lastVoteUpdate: 'No votes yet',
       voteStats: {
         total: 0,
         open: 0,

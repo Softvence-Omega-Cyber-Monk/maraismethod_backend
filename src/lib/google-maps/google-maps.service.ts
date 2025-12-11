@@ -11,6 +11,7 @@ export interface GooglePlaceResult {
   latitude: number;
   longitude: number;
   category: string;
+  imageUrl: string;
   subcategory: string;
   types: string[];
 }
@@ -96,16 +97,30 @@ export class GoogleMapsService {
         return [];
       }
 
-      return response.data.results.map((place) => ({
-        placeId: place.place_id || '',
-        name: place.name || 'Unknown',
-        location: place.vicinity || place.formatted_address || '',
-        latitude: place.geometry?.location?.lat ?? latitude,
-        longitude: place.geometry?.location?.lng ?? longitude,
-        category: this.extractCategory(place.types || []),
-        subcategory: this.extractSubcategory(place.types || []),
-        types: place.types || [],
-      }));
+      const results: GooglePlaceResult[] = [];
+
+      for (const place of response.data.results) {
+        // Fetch first photo reference if available
+        let imageUrl = '';
+        if (place.photos?.length) {
+          const photoRef = place.photos[0].photo_reference;
+          imageUrl = this.getPlacePhotoUrl(photoRef, 400);
+        }
+
+        results.push({
+          placeId: place.place_id || '',
+          name: place.name || 'Unknown',
+          location: place.vicinity || place.formatted_address || '',
+          latitude: place.geometry?.location?.lat ?? latitude,
+          longitude: place.geometry?.location?.lng ?? longitude,
+          imageUrl,
+          category: this.extractCategory(place.types || []),
+          subcategory: this.extractSubcategory(place.types || []),
+          types: place.types || [],
+        });
+      }
+
+      return results;
     } catch (error) {
       this.logger.error(
         'Google Places API error:',

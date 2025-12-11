@@ -10,7 +10,7 @@ export interface VenueResponse {
   latitude: number;
   longitude: number;
   distance: number;
-  status: VenueStatusEnum | null;
+  status: VenueStatusEnum | null | 'N/A';
   lastVoteUpdate: Date | string | null;
   voteStats: {
     total: number;
@@ -19,7 +19,7 @@ export interface VenueResponse {
   };
   source: 'database' | 'google';
   description?: string | null;
-  imageUrl?: string | null;
+  imageUrl: string | null;
   image?: any;
   createdAt?: Date;
   updatedAt?: Date;
