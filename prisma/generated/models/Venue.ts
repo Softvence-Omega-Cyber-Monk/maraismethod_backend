@@ -39,6 +39,7 @@ export type VenueSumAggregateOutputType = {
 export type VenueMinAggregateOutputType = {
   id: string | null
   name: string | null
+  googlePlaceId: string | null
   catgegory: string | null
   subcategory: string | null
   location: string | null
@@ -54,6 +55,7 @@ export type VenueMinAggregateOutputType = {
 export type VenueMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  googlePlaceId: string | null
   catgegory: string | null
   subcategory: string | null
   location: string | null
@@ -69,6 +71,7 @@ export type VenueMaxAggregateOutputType = {
 export type VenueCountAggregateOutputType = {
   id: number
   name: number
+  googlePlaceId: number
   catgegory: number
   subcategory: number
   location: number
@@ -96,6 +99,7 @@ export type VenueSumAggregateInputType = {
 export type VenueMinAggregateInputType = {
   id?: true
   name?: true
+  googlePlaceId?: true
   catgegory?: true
   subcategory?: true
   location?: true
@@ -111,6 +115,7 @@ export type VenueMinAggregateInputType = {
 export type VenueMaxAggregateInputType = {
   id?: true
   name?: true
+  googlePlaceId?: true
   catgegory?: true
   subcategory?: true
   location?: true
@@ -126,6 +131,7 @@ export type VenueMaxAggregateInputType = {
 export type VenueCountAggregateInputType = {
   id?: true
   name?: true
+  googlePlaceId?: true
   catgegory?: true
   subcategory?: true
   location?: true
@@ -228,6 +234,7 @@ export type VenueGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type VenueGroupByOutputType = {
   id: string
   name: string
+  googlePlaceId: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -266,6 +273,7 @@ export type VenueWhereInput = {
   NOT?: Prisma.VenueWhereInput | Prisma.VenueWhereInput[]
   id?: Prisma.StringFilter<"Venue"> | string
   name?: Prisma.StringFilter<"Venue"> | string
+  googlePlaceId?: Prisma.StringNullableFilter<"Venue"> | string | null
   catgegory?: Prisma.StringFilter<"Venue"> | string
   subcategory?: Prisma.StringFilter<"Venue"> | string
   location?: Prisma.StringFilter<"Venue"> | string
@@ -283,6 +291,7 @@ export type VenueWhereInput = {
 export type VenueOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  googlePlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   catgegory?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -299,6 +308,7 @@ export type VenueOrderByWithRelationInput = {
 
 export type VenueWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  googlePlaceId?: string
   imageId?: string
   AND?: Prisma.VenueWhereInput | Prisma.VenueWhereInput[]
   OR?: Prisma.VenueWhereInput[]
@@ -315,11 +325,12 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   image?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
   votes?: Prisma.VotesListRelationFilter
-}, "id" | "imageId">
+}, "id" | "googlePlaceId" | "imageId">
 
 export type VenueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  googlePlaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   catgegory?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -343,6 +354,7 @@ export type VenueScalarWhereWithAggregatesInput = {
   NOT?: Prisma.VenueScalarWhereWithAggregatesInput | Prisma.VenueScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Venue"> | string
   name?: Prisma.StringWithAggregatesFilter<"Venue"> | string
+  googlePlaceId?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   catgegory?: Prisma.StringWithAggregatesFilter<"Venue"> | string
   subcategory?: Prisma.StringWithAggregatesFilter<"Venue"> | string
   location?: Prisma.StringWithAggregatesFilter<"Venue"> | string
@@ -358,6 +370,7 @@ export type VenueScalarWhereWithAggregatesInput = {
 export type VenueCreateInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -374,6 +387,7 @@ export type VenueCreateInput = {
 export type VenueUncheckedCreateInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -390,6 +404,7 @@ export type VenueUncheckedCreateInput = {
 export type VenueUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -406,6 +421,7 @@ export type VenueUpdateInput = {
 export type VenueUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -422,6 +438,7 @@ export type VenueUncheckedUpdateInput = {
 export type VenueCreateManyInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -437,6 +454,7 @@ export type VenueCreateManyInput = {
 export type VenueUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -451,6 +469,7 @@ export type VenueUpdateManyMutationInput = {
 export type VenueUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -471,6 +490,7 @@ export type VenueNullableScalarRelationFilter = {
 export type VenueCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  googlePlaceId?: Prisma.SortOrder
   catgegory?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -491,6 +511,7 @@ export type VenueAvgOrderByAggregateInput = {
 export type VenueMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  googlePlaceId?: Prisma.SortOrder
   catgegory?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -506,6 +527,7 @@ export type VenueMaxOrderByAggregateInput = {
 export type VenueMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  googlePlaceId?: Prisma.SortOrder
   catgegory?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -577,6 +599,7 @@ export type VenueUpdateOneRequiredWithoutVotesNestedInput = {
 export type VenueCreateWithoutImageInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -592,6 +615,7 @@ export type VenueCreateWithoutImageInput = {
 export type VenueUncheckedCreateWithoutImageInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -623,6 +647,7 @@ export type VenueUpdateToOneWithWhereWithoutImageInput = {
 export type VenueUpdateWithoutImageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -638,6 +663,7 @@ export type VenueUpdateWithoutImageInput = {
 export type VenueUncheckedUpdateWithoutImageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -653,6 +679,7 @@ export type VenueUncheckedUpdateWithoutImageInput = {
 export type VenueCreateWithoutVotesInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -668,6 +695,7 @@ export type VenueCreateWithoutVotesInput = {
 export type VenueUncheckedCreateWithoutVotesInput = {
   id?: string
   name: string
+  googlePlaceId?: string | null
   catgegory: string
   subcategory: string
   location: string
@@ -699,6 +727,7 @@ export type VenueUpdateToOneWithWhereWithoutVotesInput = {
 export type VenueUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -714,6 +743,7 @@ export type VenueUpdateWithoutVotesInput = {
 export type VenueUncheckedUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   catgegory?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
@@ -760,6 +790,7 @@ export type VenueCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Ext
 export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  googlePlaceId?: boolean
   catgegory?: boolean
   subcategory?: boolean
   location?: boolean
@@ -778,6 +809,7 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  googlePlaceId?: boolean
   catgegory?: boolean
   subcategory?: boolean
   location?: boolean
@@ -794,6 +826,7 @@ export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  googlePlaceId?: boolean
   catgegory?: boolean
   subcategory?: boolean
   location?: boolean
@@ -810,6 +843,7 @@ export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type VenueSelectScalar = {
   id?: boolean
   name?: boolean
+  googlePlaceId?: boolean
   catgegory?: boolean
   subcategory?: boolean
   location?: boolean
@@ -822,7 +856,7 @@ export type VenueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
+export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
 export type VenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
@@ -844,6 +878,7 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    googlePlaceId: string | null
     catgegory: string
     subcategory: string
     location: string
@@ -1281,6 +1316,7 @@ export interface Prisma__VenueClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface VenueFieldRefs {
   readonly id: Prisma.FieldRef<"Venue", 'String'>
   readonly name: Prisma.FieldRef<"Venue", 'String'>
+  readonly googlePlaceId: Prisma.FieldRef<"Venue", 'String'>
   readonly catgegory: Prisma.FieldRef<"Venue", 'String'>
   readonly subcategory: Prisma.FieldRef<"Venue", 'String'>
   readonly location: Prisma.FieldRef<"Venue", 'String'>

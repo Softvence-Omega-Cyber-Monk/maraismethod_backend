@@ -1403,6 +1403,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const VenueScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  googlePlaceId: 'googlePlaceId',
   catgegory: 'catgegory',
   subcategory: 'subcategory',
   location: 'location',

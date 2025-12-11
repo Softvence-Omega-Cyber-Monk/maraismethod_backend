@@ -1,8 +1,8 @@
 model Venue {
   id String @id @default(uuid())
 
-  name String
-
+  name          String
+  googlePlaceId String? @unique // Google Places API place_id for deduplication
   catgegory   String
   subcategory String
 
