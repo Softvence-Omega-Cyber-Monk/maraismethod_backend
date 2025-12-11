@@ -12,7 +12,6 @@ import {
 import { VoteVenueDto } from '../dto/vote-venue.dto';
 import { VenueCacheService } from './venue-cache.service';
 
-// Common venue response interface for both DB and Google Places venues
 interface VenueResponse {
   id: string;
   name: string;
@@ -47,17 +46,13 @@ export class VenuePublicService {
     private readonly venueCacheService: VenueCacheService,
   ) {}
 
-  /**
-   * Calculate distance between two coordinates using Haversine formula
-   * Returns distance in kilometers
-   */
   private calculateDistance(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number,
   ): number {
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = this.toRad(lat2 - lat1);
     const dLon = this.toRad(lon2 - lon1);
 
@@ -76,10 +71,6 @@ export class VenuePublicService {
     return degrees * (Math.PI / 180);
   }
 
-  /**
-   * Determine venue status based on votes
-   * Returns 'OPEN' if majority voted open, 'CLOSED' if majority voted closed, null if no votes
-   */
   private async getVenueStatus(
     venueId: string,
   ): Promise<VenueStatusEnum | null> {
@@ -98,9 +89,6 @@ export class VenuePublicService {
       : VenueStatusEnum.CLOSED;
   }
 
-  /**
-   * Get last vote update time for a venue
-   */
   private async getLastVoteUpdate(venueId: string): Promise<Date | null> {
     const lastVote = await this.prisma.client.votes.findFirst({
       where: { venueId },
@@ -110,9 +98,6 @@ export class VenuePublicService {
     return lastVote?.createdAt || null;
   }
 
-  /**
-   * Transform Google Place result to venue response format
-   */
   private transformGooglePlaceToVenue(
     place: GooglePlaceResult,
     userLatitude: number,
@@ -126,7 +111,7 @@ export class VenuePublicService {
     );
 
     return {
-      id: `google_${place.placeId}`, // Temporary ID for Google venues
+      id: `google_${place.placeId}`,
       name: place.name,
       googlePlaceId: place.placeId,
       category: place.category,
@@ -135,7 +120,7 @@ export class VenuePublicService {
       latitude: place.latitude,
       longitude: place.longitude,
       distance: parseFloat(distance.toFixed(2)),
-      status: null, // No votes yet for Google-only venues
+      status: null,
       lastVoteUpdate: null,
       voteStats: {
         total: 0,
@@ -150,12 +135,8 @@ export class VenuePublicService {
   async getVenuesByLocation(dto: GetPublicVenuesDto): Promise<TResponse<any>> {
     const { page = 1, limit = 20 } = dto;
 
-    // Build where clause for DB venues
-    const where: any = {};
-
-    // Step 1: Get DB venues with votes
     const dbVenues = await this.prisma.client.venue.findMany({
-      where,
+      where: {},
       include: {
         image: true,
         votes: {
@@ -172,18 +153,15 @@ export class VenuePublicService {
     const userLatitude = dto.latitude;
     const userLongitude = dto.longitude;
 
-    // Step 2: Get cached Google Places results
     const googlePlaces = await this.venueCacheService.getCachedPlaces(
       dto.latitude,
       dto.longitude,
     );
 
-    // Step 3: Create a set of googlePlaceIds from DB venues for deduplication
     const dbGooglePlaceIds = new Set(
       dbVenues.filter((v) => v.googlePlaceId).map((v) => v.googlePlaceId),
     );
 
-    // Step 4: Process DB venues
     const processedDbVenues: VenueResponse[] = await Promise.all(
       dbVenues.map(async (venue) => {
         const distance = this.calculateDistance(
@@ -196,7 +174,6 @@ export class VenuePublicService {
         const venueStatus = await this.getVenueStatus(venue.id);
         const lastVoteUpdate = await this.getLastVoteUpdate(venue.id);
 
-        // Calculate vote statistics
         const openVotes = venue.votes.filter((v) => v.isOpen).length;
         const closedVotes = venue.votes.filter((v) => !v.isOpen).length;
         const totalVotes = venue._count.votes;
@@ -228,23 +205,18 @@ export class VenuePublicService {
       }),
     );
 
-    // Step 5: Filter Google Places (exclude those already in DB)
     const filteredGooglePlaces = googlePlaces.filter(
       (place) => !dbGooglePlaceIds.has(place.placeId),
     );
 
-    // Step 6: Transform Google Places to venue format
     const googleVenues: VenueResponse[] = filteredGooglePlaces.map((place) =>
       this.transformGooglePlaceToVenue(place, userLatitude, userLongitude),
     );
 
-    // Step 7: Merge DB and Google venues
     const allVenues = [...processedDbVenues, ...googleVenues];
 
-    // Sort by distance (closest first)
     allVenues.sort((a, b) => a.distance - b.distance);
 
-    // Pagination
     const skip = (page - 1) * limit;
     const paginatedVenues = allVenues.slice(skip, skip + limit);
 
@@ -275,13 +247,72 @@ export class VenuePublicService {
     venueId: string,
     dto: GetSingleVenueDto,
   ): Promise<TResponse<any>> {
+    // Check if this is a Google venue ID (starts with "google_")
+    const isGoogleVenue = venueId.startsWith('google_');
+
+    if (isGoogleVenue) {
+      // Extract the actual Google Place ID
+      const googlePlaceId = venueId.replace('google_', '');
+
+      // Try to get from cache
+      const googlePlace = await this.venueCacheService.getCachedPlaceById(
+        googlePlaceId,
+        dto.latitude,
+        dto.longitude,
+      );
+
+      if (!googlePlace) {
+        throw new AppError(404, 'Venue not found');
+      }
+
+      const userLatitude = dto.latitude;
+      const userLongitude = dto.longitude;
+
+      let distance: number | null = null;
+      if (userLatitude && userLongitude) {
+        distance = parseFloat(
+          this.calculateDistance(
+            userLatitude,
+            userLongitude,
+            googlePlace.latitude,
+            googlePlace.longitude,
+          ).toFixed(2),
+        );
+      }
+
+      return successResponse(
+        {
+          id: venueId,
+          name: googlePlace.name,
+          googlePlaceId: googlePlace.placeId,
+          category: googlePlace.category,
+          subcategory: googlePlace.subcategory,
+          location: googlePlace.location,
+          latitude: googlePlace.latitude,
+          longitude: googlePlace.longitude,
+          distance,
+          status: 'Not Voted',
+          lastVoteUpdate: 'No votes yet',
+          voteStats: {
+            total: 0,
+            open: 0,
+            closed: 0,
+          },
+          recentVotes: [],
+          source: 'google',
+        },
+        'Venue details retrieved successfully',
+      );
+    }
+
+    // Regular database venue lookup
     const venue = await this.prisma.client.venue.findUnique({
       where: { id: venueId },
       include: {
         image: true,
         votes: {
           orderBy: { createdAt: 'desc' },
-          take: 50, // Last 50 votes
+          take: 50,
         },
         _count: {
           select: {
@@ -337,7 +368,7 @@ export class VenuePublicService {
           open: openVotes,
           closed: closedVotes,
         },
-        recentVotes: venue.votes.slice(0, 10), // Show 10 most recent votes
+        recentVotes: venue.votes.slice(0, 10),
         source: 'database',
         createdAt: venue.createdAt,
         updatedAt: venue.updatedAt,
@@ -352,52 +383,65 @@ export class VenuePublicService {
     venueId: string,
     dto: VoteVenueDto,
   ): Promise<TResponse<any>> {
-    let venue = await this.prisma.client.venue.findUnique({
-      where: { id: venueId },
-    });
+    // Check if this is a Google venue ID (starts with "google_")
+    const isGoogleVenue = venueId.startsWith('google_');
+    let venue;
 
-    // If venue not found by ID, and googlePlaceId is provided, try to find or create
-    if (!venue && dto.googlePlaceId) {
-      // Check if venue exists by googlePlaceId
+    if (isGoogleVenue) {
+      // Extract the actual Google Place ID
+      const googlePlaceId = venueId.replace('google_', '');
+
+      // Check if venue already exists in database by googlePlaceId
       venue = await this.prisma.client.venue.findUnique({
-        where: { googlePlaceId: dto.googlePlaceId },
+        where: { googlePlaceId },
       });
 
-      // If still not found, create from Google data
+      // If not in database, fetch from cache and create
       if (!venue) {
-        if (!dto.venueName) {
+        const googlePlace = await this.venueCacheService.getCachedPlaceById(
+          googlePlaceId,
+          dto.latitude,
+          dto.longitude,
+        );
+
+        if (!googlePlace) {
           throw new AppError(
-            400,
-            'Venue name is required when voting on a new Google venue',
+            404,
+            'Venue not found. Please ensure you are near the venue.',
           );
         }
 
         this.logger.log(
-          `Creating new venue from Google Places: ${dto.venueName}`,
+          `Creating new venue from Google Places: ${googlePlace.name}`,
         );
 
         venue = await this.prisma.client.venue.create({
           data: {
-            name: dto.venueName,
-            googlePlaceId: dto.googlePlaceId,
-            catgegory: dto.venueCategory || 'OTHER',
-            subcategory: dto.venueSubcategory || 'GENERAL',
-            location: dto.venueLocation || 'Unknown',
-            latitude: dto.venueLatitude || dto.latitude,
-            longitude: dto.venueLongitude || dto.longitude,
+            name: googlePlace.name,
+            googlePlaceId: googlePlace.placeId,
+            catgegory: googlePlace.category,
+            subcategory: googlePlace.subcategory,
+            location: googlePlace.location,
+            latitude: googlePlace.latitude,
+            longitude: googlePlace.longitude,
           },
         });
 
         this.logger.log(`Created venue with ID: ${venue.id}`);
       }
+    } else {
+      // Regular database venue lookup
+      venue = await this.prisma.client.venue.findUnique({
+        where: { id: venueId },
+      });
     }
 
     if (!venue) {
       throw new AppError(404, 'Venue not found');
     }
 
-    // Validate user is near the venue (within 500 meters / 0.5 km)
-    const MAX_DISTANCE_KM = 0.5; // 500 meters
+    // Validate user is near the venue (within 500 meters)
+    const MAX_DISTANCE_KM = 0.5;
     const distance = this.calculateDistance(
       dto.latitude,
       dto.longitude,
@@ -445,7 +489,6 @@ export class VenuePublicService {
       },
     });
 
-    // Get updated venue status
     const venueStatus = await this.getVenueStatus(venue.id);
 
     return successResponse(

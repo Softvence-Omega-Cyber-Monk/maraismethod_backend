@@ -36,6 +36,13 @@ export class VenueCacheService {
   }
 
   /**
+   * Get cache key for a specific place
+   */
+  private getPlaceCacheKey(placeId: string): string {
+    return `place:${placeId}`;
+  }
+
+  /**
    * Get Google Places results with caching
    * @param latitude User's latitude
    * @param longitude User's longitude
@@ -68,10 +75,61 @@ export class VenueCacheService {
       radiusMeters,
     );
 
-    // Store in cache
+    // Store in cache (both the list and individual places)
     await this.cacheManager.set(cacheKey, places, CACHE_TTL_MS);
 
+    // Cache individual places for quick lookup by placeId
+    for (const place of places) {
+      const placeCacheKey = this.getPlaceCacheKey(place.placeId);
+      await this.cacheManager.set(placeCacheKey, place, CACHE_TTL_MS);
+    }
+
     return places;
+  }
+
+  /**
+   * Get a single Google Place by placeId with caching
+   * @param placeId Google Place ID
+   * @param userLatitude Optional user latitude to search nearby if not cached
+   * @param userLongitude Optional user longitude to search nearby if not cached
+   */
+  async getCachedPlaceById(
+    placeId: string,
+    userLatitude?: number,
+    userLongitude?: number,
+  ): Promise<GooglePlaceResult | null> {
+    const cacheKey = this.getPlaceCacheKey(placeId);
+
+    // Try to get from individual place cache
+    const cached = (await this.cacheManager.get(cacheKey)) as
+      | GooglePlaceResult
+      | undefined;
+
+    if (cached) {
+      this.logger.debug(`Cache hit for place ${placeId}`);
+      return cached;
+    }
+
+    // If not in cache and we have user location, search nearby venues
+    if (userLatitude !== undefined && userLongitude !== undefined) {
+      this.logger.debug(
+        `Cache miss for place ${placeId}, searching nearby venues`,
+      );
+
+      // This will fetch and cache all nearby places
+      const places = await this.getCachedPlaces(userLatitude, userLongitude);
+
+      // Find the specific place
+      const place = places.find((p) => p.placeId === placeId);
+
+      if (place) {
+        this.logger.debug(`Found place ${placeId} in nearby search results`);
+        return place;
+      }
+    }
+
+    this.logger.debug(`Place ${placeId} not found in cache or nearby search`);
+    return null;
   }
 
   /**
@@ -81,5 +139,14 @@ export class VenueCacheService {
     const cacheKey = this.getCacheKey(latitude, longitude);
     await this.cacheManager.del(cacheKey);
     this.logger.debug(`Cache invalidated for ${cacheKey}`);
+  }
+
+  /**
+   * Invalidate cache for a specific place
+   */
+  async invalidatePlaceCache(placeId: string): Promise<void> {
+    const cacheKey = this.getPlaceCacheKey(placeId);
+    await this.cacheManager.del(cacheKey);
+    this.logger.debug(`Cache invalidated for place ${placeId}`);
   }
 }
