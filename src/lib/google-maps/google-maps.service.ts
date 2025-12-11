@@ -2,6 +2,7 @@ import { ENVEnum } from '@/common/enum/env.enum';
 import { Client } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 export interface GooglePlaceResult {
   placeId: string;
@@ -14,11 +15,19 @@ export interface GooglePlaceResult {
   types: string[];
 }
 
+export interface PlacePhoto {
+  photoReference: string;
+  height: number;
+  width: number;
+  htmlAttributions: string[];
+}
+
 @Injectable()
 export class GoogleMapsService {
   private readonly logger = new Logger(GoogleMapsService.name);
   private client: Client;
-  private apiKey: string;
+  private readonly apiKey: string;
+  private readonly baseUrl = 'https://maps.googleapis.com/maps/api';
 
   constructor(private readonly configService: ConfigService) {
     this.client = new Client({});
@@ -27,9 +36,6 @@ export class GoogleMapsService {
     );
   }
 
-  // -----------------------
-  // Accessors
-  // -----------------------
   getClient(): Client {
     return this.client;
   }
@@ -38,13 +44,6 @@ export class GoogleMapsService {
     return this.apiKey;
   }
 
-  // -----------------------
-  // Google Maps helpers
-  // -----------------------
-  /**
-   * Validate coordinates by performing a reverse geocode and ensuring we get at least one result.
-   * Returns true when the API returns OK and at least one result.
-   */
   async validateCoordinates(
     latitude: number,
     longitude: number,
@@ -74,16 +73,6 @@ export class GoogleMapsService {
     }
   }
 
-  // -----------------------
-  // Google Places helpers
-  // -----------------------
-  /**
-   * Search for nearby venues using Google Places API
-   * @param latitude User's latitude
-   * @param longitude User's longitude
-   * @param radiusMeters Search radius in meters (default: 5000)
-   * @param type Place type to search for (default: establishment)
-   */
   async searchNearbyVenues(
     latitude: number,
     longitude: number,
@@ -126,12 +115,69 @@ export class GoogleMapsService {
     }
   }
 
-  // -----------------------
-  // Type extraction helpers
-  // -----------------------
-  /**
-   * Extract primary category from Google Places types
-   */
+  async getPlacePhotos(
+    placeId: string,
+    maxPhotos: number = 5,
+  ): Promise<PlacePhoto[]> {
+    try {
+      const url = `${this.baseUrl}/place/details/json`;
+      const params = {
+        place_id: placeId,
+        fields: 'photos',
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (response.data.status !== 'OK') {
+        this.logger.warn(
+          `Google Places API returned status: ${response.data.status}`,
+        );
+        return [];
+      }
+
+      const photos = response.data.result?.photos || [];
+
+      return photos.slice(0, maxPhotos).map((photo: any) => ({
+        photoReference: photo.photo_reference,
+        height: photo.height,
+        width: photo.width,
+        htmlAttributions: photo.html_attributions || [],
+      }));
+    } catch (error) {
+      this.logger.error(`Error fetching place photos: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async downloadPlacePhoto(
+    photoReference: string,
+    maxWidth: number = 400,
+  ): Promise<Buffer> {
+    try {
+      const url = `${this.baseUrl}/place/photo`;
+      const params = {
+        photo_reference: photoReference,
+        maxwidth: maxWidth,
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, {
+        params,
+        responseType: 'arraybuffer',
+      });
+
+      return Buffer.from(response.data);
+    } catch (error) {
+      this.logger.error(`Error downloading place photo: ${error.message}`);
+      throw error;
+    }
+  }
+
+  getPlacePhotoUrl(photoReference: string, maxWidth: number = 400): string {
+    return `${this.baseUrl}/place/photo?photo_reference=${photoReference}&maxwidth=${maxWidth}&key=${this.apiKey}`;
+  }
+
   private extractCategory(types: string[]): string {
     // Priority order for category extraction
     const categoryPriority = [
@@ -155,9 +201,6 @@ export class GoogleMapsService {
     return types[0]?.replace(/_/g, ' ').toUpperCase() || 'OTHER';
   }
 
-  /**
-   * Extract subcategory from Google Places types
-   */
   private extractSubcategory(types: string[]): string {
     // Skip generic types for subcategory
     const genericTypes = ['point_of_interest', 'establishment'];

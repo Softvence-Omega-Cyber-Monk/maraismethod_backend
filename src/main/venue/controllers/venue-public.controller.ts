@@ -4,11 +4,15 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetPublicVenuesDto, GetSingleVenueDto } from '../dto/get-venues.dto';
 import { VoteVenueDto } from '../dto/vote-venue.dto';
 import { VenuePublicService } from '../services/venue-public.service';
+import { VenueVoteService } from '../services/venue-vote.service';
 
 @ApiTags('Venue (Public)')
 @Controller('venue/public')
 export class VenuePublicController {
-  constructor(private readonly venuePublicService: VenuePublicService) {}
+  constructor(
+    private readonly venuePublicService: VenuePublicService,
+    private readonly venueVoteService: VenueVoteService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -33,6 +37,6 @@ export class VenuePublicController {
     @Param('id') venueId: string,
     @Body() dto: VoteVenueDto,
   ) {
-    return this.venuePublicService.voteForVenue(userId, venueId, dto);
+    return this.venueVoteService.voteForVenue(userId, venueId, dto);
   }
 }
