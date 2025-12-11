@@ -76,6 +76,7 @@ export class AuthGetProfileService {
       where,
       include: {
         notifications: true,
+        profilePicture: true,
       },
     });
 
