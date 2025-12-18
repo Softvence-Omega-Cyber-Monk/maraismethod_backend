@@ -69,6 +69,7 @@ export class GoogleMapsService {
       this.logger.error(
         `Google Maps reverseGeocode error for (${latitude}, ${longitude}):`,
         (error as Error).message ?? error,
+        error,
       );
       return false;
     }
@@ -93,6 +94,7 @@ export class GoogleMapsService {
       if (response.data.status !== 'OK' || !response.data.results) {
         this.logger.warn(
           `Google Places API returned status: ${response.data.status}`,
+          response,
         );
         return [];
       }
@@ -125,6 +127,7 @@ export class GoogleMapsService {
       this.logger.error(
         'Google Places API error:',
         (error as Error).message ?? error,
+        error,
       );
       return [];
     }

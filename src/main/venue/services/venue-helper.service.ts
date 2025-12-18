@@ -1,6 +1,7 @@
 import { GooglePlaceResult } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { DateTime } from 'luxon';
 import { VenueStatusEnum } from '../dto/get-venues.dto';
 import { VenueResponse } from '../interfaces/venue-response.interface';
 
@@ -49,13 +50,35 @@ export class VenueHelperService {
       : VenueStatusEnum.CLOSED;
   }
 
-  async getLastVoteUpdate(venueId: string): Promise<Date | null> {
+  async getLastVoteUpdate(venueId: string): Promise<string | null> {
     const lastVote = await this.prisma.client.votes.findFirst({
       where: { venueId },
       orderBy: { createdAt: 'desc' },
     });
 
-    return lastVote?.createdAt || null;
+    if (!lastVote?.createdAt) return null;
+
+    const now = DateTime.now();
+    const voteTime = DateTime.fromJSDate(lastVote.createdAt);
+
+    const diff = now.diff(voteTime, ['days', 'hours', 'minutes']).toObject();
+
+    let result = '';
+
+    if (diff.days && diff.days >= 1) {
+      const days = Math.floor(diff.days);
+      const hours = Math.floor(diff.hours || 0);
+      result = `${days} day${days > 1 ? 's' : ''}${hours > 0 ? ' ' + hours + ' hour' + (hours > 1 ? 's' : '') : ''}`;
+    } else if (diff.hours && diff.hours >= 1) {
+      const hours = Math.floor(diff.hours);
+      const minutes = Math.floor(diff.minutes || 0);
+      result = `${hours} hour${hours > 1 ? 's' : ''}${minutes > 0 ? ' ' + minutes + ' minute' + (minutes > 1 ? 's' : '') : ''}`;
+    } else {
+      const minutes = Math.max(Math.floor(diff.minutes || 0), 1);
+      result = `${minutes} minute${minutes > 1 ? 's' : ''}`;
+    }
+
+    return `Last updated ${result} ago`;
   }
 
   transformGooglePlaceToVenue(
