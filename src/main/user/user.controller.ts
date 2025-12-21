@@ -1,5 +1,5 @@
 import { ValidateAdmin } from '@/core/jwt/jwt.decorator';
-import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -24,7 +24,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Delete user by id' })
-  @Get(':id/delete')
+  @Delete(':id/delete')
   async deleteUserById(@Param('id') id: string) {
     return this.userService.deleteUserById(id);
   }
