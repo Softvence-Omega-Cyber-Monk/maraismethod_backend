@@ -156,10 +156,12 @@ export class AuthController {
     return this.authUpdateProfileService.updateProfile(id, dto, file);
   }
 
+  @ApiBearerAuth()
+  @ValidateAdmin()
   @Get('get-settings')
   @ApiOperation({ summary: 'Get admin settings' })
-  getSettings() {
-    return this.authSettingService.getSettings();
+  getSettings(@GetUser('sub') userId: string) {
+    return this.authSettingService.getSettings(userId);
   }
 
   @Patch('update-settings')

@@ -8,11 +8,20 @@ import { UpdateAdminSettingDto } from '../dto/update-admin-setting.dto';
 export class AuthSettingService {
   constructor(private readonly prisma: PrismaService) {}
 
-  @HandleError('Failed to get admin settings')
-  async getSettings() {
-    const settings = await this.prisma.client.adminSetting.findFirstOrThrow();
+  @HandleError('Failed to get settings')
+  async getSettings(userId: string) {
+    const [user, adminSettings] = await Promise.all([
+      this.prisma.client.user.findUniqueOrThrow({ where: { id: userId } }),
+      this.prisma.client.adminSetting.findFirstOrThrow(),
+    ]);
 
-    return successResponse(settings, 'Admin settings retrieved successfully');
+    // Merge settings: admin values but 2FA comes from user
+    const mergedSettings = {
+      ...adminSettings,
+      adminLoginTFAEnabled: user.isTFAEnabled,
+    };
+
+    return successResponse(mergedSettings, 'Settings retrieved successfully');
   }
 
   @HandleError('Failed to update admin settings')

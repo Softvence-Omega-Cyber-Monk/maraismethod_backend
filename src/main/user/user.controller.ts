@@ -1,5 +1,5 @@
 import { ValidateAdmin } from '@/core/jwt/jwt.decorator';
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -30,7 +30,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Toggle user active/deactivate' })
-  @Get(':id/toggle-active-deactivate')
+  @Patch(':id/toggle-active-deactivate')
   async toggleActiveDeactivate(@Param('id') id: string) {
     return this.userService.toggleActiveDeactivate(id);
   }
