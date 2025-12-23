@@ -28,15 +28,21 @@ export class VenuePublicService {
     const { page = 1, limit = 20, search, latitude, longitude } = dto;
 
     // 1. Fetch search-relevant venues from Database
-    const dbWhere: any = {};
+    const dbWhere: any = {
+      // catgegory: {
+      //   in: ['NIGHT CLUB', 'BAR', 'LOUNGE', 'SPORTS BAR', 'HOTEL BAR'],
+      // },
+    };
+
     if (search) {
-      dbWhere.OR = [
+      const searchOR = [
         { name: { contains: search, mode: 'insensitive' } },
         { location: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
         { catgegory: { contains: search, mode: 'insensitive' } },
         { subcategory: { contains: search, mode: 'insensitive' } },
       ];
+      dbWhere.AND = [{ OR: searchOR }];
     }
 
     const dbVenues = await this.prisma.client.venue.findMany({
@@ -106,8 +112,8 @@ export class VenuePublicService {
           description: venue.description,
           imageUrl: venue.imageUrl,
           image: venue.image,
-          startTime: venue.startTime || 'N/A',
-          endTime: venue.endTime || 'N/A',
+          startTime: this.helper.formatTimeToAmPm(venue.startTime),
+          endTime: this.helper.formatTimeToAmPm(venue.endTime),
           distance: parseFloat(distance.toFixed(2)),
           status: venueStatus,
           lastVoteUpdate,
@@ -130,14 +136,30 @@ export class VenuePublicService {
         .map((v) => v.googlePlaceId as string),
     );
 
-    // 5. Transform Google venues (excluding those already in DB)
+    // 5. Transform and filter Google venues (excluding those already in DB)
+    const allowedCategories = [
+      'NIGHT CLUB',
+      'BAR',
+      'LOUNGE',
+      'SPORTS BAR',
+      'HOTEL BAR',
+    ];
+
     const googleVenuesPromises = googlePlaces
       .filter((place) => !dbGooglePlaceIds.has(place.placeId))
-      .map((place) =>
-        this.helper.transformGooglePlaceToVenue(place, latitude, longitude),
-      );
+      .map(async (place) => {
+        const venue = await this.helper.transformGooglePlaceToVenue(
+          place,
+          latitude,
+          longitude,
+        );
+        return venue;
+      });
 
-    const googleVenues = await Promise.all(googleVenuesPromises);
+    const googleVenuesRaw = await Promise.all(googleVenuesPromises);
+    const googleVenues = googleVenuesRaw.filter((v) =>
+      allowedCategories.includes(v.category),
+    );
 
     // 6. Merge and sort by distance
     const allVenues = [...processedDbVenues, ...googleVenues];
@@ -319,8 +341,8 @@ export class VenuePublicService {
         description: venue.description,
         imageUrl: venue.imageUrl,
         image: venue.image,
-        startTime: venue.startTime || 'N/A',
-        endTime: venue.endTime || 'N/A',
+        startTime: this.helper.formatTimeToAmPm(venue.startTime),
+        endTime: this.helper.formatTimeToAmPm(venue.endTime),
         distance,
         status: venueStatus,
         lastVoteUpdate,

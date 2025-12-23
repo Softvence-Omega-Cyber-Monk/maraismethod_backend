@@ -1,5 +1,8 @@
 import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
-import { GooglePlaceResult } from '@/lib/google-maps/google-maps.service';
+import {
+  GoogleMapsService,
+  GooglePlaceResult,
+} from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
@@ -8,7 +11,10 @@ import { VenueResponse } from '../interfaces/venue-response.interface';
 
 @Injectable()
 export class VenueHelperService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly googleMapsService: GoogleMapsService,
+  ) {}
 
   calculateDistance(
     lat1: number,
@@ -21,6 +27,13 @@ export class VenueHelperService {
 
   toRad(degrees: number): number {
     return toRad(degrees);
+  }
+
+  formatTimeToAmPm(time: string | null): string {
+    if (!time || time === 'N/A') return 'N/A';
+    const dt = DateTime.fromFormat(time, 'HH:mm');
+    if (!dt.isValid) return time;
+    return dt.toFormat('h:mm a');
   }
 
   async getVenueStatus(venueId: string): Promise<VenueStatusEnum> {
@@ -48,7 +61,13 @@ export class VenueHelperService {
 
     // Fallback to start/end times if no votes exist
     if (venue.startTime && venue.endTime) {
-      const now = DateTime.now().setZone('UTC'); // Or specific timezone if known
+      // Get the venue's local timezone using Google API
+      const timezone = await this.googleMapsService.getTimezone(
+        venue.latitude,
+        venue.longitude,
+      );
+
+      const now = DateTime.now().setZone(timezone);
       const currentTimeStr = now.toFormat('HH:mm');
 
       // Simple string comparison for HH:mm format
@@ -108,14 +127,20 @@ export class VenueHelperService {
     return `Last updated ${result} ago`;
   }
 
-  transformGooglePlaceToVenue(
+  async transformGooglePlaceToVenue(
     place: GooglePlaceResult,
     userLatitude: number,
     userLongitude: number,
-  ): VenueResponse {
+  ): Promise<VenueResponse> {
     const distance = this.calculateDistance(
       userLatitude,
       userLongitude,
+      place.latitude,
+      place.longitude,
+    );
+
+    // Get the venue's local timezone
+    const timezone = await this.googleMapsService.getTimezone(
       place.latitude,
       place.longitude,
     );
@@ -128,23 +153,14 @@ export class VenueHelperService {
     let startTime: string = place.openTime || 'N/A';
     let endTime: string = place.closeTime || 'N/A';
 
-    // If we have openingHours from Google Details, extract for today
+    // If we have openingHours from Google Details, extract for today using local timezone
     if (place.openingHours?.periods) {
-      const today = DateTime.now().weekday; // 1-7 (Mon-Sun)
-      // Google uses 0-6 (Sun-Sat)
-      const googleToday = today === 7 ? 0 : today;
-
-      const period = place.openingHours.periods.find(
-        (p: any) => p.open?.day === googleToday,
+      const { openTime, closeTime } = this.googleMapsService.extractTodayHours(
+        place.openingHours.periods,
+        timezone,
       );
-      if (period) {
-        if (period.open?.time) {
-          startTime = `${period.open.time.slice(0, 2)}:${period.open.time.slice(2)}`;
-        }
-        if (period.close?.time) {
-          endTime = `${period.close.time.slice(0, 2)}:${period.close.time.slice(2)}`;
-        }
-      }
+      if (openTime) startTime = openTime;
+      if (closeTime) endTime = closeTime;
     }
 
     return {
@@ -166,8 +182,8 @@ export class VenueHelperService {
         closed: 0,
       },
       source: 'google',
-      startTime,
-      endTime,
+      startTime: this.formatTimeToAmPm(startTime),
+      endTime: this.formatTimeToAmPm(endTime),
     };
   }
 

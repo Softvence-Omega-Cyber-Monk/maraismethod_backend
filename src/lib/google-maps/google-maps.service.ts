@@ -3,6 +3,7 @@ import { Client } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { DateTime } from 'luxon';
 
 export interface GooglePlaceResult {
   placeId: string;
@@ -95,7 +96,7 @@ export class GoogleMapsService {
         params: {
           location: { lat: latitude, lng: longitude },
           radius: radiusMeters,
-          type: 'night_club,bar,lounge,sports_bar,hotel_bar',
+          keyword: 'night club bar lounge sports bar hotel bar',
           key: this.apiKey,
         },
       });
@@ -293,6 +294,30 @@ export class GoogleMapsService {
     }
   }
 
+  async getTimezone(latitude: number, longitude: number): Promise<string> {
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const url = `${this.baseUrl}/timezone/json`;
+      const params = {
+        location: `${latitude},${longitude}`,
+        timestamp,
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (response.data.status === 'OK') {
+        return response.data.timeZoneId; // e.g., "America/New_York"
+      }
+      return 'UTC';
+    } catch (error) {
+      this.logger.error(
+        `Error fetching timezone for (${latitude}, ${longitude}): ${(error as Error).message}`,
+      );
+      return 'UTC';
+    }
+  }
+
   async downloadPlacePhoto(
     photoReference: string,
     maxWidth: number = 400,
@@ -326,7 +351,10 @@ export class GoogleMapsService {
   /**
    * Extract opening hours for today from Google's periods array
    */
-  extractTodayHours(periods?: OpeningHoursPeriod[]): {
+  extractTodayHours(
+    periods?: OpeningHoursPeriod[],
+    timezone: string = 'UTC',
+  ): {
     openTime: string | null;
     closeTime: string | null;
   } {
@@ -334,8 +362,8 @@ export class GoogleMapsService {
       return { openTime: null, closeTime: null };
     }
 
-    const now = new Date();
-    const today = now.getDay(); // 0-6 (Sun-Sat)
+    const now = DateTime.now().setZone(timezone);
+    const today = now.weekday === 7 ? 0 : now.weekday; // Google: 0 (Sun) to 6 (Sat). Luxon: 1 (Mon) to 7 (Sun).
 
     const todayPeriod = periods.find((p) => p.open?.day === today);
 
