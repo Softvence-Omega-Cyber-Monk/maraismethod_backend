@@ -51,6 +51,13 @@ export class GetVenuesDto extends PaginationDto {
 }
 
 export class GetPublicVenuesDto extends PaginationDto {
+  @ApiPropertyOptional({
+    description: 'Search by name/location/description',
+  })
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   @ApiProperty({
     description: 'User latitude for distance calculation',
     example: 40.7128,

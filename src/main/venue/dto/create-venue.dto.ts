@@ -63,19 +63,19 @@ export class CreateVenueDto {
 
   @ApiPropertyOptional({
     example: '09:00',
-    description: 'Opening time (HH:mm)',
+    description: 'Start time (HH:mm)',
   })
   @IsString()
   @IsOptional()
-  openTime?: string;
+  startTime?: string;
 
   @ApiPropertyOptional({
     example: '22:00',
-    description: 'Closing time (HH:mm)',
+    description: 'End time (HH:mm)',
   })
   @IsString()
   @IsOptional()
-  closeTime?: string;
+  endTime?: string;
 
   @ApiPropertyOptional({
     type: 'string',

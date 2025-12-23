@@ -162,8 +162,8 @@ export class VenueVoteService {
         location: googlePlace.location,
         latitude: googlePlace.latitude,
         longitude: googlePlace.longitude,
-        openTime: googlePlace.openTime,
-        closeTime: googlePlace.closeTime,
+        startTime: googlePlace.openTime,
+        endTime: googlePlace.closeTime,
         ...(imageInstance && {
           image: {
             connect: { id: imageInstance.id },

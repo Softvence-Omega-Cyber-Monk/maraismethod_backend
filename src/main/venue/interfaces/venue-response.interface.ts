@@ -19,8 +19,8 @@ export interface VenueResponse {
   };
   source: 'database' | 'google';
   description?: string | null;
-  openTime?: string | null;
-  closeTime?: string | null;
+  startTime?: string | null;
+  endTime?: string | null;
   imageUrl: string | null;
   image?: any;
   createdAt?: Date;

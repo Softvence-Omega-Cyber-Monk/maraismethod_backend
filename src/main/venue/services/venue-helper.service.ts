@@ -23,7 +23,7 @@ export class VenueHelperService {
     return toRad(degrees);
   }
 
-  async getVenueStatus(venueId: string): Promise<VenueStatusEnum | null> {
+  async getVenueStatus(venueId: string): Promise<VenueStatusEnum> {
     const venue = await this.prisma.client.venue.findUnique({
       where: { id: venueId },
       include: {
@@ -33,7 +33,7 @@ export class VenueHelperService {
       },
     });
 
-    if (!venue) return null;
+    if (!venue) return VenueStatusEnum.CLOSED;
 
     const votes = venue.votes;
 
@@ -41,42 +41,49 @@ export class VenueHelperService {
       const openVotes = votes.filter((v) => v.isOpen).length;
       const closedVotes = votes.filter((v) => !v.isOpen).length;
 
-      return openVotes > closedVotes
+      return openVotes >= closedVotes
         ? VenueStatusEnum.OPEN
         : VenueStatusEnum.CLOSED;
     }
 
-    // Fallback to open/close times if no votes exist
-    if (venue.openTime && venue.closeTime) {
+    // Fallback to start/end times if no votes exist
+    if (venue.startTime && venue.endTime) {
       const now = DateTime.now().setZone('UTC'); // Or specific timezone if known
       const currentTimeStr = now.toFormat('HH:mm');
 
       // Simple string comparison for HH:mm format
-      if (venue.openTime <= venue.closeTime) {
+      if (venue.startTime <= venue.endTime) {
         // Normal case (e.g., 09:00 - 22:00)
-        return currentTimeStr >= venue.openTime &&
-          currentTimeStr <= venue.closeTime
+        return currentTimeStr >= venue.startTime &&
+          currentTimeStr <= venue.endTime
           ? VenueStatusEnum.OPEN
           : VenueStatusEnum.CLOSED;
       } else {
         // Overnight case (e.g., 22:00 - 04:00)
-        return currentTimeStr >= venue.openTime ||
-          currentTimeStr <= venue.closeTime
+        return currentTimeStr >= venue.startTime ||
+          currentTimeStr <= venue.endTime
           ? VenueStatusEnum.OPEN
           : VenueStatusEnum.CLOSED;
       }
     }
 
-    return null;
+    return VenueStatusEnum.CLOSED;
   }
 
-  async getLastVoteUpdate(venueId: string): Promise<string | null> {
+  async getLastVoteUpdate(
+    venueId: string,
+    fallbackStatus?: VenueStatusEnum | null,
+  ): Promise<string> {
     const lastVote = await this.prisma.client.votes.findFirst({
       where: { venueId },
       orderBy: { createdAt: 'desc' },
     });
 
-    if (!lastVote?.createdAt) return null;
+    if (!lastVote?.createdAt) {
+      return fallbackStatus
+        ? `Currently ${fallbackStatus.toLowerCase()}`
+        : 'Status updated 0 minutes ago';
+    }
 
     const now = DateTime.now();
     const voteTime = DateTime.fromJSDate(lastVote.createdAt);
@@ -116,12 +123,10 @@ export class VenueHelperService {
     let status = VenueStatusEnum.CLOSED; // Default
     if (place.openNow === true) {
       status = VenueStatusEnum.OPEN;
-    } else if (place.openNow === null) {
-      status = 'Not Voted' as any;
     }
 
-    let openTime: string | null = place.openTime || null;
-    let closeTime: string | null = place.closeTime || null;
+    let startTime: string = place.openTime || 'N/A';
+    let endTime: string = place.closeTime || 'N/A';
 
     // If we have openingHours from Google Details, extract for today
     if (place.openingHours?.periods) {
@@ -134,10 +139,10 @@ export class VenueHelperService {
       );
       if (period) {
         if (period.open?.time) {
-          openTime = `${period.open.time.slice(0, 2)}:${period.open.time.slice(2)}`;
+          startTime = `${period.open.time.slice(0, 2)}:${period.open.time.slice(2)}`;
         }
         if (period.close?.time) {
-          closeTime = `${period.close.time.slice(0, 2)}:${period.close.time.slice(2)}`;
+          endTime = `${period.close.time.slice(0, 2)}:${period.close.time.slice(2)}`;
         }
       }
     }
@@ -154,15 +159,15 @@ export class VenueHelperService {
       distance: parseFloat(distance.toFixed(2)),
       status,
       imageUrl: place.imageUrl,
-      lastVoteUpdate: 'Last updated 0 minutes ago',
+      lastVoteUpdate: `Currently ${status.toLowerCase()}`,
       voteStats: {
         total: 0,
         open: 0,
         closed: 0,
       },
       source: 'google',
-      openTime,
-      closeTime,
+      startTime,
+      endTime,
     };
   }
 

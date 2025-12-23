@@ -10,8 +10,8 @@ model Venue {
   latitude  Float
   longitude Float
 
-  openTime  String?
-  closeTime String?
+  startTime  String?
+  endTime    String?
 
   description String?
 

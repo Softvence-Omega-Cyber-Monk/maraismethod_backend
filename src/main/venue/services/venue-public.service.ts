@@ -25,10 +25,22 @@ export class VenuePublicService {
 
   @HandleError('Failed to get venues')
   async getVenuesByLocation(dto: GetPublicVenuesDto): Promise<TResponse<any>> {
-    const { page = 1, limit = 20 } = dto;
+    const { page = 1, limit = 20, search, latitude, longitude } = dto;
+
+    // 1. Fetch search-relevant venues from Database
+    const dbWhere: any = {};
+    if (search) {
+      dbWhere.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { catgegory: { contains: search, mode: 'insensitive' } },
+        { subcategory: { contains: search, mode: 'insensitive' } },
+      ];
+    }
 
     const dbVenues = await this.prisma.client.venue.findMany({
-      where: {},
+      where: dbWhere,
       include: {
         image: true,
         votes: {
@@ -42,14 +54,26 @@ export class VenuePublicService {
       },
     });
 
-    const userLatitude = dto.latitude;
-    const userLongitude = dto.longitude;
-
-    const googlePlaces = await this.venueCacheService.getCachedPlaces(
-      dto.latitude,
-      dto.longitude,
+    // 2. Fetch search-relevant venues from Google API (via cache)
+    // Note: searchNearbyVenues currently doesn't support keywords, but we'll use it as the base
+    // If search is provided, we might want to filter Google results too
+    let googlePlaces = await this.venueCacheService.getCachedPlaces(
+      latitude,
+      longitude,
     );
 
+    if (search) {
+      const searchLower = search.toLowerCase();
+      googlePlaces = googlePlaces.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchLower) ||
+          p.location.toLowerCase().includes(searchLower) ||
+          p.category.toLowerCase().includes(searchLower) ||
+          p.subcategory.toLowerCase().includes(searchLower),
+      );
+    }
+
+    // 3. Process and Merge results
     const dbGooglePlaceIds = new Set(
       dbVenues.filter((v) => v.googlePlaceId).map((v) => v.googlePlaceId),
     );
@@ -57,14 +81,17 @@ export class VenuePublicService {
     const processedDbVenues: VenueResponse[] = await Promise.all(
       dbVenues.map(async (venue) => {
         const distance = this.helper.calculateDistance(
-          userLatitude,
-          userLongitude,
+          latitude,
+          longitude,
           venue.latitude,
           venue.longitude,
         );
 
         const venueStatus = await this.helper.getVenueStatus(venue.id);
-        const lastVoteUpdate = await this.helper.getLastVoteUpdate(venue.id);
+        const lastVoteUpdate = await this.helper.getLastVoteUpdate(
+          venue.id,
+          venueStatus,
+        );
 
         const openVotes = venue.votes.filter((v) => v.isOpen).length;
         const closedVotes = venue.votes.filter((v) => !v.isOpen).length;
@@ -82,8 +109,8 @@ export class VenuePublicService {
           description: venue.description,
           imageUrl: venue.imageUrl,
           image: venue.image,
-          openTime: venue.openTime,
-          closeTime: venue.closeTime,
+          startTime: venue.startTime || 'N/A',
+          endTime: venue.endTime || 'N/A',
           distance: parseFloat(distance.toFixed(2)),
           status: venueStatus,
           lastVoteUpdate,
@@ -104,23 +131,16 @@ export class VenuePublicService {
     );
 
     const googleVenues: VenueResponse[] = filteredGooglePlaces.map((place) =>
-      this.helper.transformGooglePlaceToVenue(
-        place,
-        userLatitude,
-        userLongitude,
-      ),
+      this.helper.transformGooglePlaceToVenue(place, latitude, longitude),
     );
 
     const allVenues = [...processedDbVenues, ...googleVenues];
 
+    // Sort by distance (closest first)
     allVenues.sort((a, b) => a.distance - b.distance);
 
     const skip = (page - 1) * limit;
     const paginatedVenues = allVenues.slice(skip, skip + limit);
-
-    this.logger.debug(
-      `Returning ${paginatedVenues.length} venues (${processedDbVenues.length} from DB, ${googleVenues.length} from Google)`,
-    );
 
     return successResponse(
       {
@@ -221,7 +241,10 @@ export class VenuePublicService {
     }
 
     const venueStatus = await this.helper.getVenueStatus(venue.id);
-    const lastVoteUpdate = await this.helper.getLastVoteUpdate(venue.id);
+    const lastVoteUpdate = await this.helper.getLastVoteUpdate(
+      venue.id,
+      venueStatus,
+    );
 
     const openVotes = venue.votes.filter((v) => v.isOpen).length;
     const closedVotes = venue.votes.filter((v) => !v.isOpen).length;
@@ -256,11 +279,11 @@ export class VenuePublicService {
         description: venue.description,
         imageUrl: venue.imageUrl,
         image: venue.image,
-        openTime: venue.openTime,
-        closeTime: venue.closeTime,
+        startTime: venue.startTime || 'N/A',
+        endTime: venue.endTime || 'N/A',
         distance,
-        status: venueStatus ?? 'Not Voted',
-        lastVoteUpdate: lastVoteUpdate ?? 'Last updated 0 minutes ago',
+        status: venueStatus,
+        lastVoteUpdate,
         voteStats: {
           total: venue._count.votes,
           open: openVotes,

@@ -53,8 +53,8 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        openTime: dto.openTime,
-        closeTime: dto.closeTime,
+        startTime: dto.startTime,
+        endTime: dto.endTime,
         description: dto.description,
         ...(fileInstance && {
           image: {
@@ -118,8 +118,8 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        openTime: dto.openTime,
-        closeTime: dto.closeTime,
+        startTime: dto.startTime,
+        endTime: dto.endTime,
         description: dto.description,
         ...(fileInstance && {
           image: {
