@@ -260,7 +260,7 @@ export class VenuePublicService {
         closeTime: venue.closeTime,
         distance,
         status: venueStatus ?? 'Not Voted',
-        lastVoteUpdate: lastVoteUpdate ?? 'No votes yet',
+        lastVoteUpdate: lastVoteUpdate ?? 'Last updated 0 minutes ago',
         voteStats: {
           total: venue._count.votes,
           open: openVotes,

@@ -8,7 +8,7 @@ model Advertisement {
   latitude  Float
   longitude Float
 
-  adShowRangeInKm Int
+  adShowRangeInMiles Int
 
   startDate DateTime
   endDate   DateTime

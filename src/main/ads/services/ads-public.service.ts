@@ -1,3 +1,4 @@
+import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
@@ -11,7 +12,7 @@ export class AdsPublicService {
 
   /**
    * Calculate distance between two coordinates using Haversine formula
-   * Returns distance in kilometers
+   * Returns distance in miles
    */
   private calculateDistance(
     lat1: number,
@@ -19,23 +20,11 @@ export class AdsPublicService {
     lat2: number,
     lon2: number,
   ): number {
-    const R = 6371; // Earth's radius in km
-    const dLat = this.toRad(lat2 - lat1);
-    const dLon = this.toRad(lon2 - lon1);
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRad(lat1)) *
-        Math.cos(this.toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+    return calculateDistanceInMiles(lat1, lon1, lat2, lon2);
   }
 
   private toRad(degrees: number): number {
-    return degrees * (Math.PI / 180);
+    return toRad(degrees);
   }
 
   /**
@@ -102,7 +91,7 @@ export class AdsPublicService {
           location: ad.location,
           latitude: ad.latitude,
           longitude: ad.longitude,
-          adShowRangeInKm: ad.adShowRangeInKm,
+          adShowRangeInMiles: ad.adShowRangeInMiles,
           startDate: ad.startDate,
           endDate: ad.endDate,
           fileUrl: ad.fileUrl,
@@ -115,7 +104,7 @@ export class AdsPublicService {
         };
       })
       // Filter: only show ads where user is within the ad's range
-      .filter((ad) => ad.distance <= ad.adShowRangeInKm)
+      .filter((ad) => ad.distance <= ad.adShowRangeInMiles)
       // Sort by distance (closest first)
       .sort((a, b) => a.distance - b.distance);
 
@@ -185,7 +174,7 @@ export class AdsPublicService {
         location: advertisement.location,
         latitude: advertisement.latitude,
         longitude: advertisement.longitude,
-        adShowRangeInKm: advertisement.adShowRangeInKm,
+        adShowRangeInMiles: advertisement.adShowRangeInMiles,
         startDate: advertisement.startDate,
         endDate: advertisement.endDate,
         fileUrl: advertisement.fileUrl,

@@ -29,13 +29,13 @@ export type AggregateAdvertisement = {
 export type AdvertisementAvgAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  adShowRangeInKm: number | null
+  adShowRangeInMiles: number | null
 }
 
 export type AdvertisementSumAggregateOutputType = {
   latitude: number | null
   longitude: number | null
-  adShowRangeInKm: number | null
+  adShowRangeInMiles: number | null
 }
 
 export type AdvertisementMinAggregateOutputType = {
@@ -45,7 +45,7 @@ export type AdvertisementMinAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
-  adShowRangeInKm: number | null
+  adShowRangeInMiles: number | null
   startDate: Date | null
   endDate: Date | null
   status: $Enums.AdvertisementStatus | null
@@ -62,7 +62,7 @@ export type AdvertisementMaxAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
-  adShowRangeInKm: number | null
+  adShowRangeInMiles: number | null
   startDate: Date | null
   endDate: Date | null
   status: $Enums.AdvertisementStatus | null
@@ -79,7 +79,7 @@ export type AdvertisementCountAggregateOutputType = {
   location: number
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: number
   endDate: number
   status: number
@@ -94,13 +94,13 @@ export type AdvertisementCountAggregateOutputType = {
 export type AdvertisementAvgAggregateInputType = {
   latitude?: true
   longitude?: true
-  adShowRangeInKm?: true
+  adShowRangeInMiles?: true
 }
 
 export type AdvertisementSumAggregateInputType = {
   latitude?: true
   longitude?: true
-  adShowRangeInKm?: true
+  adShowRangeInMiles?: true
 }
 
 export type AdvertisementMinAggregateInputType = {
@@ -110,7 +110,7 @@ export type AdvertisementMinAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  adShowRangeInKm?: true
+  adShowRangeInMiles?: true
   startDate?: true
   endDate?: true
   status?: true
@@ -127,7 +127,7 @@ export type AdvertisementMaxAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  adShowRangeInKm?: true
+  adShowRangeInMiles?: true
   startDate?: true
   endDate?: true
   status?: true
@@ -144,7 +144,7 @@ export type AdvertisementCountAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  adShowRangeInKm?: true
+  adShowRangeInMiles?: true
   startDate?: true
   endDate?: true
   status?: true
@@ -248,7 +248,7 @@ export type AdvertisementGroupByOutputType = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date
   endDate: Date
   status: $Enums.AdvertisementStatus
@@ -288,7 +288,7 @@ export type AdvertisementWhereInput = {
   location?: Prisma.StringFilter<"Advertisement"> | string
   latitude?: Prisma.FloatFilter<"Advertisement"> | number
   longitude?: Prisma.FloatFilter<"Advertisement"> | number
-  adShowRangeInKm?: Prisma.IntFilter<"Advertisement"> | number
+  adShowRangeInMiles?: Prisma.IntFilter<"Advertisement"> | number
   startDate?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   status?: Prisma.EnumAdvertisementStatusFilter<"Advertisement"> | $Enums.AdvertisementStatus
@@ -307,7 +307,7 @@ export type AdvertisementOrderByWithRelationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -330,7 +330,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   location?: Prisma.StringFilter<"Advertisement"> | string
   latitude?: Prisma.FloatFilter<"Advertisement"> | number
   longitude?: Prisma.FloatFilter<"Advertisement"> | number
-  adShowRangeInKm?: Prisma.IntFilter<"Advertisement"> | number
+  adShowRangeInMiles?: Prisma.IntFilter<"Advertisement"> | number
   startDate?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   status?: Prisma.EnumAdvertisementStatusFilter<"Advertisement"> | $Enums.AdvertisementStatus
@@ -348,7 +348,7 @@ export type AdvertisementOrderByWithAggregationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -373,7 +373,7 @@ export type AdvertisementScalarWhereWithAggregatesInput = {
   location?: Prisma.StringWithAggregatesFilter<"Advertisement"> | string
   latitude?: Prisma.FloatWithAggregatesFilter<"Advertisement"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Advertisement"> | number
-  adShowRangeInKm?: Prisma.IntWithAggregatesFilter<"Advertisement"> | number
+  adShowRangeInMiles?: Prisma.IntWithAggregatesFilter<"Advertisement"> | number
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Advertisement"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Advertisement"> | Date | string
   status?: Prisma.EnumAdvertisementStatusWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementStatus
@@ -390,7 +390,7 @@ export type AdvertisementCreateInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -408,7 +408,7 @@ export type AdvertisementUncheckedCreateInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -426,7 +426,7 @@ export type AdvertisementUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -444,7 +444,7 @@ export type AdvertisementUncheckedUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -462,7 +462,7 @@ export type AdvertisementCreateManyInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -479,7 +479,7 @@ export type AdvertisementUpdateManyMutationInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -495,7 +495,7 @@ export type AdvertisementUncheckedUpdateManyInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -512,7 +512,7 @@ export type AdvertisementCountOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -525,7 +525,7 @@ export type AdvertisementCountOrderByAggregateInput = {
 export type AdvertisementAvgOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
 }
 
 export type AdvertisementMaxOrderByAggregateInput = {
@@ -535,7 +535,7 @@ export type AdvertisementMaxOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -552,7 +552,7 @@ export type AdvertisementMinOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -565,7 +565,7 @@ export type AdvertisementMinOrderByAggregateInput = {
 export type AdvertisementSumOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  adShowRangeInKm?: Prisma.SortOrder
+  adShowRangeInMiles?: Prisma.SortOrder
 }
 
 export type AdvertisementScalarRelationFilter = {
@@ -663,7 +663,7 @@ export type AdvertisementCreateWithoutAdvertisementAnalyticsInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -680,7 +680,7 @@ export type AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -713,7 +713,7 @@ export type AdvertisementUpdateWithoutAdvertisementAnalyticsInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -730,7 +730,7 @@ export type AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -747,7 +747,7 @@ export type AdvertisementCreateWithoutFileInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -764,7 +764,7 @@ export type AdvertisementUncheckedCreateWithoutFileInput = {
   location: string
   latitude: number
   longitude: number
-  adShowRangeInKm: number
+  adShowRangeInMiles: number
   startDate: Date | string
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
@@ -797,7 +797,7 @@ export type AdvertisementUpdateWithoutFileInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -814,7 +814,7 @@ export type AdvertisementUncheckedUpdateWithoutFileInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  adShowRangeInKm?: Prisma.IntFieldUpdateOperationsInput | number
+  adShowRangeInMiles?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
@@ -833,7 +833,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  adShowRangeInKm?: boolean
+  adShowRangeInMiles?: boolean
   startDate?: boolean
   endDate?: boolean
   status?: boolean
@@ -852,7 +852,7 @@ export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  adShowRangeInKm?: boolean
+  adShowRangeInMiles?: boolean
   startDate?: boolean
   endDate?: boolean
   status?: boolean
@@ -870,7 +870,7 @@ export type AdvertisementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  adShowRangeInKm?: boolean
+  adShowRangeInMiles?: boolean
   startDate?: boolean
   endDate?: boolean
   status?: boolean
@@ -888,7 +888,7 @@ export type AdvertisementSelectScalar = {
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  adShowRangeInKm?: boolean
+  adShowRangeInMiles?: boolean
   startDate?: boolean
   endDate?: boolean
   status?: boolean
@@ -898,7 +898,7 @@ export type AdvertisementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "latitude" | "longitude" | "adShowRangeInKm" | "startDate" | "endDate" | "status" | "fileId" | "fileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
+export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "latitude" | "longitude" | "adShowRangeInMiles" | "startDate" | "endDate" | "status" | "fileId" | "fileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
 export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
   advertisementAnalytics?: boolean | Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs>
@@ -923,7 +923,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     location: string
     latitude: number
     longitude: number
-    adShowRangeInKm: number
+    adShowRangeInMiles: number
     startDate: Date
     endDate: Date
     status: $Enums.AdvertisementStatus
@@ -1362,7 +1362,7 @@ export interface AdvertisementFieldRefs {
   readonly location: Prisma.FieldRef<"Advertisement", 'String'>
   readonly latitude: Prisma.FieldRef<"Advertisement", 'Float'>
   readonly longitude: Prisma.FieldRef<"Advertisement", 'Float'>
-  readonly adShowRangeInKm: Prisma.FieldRef<"Advertisement", 'Int'>
+  readonly adShowRangeInMiles: Prisma.FieldRef<"Advertisement", 'Int'>
   readonly startDate: Prisma.FieldRef<"Advertisement", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Advertisement", 'DateTime'>
   readonly status: Prisma.FieldRef<"Advertisement", 'AdvertisementStatus'>

@@ -87,7 +87,7 @@ export const AdvertisementScalarFieldEnum = {
   location: 'location',
   latitude: 'latitude',
   longitude: 'longitude',
-  adShowRangeInKm: 'adShowRangeInKm',
+  adShowRangeInMiles: 'adShowRangeInMiles',
   startDate: 'startDate',
   endDate: 'endDate',
   status: 'status',

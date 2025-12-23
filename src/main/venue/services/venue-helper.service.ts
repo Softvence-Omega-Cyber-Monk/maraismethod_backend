@@ -1,3 +1,4 @@
+import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
 import { GooglePlaceResult } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
@@ -15,24 +16,11 @@ export class VenueHelperService {
     lat2: number,
     lon2: number,
   ): number {
-    const R = 6371; // Earth's radius in km
-    const dLat = this.toRad(lat2 - lat1);
-    const dLon = this.toRad(lon2 - lon1);
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRad(lat1)) *
-        Math.cos(this.toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distanceKm = R * c;
-    return distanceKm * 0.621371; // Convert km to miles
+    return calculateDistanceInMiles(lat1, lon1, lat2, lon2);
   }
 
   toRad(degrees: number): number {
-    return degrees * (Math.PI / 180);
+    return toRad(degrees);
   }
 
   async getVenueStatus(venueId: string): Promise<VenueStatusEnum | null> {
@@ -166,7 +154,7 @@ export class VenueHelperService {
       distance: parseFloat(distance.toFixed(2)),
       status,
       imageUrl: place.imageUrl,
-      lastVoteUpdate: 'No votes yet',
+      lastVoteUpdate: 'Last updated 0 minutes ago',
       voteStats: {
         total: 0,
         open: 0,
