@@ -176,8 +176,6 @@ export class VenueHelperService {
       night_club: 'NIGHT CLUB',
       bar: 'BAR',
       lounge: 'LOUNGE',
-      food: 'FOOD',
-      restaurant: 'FOOD',
       sports_bar: 'SPORTS BAR',
       hotel_bar: 'HOTEL BAR',
     };
@@ -196,7 +194,6 @@ export class VenueHelperService {
       'NIGHT CLUB': ['night_club', 'club', 'discotheque'],
       BAR: ['bar', 'pub', 'wine_bar'],
       LOUNGE: ['lounge', 'hookah_lounge', 'rooftop_lounge'],
-      FOOD: ['restaurant', 'cafe', 'fast_food', 'food'],
       'SPORTS BAR': ['sports_bar'],
       'HOTEL BAR': ['hotel_bar'],
     };
