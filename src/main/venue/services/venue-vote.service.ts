@@ -13,7 +13,7 @@ import { VenueHelperService } from './venue-helper.service';
 @Injectable()
 export class VenueVoteService {
   private readonly logger = new Logger(VenueVoteService.name);
-  private readonly MAX_DISTANCE_KM = 0.5; // 500 meters
+  private readonly MAX_DISTANCE_MILES = 0.31; // Roughly 500 meters
   private readonly VOTE_COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
 
   constructor(
@@ -68,7 +68,7 @@ export class VenueVoteService {
           imageUrl: venue.imageUrl,
         },
         currentStatus: venueStatus,
-        message: `Your vote has been recorded. You were ${(distance * 1000).toFixed(0)} meters from the venue.`,
+        message: `Your vote has been recorded. You were ${distance.toFixed(2)} miles from the venue.`,
       },
       'Vote recorded successfully',
     );
@@ -162,6 +162,8 @@ export class VenueVoteService {
         location: googlePlace.location,
         latitude: googlePlace.latitude,
         longitude: googlePlace.longitude,
+        startTime: googlePlace.openTime,
+        endTime: googlePlace.closeTime,
         ...(imageInstance && {
           image: {
             connect: { id: imageInstance.id },
@@ -247,10 +249,10 @@ export class VenueVoteService {
       venue.longitude,
     );
 
-    if (distance > this.MAX_DISTANCE_KM) {
+    if (distance > this.MAX_DISTANCE_MILES) {
       throw new AppError(
         403,
-        `You must be within ${this.MAX_DISTANCE_KM * 1000} meters of the venue to vote. You are ${(distance * 1000).toFixed(0)} meters away.`,
+        `You must be within ${this.MAX_DISTANCE_MILES} miles of the venue to vote. You are ${distance.toFixed(2)} miles away.`,
       );
     }
   }

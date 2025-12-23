@@ -45,6 +45,8 @@ export type VenueMinAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
+  startTime: string | null
+  endTime: string | null
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -61,6 +63,8 @@ export type VenueMaxAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
+  startTime: string | null
+  endTime: string | null
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -77,6 +81,8 @@ export type VenueCountAggregateOutputType = {
   location: number
   latitude: number
   longitude: number
+  startTime: number
+  endTime: number
   description: number
   imageId: number
   imageUrl: number
@@ -105,6 +111,8 @@ export type VenueMinAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
+  startTime?: true
+  endTime?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -121,6 +129,8 @@ export type VenueMaxAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
+  startTime?: true
+  endTime?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -137,6 +147,8 @@ export type VenueCountAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
+  startTime?: true
+  endTime?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -240,6 +252,8 @@ export type VenueGroupByOutputType = {
   location: string
   latitude: number
   longitude: number
+  startTime: string | null
+  endTime: string | null
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -279,6 +293,8 @@ export type VenueWhereInput = {
   location?: Prisma.StringFilter<"Venue"> | string
   latitude?: Prisma.FloatFilter<"Venue"> | number
   longitude?: Prisma.FloatFilter<"Venue"> | number
+  startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
+  endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
@@ -297,6 +313,8 @@ export type VenueOrderByWithRelationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -319,6 +337,8 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   location?: Prisma.StringFilter<"Venue"> | string
   latitude?: Prisma.FloatFilter<"Venue"> | number
   longitude?: Prisma.FloatFilter<"Venue"> | number
+  startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
+  endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
@@ -336,6 +356,8 @@ export type VenueOrderByWithAggregationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +382,8 @@ export type VenueScalarWhereWithAggregatesInput = {
   location?: Prisma.StringWithAggregatesFilter<"Venue"> | string
   latitude?: Prisma.FloatWithAggregatesFilter<"Venue"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Venue"> | number
+  startTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
+  endTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
@@ -376,6 +400,8 @@ export type VenueCreateInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -393,6 +419,8 @@ export type VenueUncheckedCreateInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -410,6 +438,8 @@ export type VenueUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +457,8 @@ export type VenueUncheckedUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -444,6 +476,8 @@ export type VenueCreateManyInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -460,6 +494,8 @@ export type VenueUpdateManyMutationInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -475,6 +511,8 @@ export type VenueUncheckedUpdateManyInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -496,6 +534,8 @@ export type VenueCountOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -517,6 +557,8 @@ export type VenueMaxOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -533,6 +575,8 @@ export type VenueMinOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -605,6 +649,8 @@ export type VenueCreateWithoutImageInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -621,6 +667,8 @@ export type VenueUncheckedCreateWithoutImageInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -653,6 +701,8 @@ export type VenueUpdateWithoutImageInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -669,6 +719,8 @@ export type VenueUncheckedUpdateWithoutImageInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -685,6 +737,8 @@ export type VenueCreateWithoutVotesInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -701,6 +755,8 @@ export type VenueUncheckedCreateWithoutVotesInput = {
   location: string
   latitude: number
   longitude: number
+  startTime?: string | null
+  endTime?: string | null
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -733,6 +789,8 @@ export type VenueUpdateWithoutVotesInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -749,6 +807,8 @@ export type VenueUncheckedUpdateWithoutVotesInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -796,6 +856,8 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   location?: boolean
   latitude?: boolean
   longitude?: boolean
+  startTime?: boolean
+  endTime?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -815,6 +877,8 @@ export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   location?: boolean
   latitude?: boolean
   longitude?: boolean
+  startTime?: boolean
+  endTime?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -832,6 +896,8 @@ export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   location?: boolean
   latitude?: boolean
   longitude?: boolean
+  startTime?: boolean
+  endTime?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -849,6 +915,8 @@ export type VenueSelectScalar = {
   location?: boolean
   latitude?: boolean
   longitude?: boolean
+  startTime?: boolean
+  endTime?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -856,7 +924,7 @@ export type VenueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
+export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
 export type VenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
@@ -884,6 +952,8 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     location: string
     latitude: number
     longitude: number
+    startTime: string | null
+    endTime: string | null
     description: string | null
     imageId: string | null
     imageUrl: string | null
@@ -1322,6 +1392,8 @@ export interface VenueFieldRefs {
   readonly location: Prisma.FieldRef<"Venue", 'String'>
   readonly latitude: Prisma.FieldRef<"Venue", 'Float'>
   readonly longitude: Prisma.FieldRef<"Venue", 'Float'>
+  readonly startTime: Prisma.FieldRef<"Venue", 'String'>
+  readonly endTime: Prisma.FieldRef<"Venue", 'String'>
   readonly description: Prisma.FieldRef<"Venue", 'String'>
   readonly imageId: Prisma.FieldRef<"Venue", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Venue", 'String'>

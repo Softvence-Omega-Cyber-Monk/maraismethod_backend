@@ -62,6 +62,22 @@ export class CreateVenueDto {
   description?: string;
 
   @ApiPropertyOptional({
+    example: '09:00',
+    description: 'Start time (HH:mm)',
+  })
+  @IsString()
+  @IsOptional()
+  startTime?: string;
+
+  @ApiPropertyOptional({
+    example: '22:00',
+    description: 'End time (HH:mm)',
+  })
+  @IsString()
+  @IsOptional()
+  endTime?: string;
+
+  @ApiPropertyOptional({
     type: 'string',
     format: 'binary',
     description: 'Optional profile image',

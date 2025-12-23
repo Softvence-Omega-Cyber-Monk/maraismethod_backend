@@ -57,13 +57,13 @@ export class CreateAdDto {
 
   @ApiProperty({
     example: 10,
-    description: 'Range in kilometers within which the ad should be shown',
+    description: 'Range in miles within which the ad should be shown',
   })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @IsNotEmpty()
-  adShowRangeInKm: number;
+  adShowRangeInMiles: number;
 
   @ApiProperty({
     example: AdvertisementStatus.RUNNING,

@@ -3,6 +3,7 @@ import { Client } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { DateTime } from 'luxon';
 
 export interface GooglePlaceResult {
   placeId: string;
@@ -14,6 +15,10 @@ export interface GooglePlaceResult {
   imageUrl: string;
   subcategory: string;
   types: string[];
+  openNow?: boolean | null;
+  openingHours?: any;
+  openTime?: string | null;
+  closeTime?: string | null;
 }
 
 export interface PlacePhoto {
@@ -21,6 +26,11 @@ export interface PlacePhoto {
   height: number;
   width: number;
   htmlAttributions: string[];
+}
+
+export interface OpeningHoursPeriod {
+  open?: { day: number; time?: string };
+  close?: { day: number; time?: string };
 }
 
 @Injectable()
@@ -79,14 +89,14 @@ export class GoogleMapsService {
     latitude: number,
     longitude: number,
     radiusMeters: number = 5000,
-    type: string = 'establishment',
+    enrichWithDetails: boolean = true,
   ): Promise<GooglePlaceResult[]> {
     try {
       const response = await this.client.placesNearby({
         params: {
           location: { lat: latitude, lng: longitude },
           radius: radiusMeters,
-          type,
+          keyword: 'night club bar lounge sports bar hotel bar',
           key: this.apiKey,
         },
       });
@@ -94,7 +104,6 @@ export class GoogleMapsService {
       if (response.data.status !== 'OK' || !response.data.results) {
         this.logger.warn(
           `Google Places API returned status: ${response.data.status}`,
-          response,
         );
         return [];
       }
@@ -102,12 +111,21 @@ export class GoogleMapsService {
       const results: GooglePlaceResult[] = [];
 
       for (const place of response.data.results) {
-        // Fetch first photo reference if available
+        // Skip non-venue types (neighborhoods, political boundaries, etc.)
+        if (this.shouldSkipPlace(place.types || [])) {
+          continue;
+        }
+
         let imageUrl = '';
         if (place.photos?.length) {
           const photoRef = place.photos[0].photo_reference;
           imageUrl = this.getPlacePhotoUrl(photoRef, 400);
         }
+
+        // Extract opening hours for today from nearby search (limited data)
+        const { openTime, closeTime } = this.extractTodayHours(
+          place?.opening_hours?.periods,
+        );
 
         results.push({
           placeId: place.place_id || '',
@@ -119,7 +137,16 @@ export class GoogleMapsService {
           category: this.extractCategory(place.types || []),
           subcategory: this.extractSubcategory(place.types || []),
           types: place.types || [],
+          openNow: place.opening_hours?.open_now ?? null,
+          openingHours: place.opening_hours,
+          openTime,
+          closeTime,
         });
+      }
+
+      // If enrichWithDetails is true, fetch full details for places with missing hours
+      if (enrichWithDetails) {
+        await this.enrichPlacesWithDetails(results);
       }
 
       return results;
@@ -127,10 +154,94 @@ export class GoogleMapsService {
       this.logger.error(
         'Google Places API error:',
         (error as Error).message ?? error,
-        error,
       );
       return [];
     }
+  }
+
+  /**
+   * Check if place type should be skipped (non-venues)
+   */
+  private shouldSkipPlace(types: string[]): boolean {
+    const skipTypes = [
+      'neighborhood',
+      'political',
+      'locality',
+      'sublocality',
+      'administrative_area_level_1',
+      'administrative_area_level_2',
+      'administrative_area_level_3',
+      'country',
+      'postal_code',
+      'route',
+      'street_address',
+    ];
+
+    // If place only has skip types, skip it
+    return types.every((type) => skipTypes.includes(type));
+  }
+
+  /**
+   * Enrich places with full details (opening hours) - batch processing
+   */
+  private async enrichPlacesWithDetails(
+    places: GooglePlaceResult[],
+  ): Promise<void> {
+    const placesToEnrich = places.filter(
+      (p) => !p.openTime || !p.closeTime || !p.openingHours?.periods,
+    );
+
+    if (placesToEnrich.length === 0) return;
+
+    this.logger.log(
+      `Enriching ${placesToEnrich.length} places with detailed hours...`,
+    );
+
+    // Process in batches to avoid rate limits (max 10 concurrent)
+    const batchSize = 10;
+    const batches: GooglePlaceResult[][] = [];
+
+    for (let i = 0; i < placesToEnrich.length; i += batchSize) {
+      batches.push(placesToEnrich.slice(i, i + batchSize));
+    }
+
+    for (const batch of batches) {
+      await Promise.all(
+        batch.map(async (place) => {
+          try {
+            const details = await this.getPlaceDetails(place.placeId);
+            this.logger.log(
+              `Enriched place ${place.placeId}`,
+              JSON.stringify(details),
+            );
+
+            if (details?.opening_hours) {
+              // Update opening hours
+              place.openingHours = details.opening_hours;
+              place.openNow = details.opening_hours.open_now ?? null;
+
+              // Extract today's hours
+              const { openTime, closeTime } = this.extractTodayHours(
+                details.opening_hours.periods,
+              );
+              place.openTime = openTime;
+              place.closeTime = closeTime;
+            }
+          } catch (error) {
+            this.logger.warn(
+              `Failed to enrich place ${place.placeId}: ${(error as Error).message}`,
+            );
+          }
+        }),
+      );
+
+      // Small delay between batches to respect rate limits
+      if (batches.indexOf(batch) < batches.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    this.logger.log(`Successfully enriched ${placesToEnrich.length} places`);
   }
 
   async getPlacePhotos(
@@ -138,23 +249,8 @@ export class GoogleMapsService {
     maxPhotos: number = 5,
   ): Promise<PlacePhoto[]> {
     try {
-      const url = `${this.baseUrl}/place/details/json`;
-      const params = {
-        place_id: placeId,
-        fields: 'photos',
-        key: this.apiKey,
-      };
-
-      const response = await axios.get(url, { params });
-
-      if (response.data.status !== 'OK') {
-        this.logger.warn(
-          `Google Places API returned status: ${response.data.status}`,
-        );
-        return [];
-      }
-
-      const photos = response.data.result?.photos || [];
+      const details = await this.getPlaceDetails(placeId);
+      const photos = details?.photos || [];
 
       return photos.slice(0, maxPhotos).map((photo: any) => ({
         photoReference: photo.photo_reference,
@@ -163,8 +259,62 @@ export class GoogleMapsService {
         htmlAttributions: photo.html_attributions || [],
       }));
     } catch (error) {
-      this.logger.error(`Error fetching place photos: ${error.message}`);
-      throw error;
+      this.logger.error(
+        `Error fetching place photos: ${(error as Error).message}`,
+      );
+      return [];
+    }
+  }
+
+  async getPlaceDetails(placeId: string): Promise<any> {
+    try {
+      const url = `${this.baseUrl}/place/details/json`;
+      const params = {
+        place_id: placeId,
+        fields:
+          'name,geometry,vicinity,formatted_address,photos,types,opening_hours,business_status,rating,user_ratings_total,website,formatted_phone_number',
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (response.data.status !== 'OK') {
+        this.logger.warn(
+          `Google Places Details API returned status: ${response.data.status} for place ${placeId}`,
+        );
+        return null;
+      }
+
+      return response.data.result;
+    } catch (error) {
+      this.logger.error(
+        `Error fetching place details for ${placeId}: ${(error as Error).message}`,
+      );
+      return null;
+    }
+  }
+
+  async getTimezone(latitude: number, longitude: number): Promise<string> {
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const url = `${this.baseUrl}/timezone/json`;
+      const params = {
+        location: `${latitude},${longitude}`,
+        timestamp,
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (response.data.status === 'OK') {
+        return response.data.timeZoneId; // e.g., "America/New_York"
+      }
+      return 'UTC';
+    } catch (error) {
+      this.logger.error(
+        `Error fetching timezone for (${latitude}, ${longitude}): ${(error as Error).message}`,
+      );
+      return 'UTC';
     }
   }
 
@@ -187,7 +337,9 @@ export class GoogleMapsService {
 
       return Buffer.from(response.data);
     } catch (error) {
-      this.logger.error(`Error downloading place photo: ${error.message}`);
+      this.logger.error(
+        `Error downloading place photo: ${(error as Error).message}`,
+      );
       throw error;
     }
   }
@@ -196,33 +348,78 @@ export class GoogleMapsService {
     return `${this.baseUrl}/place/photo?photo_reference=${photoReference}&maxwidth=${maxWidth}&key=${this.apiKey}`;
   }
 
-  private extractCategory(types: string[]): string {
-    // Priority order for category extraction
-    const categoryPriority = [
-      'restaurant',
-      'cafe',
-      'bar',
-      'food',
-      'store',
-      'shopping_mall',
-      'lodging',
-      'point_of_interest',
-      'establishment',
-    ];
+  /**
+   * Extract opening hours for today from Google's periods array
+   */
+  extractTodayHours(
+    periods?: OpeningHoursPeriod[],
+    timezone: string = 'UTC',
+  ): {
+    openTime: string | null;
+    closeTime: string | null;
+  } {
+    if (!periods || periods.length === 0) {
+      return { openTime: null, closeTime: null };
+    }
 
-    for (const cat of categoryPriority) {
-      if (types.includes(cat)) {
-        return cat.replace(/_/g, ' ').toUpperCase();
+    const now = DateTime.now().setZone(timezone);
+    const today = now.weekday === 7 ? 0 : now.weekday; // Google: 0 (Sun) to 6 (Sat). Luxon: 1 (Mon) to 7 (Sun).
+
+    const todayPeriod = periods.find((p) => p.open?.day === today);
+
+    if (!todayPeriod) {
+      return { openTime: null, closeTime: null };
+    }
+
+    const openTime = todayPeriod.open?.time
+      ? this.formatGoogleTime(todayPeriod.open.time)
+      : null;
+    const closeTime = todayPeriod.close?.time
+      ? this.formatGoogleTime(todayPeriod.close.time)
+      : null;
+
+    return { openTime, closeTime };
+  }
+
+  /**
+   * Format Google's time string (e.g., "0900") to HH:mm format (e.g., "09:00")
+   */
+  private formatGoogleTime(time: string): string {
+    if (!time || time.length !== 4) return time;
+    return `${time.slice(0, 2)}:${time.slice(2)}`;
+  }
+
+  public extractCategory(types: string[]): string {
+    const categoryMapping: Record<string, string> = {
+      night_club: 'NIGHT CLUB',
+      bar: 'BAR',
+      lounge: 'LOUNGE',
+      sports_bar: 'SPORTS BAR',
+      hotel_bar: 'HOTEL BAR',
+    };
+
+    for (const t of types) {
+      if (categoryMapping[t]) {
+        return categoryMapping[t];
       }
     }
 
     return types[0]?.replace(/_/g, ' ').toUpperCase() || 'OTHER';
   }
 
-  private extractSubcategory(types: string[]): string {
-    // Skip generic types for subcategory
-    const genericTypes = ['point_of_interest', 'establishment'];
-    const subcategory = types.find((t) => !genericTypes.includes(t));
-    return subcategory?.replace(/_/g, ' ').toUpperCase() || 'GENERAL';
+  public extractSubcategory(types: string[]): string {
+    const subcategoryMapping: Record<string, string[]> = {
+      'NIGHT CLUB': ['night_club', 'club', 'discotheque'],
+      BAR: ['bar', 'pub', 'wine_bar'],
+      LOUNGE: ['lounge', 'hookah_lounge', 'rooftop_lounge'],
+      'SPORTS BAR': ['sports_bar'],
+      'HOTEL BAR': ['hotel_bar'],
+    };
+
+    const category = this.extractCategory(types);
+    const allowed = subcategoryMapping[category] || [];
+    const match = types.find((t) => allowed.includes(t));
+
+    return match?.replace(/_/g, ' ').toUpperCase() || category;
   }
 }

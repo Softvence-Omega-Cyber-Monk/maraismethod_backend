@@ -10,6 +10,9 @@ model Venue {
   latitude  Float
   longitude Float
 
+  startTime  String?
+  endTime    String?
+
   description String?
 
   imageId  String?       @unique

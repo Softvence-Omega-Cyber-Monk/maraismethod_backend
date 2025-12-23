@@ -8,7 +8,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 // Cache TTL in milliseconds (7 days)
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-// Grid size for location-based caching (0.01 degrees ≈ 1.1km)
+// Grid size for location-based caching (0.01 degrees ≈ 0.68 miles)
 const GRID_SIZE = 0.01;
 
 @Injectable()
