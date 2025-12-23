@@ -175,7 +175,7 @@ export class VenueHelperService {
       distance: parseFloat(distance.toFixed(2)),
       status,
       imageUrl: place.imageUrl,
-      lastVoteUpdate: `Currently ${status.toLowerCase()}`,
+      lastVoteUpdate: 'Last updated 0 minutes ago',
       voteStats: {
         total: 0,
         open: 0,

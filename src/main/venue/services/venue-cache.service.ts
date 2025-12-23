@@ -26,13 +26,21 @@ export class VenueCacheService {
   ) {}
 
   /**
-   * Get cache key based on location grid
+   * Get cache key based on location grid and search query
    * Using grid-based caching to reuse results for nearby requests
    */
-  private getCacheKey(latitude: number, longitude: number): string {
+  private getCacheKey(
+    latitude: number,
+    longitude: number,
+    search?: string,
+  ): string {
     const gridLat = Math.floor(latitude / GRID_SIZE) * GRID_SIZE;
     const gridLng = Math.floor(longitude / GRID_SIZE) * GRID_SIZE;
-    return `places:${gridLat.toFixed(4)}:${gridLng.toFixed(4)}`;
+    let key = `places:${gridLat.toFixed(4)}:${gridLng.toFixed(4)}`;
+    if (search) {
+      key += `:${search.toLowerCase().trim()}`;
+    }
+    return key;
   }
 
   /**
@@ -47,13 +55,15 @@ export class VenueCacheService {
    * @param latitude User's latitude
    * @param longitude User's longitude
    * @param radiusMeters Search radius in meters
+   * @param search Optional search query
    */
   async getCachedPlaces(
     latitude: number,
     longitude: number,
     radiusMeters: number = 5000,
+    search?: string,
   ): Promise<GooglePlaceResult[]> {
-    const cacheKey = this.getCacheKey(latitude, longitude);
+    const cacheKey = this.getCacheKey(latitude, longitude, search);
 
     // Try to get from cache
     const cached = (await this.cacheManager.get(cacheKey)) as
@@ -73,6 +83,7 @@ export class VenueCacheService {
       latitude,
       longitude,
       radiusMeters,
+      search,
     );
 
     // Store in cache (both the list and individual places)

@@ -13,7 +13,7 @@ import { VenueHelperService } from './venue-helper.service';
 @Injectable()
 export class VenueVoteService {
   private readonly logger = new Logger(VenueVoteService.name);
-  private readonly MAX_DISTANCE_MILES = 0.31; // Roughly 500 meters
+  private readonly MAX_DISTANCE_MILES = 0.621371; // 1 KM in miles
   private readonly VOTE_COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
 
   constructor(
