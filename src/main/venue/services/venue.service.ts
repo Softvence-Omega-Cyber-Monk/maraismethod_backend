@@ -6,8 +6,8 @@ import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { FileInstance } from '@prisma';
-import { UpdateVenueDto } from '../dto/update-venue.dto';
 import { CreateVenueDto } from '../dto/create-venue.dto';
+import { UpdateVenueDto } from '../dto/update-venue.dto';
 
 @Injectable()
 export class VenueService {
@@ -53,6 +53,8 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
+        openTime: dto.openTime,
+        closeTime: dto.closeTime,
         description: dto.description,
         ...(fileInstance && {
           image: {
@@ -116,6 +118,8 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
+        openTime: dto.openTime,
+        closeTime: dto.closeTime,
         description: dto.description,
         ...(fileInstance && {
           image: {

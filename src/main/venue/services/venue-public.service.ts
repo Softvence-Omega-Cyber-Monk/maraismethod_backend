@@ -1,6 +1,10 @@
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
+import {
+  GoogleMapsService,
+  GooglePlaceResult,
+} from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { GetPublicVenuesDto, GetSingleVenueDto } from '../dto/get-venues.dto';
@@ -16,6 +20,7 @@ export class VenuePublicService {
     private readonly prisma: PrismaService,
     private readonly venueCacheService: VenueCacheService,
     private readonly helper: VenueHelperService,
+    private readonly googleMapsService: GoogleMapsService,
   ) {}
 
   @HandleError('Failed to get venues')
@@ -77,6 +82,8 @@ export class VenuePublicService {
           description: venue.description,
           imageUrl: venue.imageUrl,
           image: venue.image,
+          openTime: venue.openTime,
+          closeTime: venue.closeTime,
           distance: parseFloat(distance.toFixed(2)),
           status: venueStatus,
           lastVoteUpdate,
@@ -142,57 +149,51 @@ export class VenuePublicService {
     const isGoogleVenue = venueId.startsWith('google_');
 
     if (isGoogleVenue) {
-      // Extract the actual Google Place ID
       const googlePlaceId = venueId.replace('google_', '');
 
-      // Try to get from cache
-      const googlePlace = await this.venueCacheService.getCachedPlaceById(
-        googlePlaceId,
+      // Fetch full details from Google for specific venue
+      const details =
+        await this.googleMapsService.getPlaceDetails(googlePlaceId);
+
+      if (!details) {
+        throw new AppError(404, 'Venue details not found from Google');
+      }
+
+      // Transform using helper (which now extracts hours)
+      const GoogleMapsResult: GooglePlaceResult = {
+        placeId: googlePlaceId,
+        name: details.name,
+        location: details.vicinity || details.formatted_address,
+        latitude: details.geometry?.location?.lat,
+        longitude: details.geometry?.location?.lng,
+        category: (this.googleMapsService as any).extractCategory(
+          details.types,
+        ),
+        subcategory: (this.googleMapsService as any).extractSubcategory(
+          details.types,
+        ),
+        imageUrl: details.photos?.[0]
+          ? this.googleMapsService.getPlacePhotoUrl(
+              details.photos[0].photo_reference,
+            )
+          : '',
+        types: details.types || [],
+        openNow: details.opening_hours?.open_now,
+        openingHours: details.opening_hours,
+      };
+
+      const venueResponse = this.helper.transformGooglePlaceToVenue(
+        GoogleMapsResult,
         dto.latitude,
         dto.longitude,
       );
 
-      if (!googlePlace) {
-        throw new AppError(404, 'Venue not found');
-      }
-
-      const userLatitude = dto.latitude;
-      const userLongitude = dto.longitude;
-
-      let distance: number | null = null;
-      if (userLatitude && userLongitude) {
-        distance = parseFloat(
-          this.helper
-            .calculateDistance(
-              userLatitude,
-              userLongitude,
-              googlePlace.latitude,
-              googlePlace.longitude,
-            )
-            .toFixed(2),
-        );
-      }
-
       return successResponse(
         {
-          id: venueId,
-          name: googlePlace.name,
-          googlePlaceId: googlePlace.placeId,
-          category: googlePlace.category,
-          subcategory: googlePlace.subcategory,
-          location: googlePlace.location,
-          latitude: googlePlace.latitude,
-          longitude: googlePlace.longitude,
-          distance,
-          status: 'Not Voted',
-          lastVoteUpdate: 'No votes yet',
-          voteStats: {
-            total: 0,
-            open: 0,
-            closed: 0,
-          },
+          ...venueResponse,
+          category: this.helper.extractCategory(details.types || []),
+          subcategory: this.helper.extractSubcategory(details.types || []),
           recentVotes: [],
-          source: 'google',
         },
         'Venue details retrieved successfully',
       );
@@ -255,6 +256,8 @@ export class VenuePublicService {
         description: venue.description,
         imageUrl: venue.imageUrl,
         image: venue.image,
+        openTime: venue.openTime,
+        closeTime: venue.closeTime,
         distance,
         status: venueStatus ?? 'Not Voted',
         lastVoteUpdate: lastVoteUpdate ?? 'No votes yet',

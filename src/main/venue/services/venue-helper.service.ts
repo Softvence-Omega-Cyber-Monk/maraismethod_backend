@@ -15,7 +15,7 @@ export class VenueHelperService {
     lat2: number,
     lon2: number,
   ): number {
-    const R = 6371;
+    const R = 6371; // Earth's radius in km
     const dLat = this.toRad(lat2 - lat1);
     const dLon = this.toRad(lon2 - lon1);
 
@@ -27,7 +27,8 @@ export class VenueHelperService {
         Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+    const distanceKm = R * c;
+    return distanceKm * 0.621371; // Convert km to miles
   }
 
   toRad(degrees: number): number {
@@ -35,19 +36,50 @@ export class VenueHelperService {
   }
 
   async getVenueStatus(venueId: string): Promise<VenueStatusEnum | null> {
-    const votes = await this.prisma.client.votes.findMany({
-      where: { venueId },
-      orderBy: { createdAt: 'desc' },
+    const venue = await this.prisma.client.venue.findUnique({
+      where: { id: venueId },
+      include: {
+        votes: {
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     });
 
-    if (votes.length === 0) return null;
+    if (!venue) return null;
 
-    const openVotes = votes.filter((v) => v.isOpen).length;
-    const closedVotes = votes.filter((v) => !v.isOpen).length;
+    const votes = venue.votes;
 
-    return openVotes > closedVotes
-      ? VenueStatusEnum.OPEN
-      : VenueStatusEnum.CLOSED;
+    if (votes.length > 0) {
+      const openVotes = votes.filter((v) => v.isOpen).length;
+      const closedVotes = votes.filter((v) => !v.isOpen).length;
+
+      return openVotes > closedVotes
+        ? VenueStatusEnum.OPEN
+        : VenueStatusEnum.CLOSED;
+    }
+
+    // Fallback to open/close times if no votes exist
+    if (venue.openTime && venue.closeTime) {
+      const now = DateTime.now().setZone('UTC'); // Or specific timezone if known
+      const currentTimeStr = now.toFormat('HH:mm');
+
+      // Simple string comparison for HH:mm format
+      if (venue.openTime <= venue.closeTime) {
+        // Normal case (e.g., 09:00 - 22:00)
+        return currentTimeStr >= venue.openTime &&
+          currentTimeStr <= venue.closeTime
+          ? VenueStatusEnum.OPEN
+          : VenueStatusEnum.CLOSED;
+      } else {
+        // Overnight case (e.g., 22:00 - 04:00)
+        return currentTimeStr >= venue.openTime ||
+          currentTimeStr <= venue.closeTime
+          ? VenueStatusEnum.OPEN
+          : VenueStatusEnum.CLOSED;
+      }
+    }
+
+    return null;
   }
 
   async getLastVoteUpdate(venueId: string): Promise<string | null> {
@@ -93,6 +125,35 @@ export class VenueHelperService {
       place.longitude,
     );
 
+    let status = VenueStatusEnum.CLOSED; // Default
+    if (place.openNow === true) {
+      status = VenueStatusEnum.OPEN;
+    } else if (place.openNow === null) {
+      status = 'Not Voted' as any;
+    }
+
+    let openTime: string | null = place.openTime || null;
+    let closeTime: string | null = place.closeTime || null;
+
+    // If we have openingHours from Google Details, extract for today
+    if (place.openingHours?.periods) {
+      const today = DateTime.now().weekday; // 1-7 (Mon-Sun)
+      // Google uses 0-6 (Sun-Sat)
+      const googleToday = today === 7 ? 0 : today;
+
+      const period = place.openingHours.periods.find(
+        (p: any) => p.open?.day === googleToday,
+      );
+      if (period) {
+        if (period.open?.time) {
+          openTime = `${period.open.time.slice(0, 2)}:${period.open.time.slice(2)}`;
+        }
+        if (period.close?.time) {
+          closeTime = `${period.close.time.slice(0, 2)}:${period.close.time.slice(2)}`;
+        }
+      }
+    }
+
     return {
       id: `google_${place.placeId}`,
       name: place.name,
@@ -103,7 +164,7 @@ export class VenueHelperService {
       latitude: place.latitude,
       longitude: place.longitude,
       distance: parseFloat(distance.toFixed(2)),
-      status: 'N/A',
+      status,
       imageUrl: place.imageUrl,
       lastVoteUpdate: 'No votes yet',
       voteStats: {
@@ -112,6 +173,47 @@ export class VenueHelperService {
         closed: 0,
       },
       source: 'google',
+      openTime,
+      closeTime,
     };
+  }
+
+  extractCategory(types: string[]): string {
+    const categoryMapping: Record<string, string> = {
+      night_club: 'NIGHT CLUB',
+      bar: 'BAR',
+      lounge: 'LOUNGE',
+      food: 'FOOD',
+      restaurant: 'FOOD',
+      sports_bar: 'SPORTS BAR',
+      hotel_bar: 'HOTEL BAR',
+    };
+
+    for (const t of types) {
+      if (categoryMapping[t]) {
+        return categoryMapping[t];
+      }
+    }
+
+    return types[0]?.replace(/_/g, ' ').toUpperCase() || 'OTHER';
+  }
+
+  extractSubcategory(types: string[]): string {
+    const subcategoryMapping: Record<string, string[]> = {
+      'NIGHT CLUB': ['night_club', 'club', 'discotheque'],
+      BAR: ['bar', 'pub', 'wine_bar'],
+      LOUNGE: ['lounge', 'hookah_lounge', 'rooftop_lounge'],
+      FOOD: ['restaurant', 'cafe', 'fast_food', 'food'],
+      'SPORTS BAR': ['sports_bar'],
+      'HOTEL BAR': ['hotel_bar'],
+    };
+
+    const category = this.extractCategory(types);
+
+    const allowed = subcategoryMapping[category] || [];
+
+    const match = types.find((t) => allowed.includes(t));
+
+    return match?.replace(/_/g, ' ').toUpperCase() || category;
   }
 }

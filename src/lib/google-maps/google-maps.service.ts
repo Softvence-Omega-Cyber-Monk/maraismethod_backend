@@ -14,6 +14,10 @@ export interface GooglePlaceResult {
   imageUrl: string;
   subcategory: string;
   types: string[];
+  openNow?: boolean | null;
+  openingHours?: any;
+  openTime?: string | null;
+  closeTime?: string | null;
 }
 
 export interface PlacePhoto {
@@ -119,6 +123,7 @@ export class GoogleMapsService {
           category: this.extractCategory(place.types || []),
           subcategory: this.extractSubcategory(place.types || []),
           types: place.types || [],
+          openNow: place.opening_hours?.open_now ?? null,
         });
       }
 
@@ -138,23 +143,8 @@ export class GoogleMapsService {
     maxPhotos: number = 5,
   ): Promise<PlacePhoto[]> {
     try {
-      const url = `${this.baseUrl}/place/details/json`;
-      const params = {
-        place_id: placeId,
-        fields: 'photos',
-        key: this.apiKey,
-      };
-
-      const response = await axios.get(url, { params });
-
-      if (response.data.status !== 'OK') {
-        this.logger.warn(
-          `Google Places API returned status: ${response.data.status}`,
-        );
-        return [];
-      }
-
-      const photos = response.data.result?.photos || [];
+      const details = await this.getPlaceDetails(placeId);
+      const photos = details.photos || [];
 
       return photos.slice(0, maxPhotos).map((photo: any) => ({
         photoReference: photo.photo_reference,
@@ -164,7 +154,35 @@ export class GoogleMapsService {
       }));
     } catch (error) {
       this.logger.error(`Error fetching place photos: ${error.message}`);
-      throw error;
+      return [];
+    }
+  }
+
+  async getPlaceDetails(placeId: string): Promise<any> {
+    try {
+      const url = `${this.baseUrl}/place/details/json`;
+      const params = {
+        place_id: placeId,
+        fields:
+          'name,geometry,vicinity,formatted_address,photos,types,opening_hours',
+        key: this.apiKey,
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (response.data.status !== 'OK') {
+        this.logger.warn(
+          `Google Places Details API returned status: ${response.data.status}`,
+        );
+        return null;
+      }
+
+      return response.data.result;
+    } catch (error) {
+      this.logger.error(
+        `Error fetching place details for ${placeId}: ${error.message}`,
+      );
+      return null;
     }
   }
 
@@ -196,33 +214,42 @@ export class GoogleMapsService {
     return `${this.baseUrl}/place/photo?photo_reference=${photoReference}&maxwidth=${maxWidth}&key=${this.apiKey}`;
   }
 
-  private extractCategory(types: string[]): string {
-    // Priority order for category extraction
-    const categoryPriority = [
-      'restaurant',
-      'cafe',
-      'bar',
-      'food',
-      'store',
-      'shopping_mall',
-      'lodging',
-      'point_of_interest',
-      'establishment',
-    ];
+  public extractCategory(types: string[]): string {
+    const categoryMapping: Record<string, string> = {
+      night_club: 'NIGHT CLUB',
+      bar: 'BAR',
+      lounge: 'LOUNGE',
+      food: 'FOOD',
+      restaurant: 'FOOD',
+      sports_bar: 'SPORTS BAR',
+      hotel_bar: 'HOTEL BAR',
+    };
 
-    for (const cat of categoryPriority) {
-      if (types.includes(cat)) {
-        return cat.replace(/_/g, ' ').toUpperCase();
+    for (const t of types) {
+      if (categoryMapping[t]) {
+        return categoryMapping[t];
       }
     }
 
     return types[0]?.replace(/_/g, ' ').toUpperCase() || 'OTHER';
   }
 
-  private extractSubcategory(types: string[]): string {
-    // Skip generic types for subcategory
-    const genericTypes = ['point_of_interest', 'establishment'];
-    const subcategory = types.find((t) => !genericTypes.includes(t));
-    return subcategory?.replace(/_/g, ' ').toUpperCase() || 'GENERAL';
+  public extractSubcategory(types: string[]): string {
+    const subcategoryMapping: Record<string, string[]> = {
+      'NIGHT CLUB': ['night_club', 'club', 'discotheque'],
+      BAR: ['bar', 'pub', 'wine_bar'],
+      LOUNGE: ['lounge', 'hookah_lounge', 'rooftop_lounge'],
+      FOOD: ['restaurant', 'cafe', 'fast_food', 'food'],
+      'SPORTS BAR': ['sports_bar'],
+      'HOTEL BAR': ['hotel_bar'],
+    };
+
+    const category = this.extractCategory(types);
+
+    const allowed = subcategoryMapping[category] || [];
+
+    const match = types.find((t) => allowed.includes(t));
+
+    return match?.replace(/_/g, ' ').toUpperCase() || category;
   }
 }
