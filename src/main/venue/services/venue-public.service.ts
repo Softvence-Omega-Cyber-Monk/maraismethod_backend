@@ -66,6 +66,8 @@ export class VenuePublicService {
     let googlePlaces = await this.venueCacheService.getCachedPlaces(
       latitude,
       longitude,
+      5000,
+      search,
     );
 
     // Filter Google results by search term

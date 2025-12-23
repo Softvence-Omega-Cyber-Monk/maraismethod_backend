@@ -89,14 +89,18 @@ export class GoogleMapsService {
     latitude: number,
     longitude: number,
     radiusMeters: number = 5000,
+    search?: string,
     enrichWithDetails: boolean = true,
   ): Promise<GooglePlaceResult[]> {
     try {
+      const baseKeywords = 'night club bar lounge sports bar hotel bar';
+      const keyword = search ? `${search} ${baseKeywords}` : baseKeywords;
+
       const response = await this.client.placesNearby({
         params: {
           location: { lat: latitude, lng: longitude },
           radius: radiusMeters,
-          keyword: 'night club bar lounge sports bar hotel bar',
+          keyword,
           key: this.apiKey,
         },
       });
