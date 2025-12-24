@@ -191,4 +191,10 @@ export class AuthController {
   toggle2FA(@GetUser('sub') userId: string) {
     return this.authSettingService.toggle2FA(userId);
   }
+
+  @Get('show-search/app')
+  @ApiOperation({ summary: 'Check if search bar should be shown in app' })
+  shouldShowSearchBarInApp() {
+    return this.authSettingService.shouldShowSearchBarInApp();
+  }
 }
