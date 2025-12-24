@@ -24,6 +24,19 @@ export class AuthSettingService {
     return successResponse(mergedSettings, 'Settings retrieved successfully');
   }
 
+  @HandleError('Failed to get admin setting')
+  async shouldShowSearchBarInApp() {
+    const adminSetting =
+      await this.prisma.client.adminSetting.findFirstOrThrow();
+
+    const shouldShowSearchBarInApp = !!adminSetting.showSearchBarInApp;
+
+    return successResponse(
+      { shouldShowSearchBarInApp },
+      'Search bar setting retrieved successfully',
+    );
+  }
+
   @HandleError('Failed to update admin settings')
   async updateSettings(dto: UpdateAdminSettingDto) {
     const settings = await this.prisma.client.adminSetting.findFirstOrThrow();
