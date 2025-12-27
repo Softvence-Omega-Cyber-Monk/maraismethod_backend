@@ -183,6 +183,8 @@ export const AdminSettingScalarFieldEnum = {
   pushNotificationsEnabled: 'pushNotificationsEnabled',
   adminLoginTFAEnabled: 'adminLoginTFAEnabled',
   showSearchBarInApp: 'showSearchBarInApp',
+  shouldValidateLocation: 'shouldValidateLocation',
+  shouldValidateTime: 'shouldValidateTime',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

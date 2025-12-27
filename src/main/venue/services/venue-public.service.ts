@@ -7,6 +7,8 @@ import {
 } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma';
+import { QueryMode } from 'prisma/generated/internal/prismaNamespace';
 import { GetPublicVenuesDto, GetSingleVenueDto } from '../dto/get-venues.dto';
 import { VenueResponse } from '../interfaces/venue-response.interface';
 import { VenueCacheService } from './venue-cache.service';
@@ -27,22 +29,40 @@ export class VenuePublicService {
   async getVenuesByLocation(dto: GetPublicVenuesDto): Promise<TResponse<any>> {
     const { page = 1, limit = 20, search, latitude, longitude } = dto;
 
+    // Convert km to degrees
+    const RADIUS_KM = 5;
+    const ONE_DEG_LAT_KM = 111;
+
+    const latDelta = RADIUS_KM / ONE_DEG_LAT_KM;
+    const lonDelta = RADIUS_KM / (111 * Math.cos((latitude * Math.PI) / 180));
+
+    const minLat = latitude - latDelta;
+    const maxLat = latitude + latDelta;
+    const minLng = longitude - lonDelta;
+    const maxLng = longitude + lonDelta;
+
     // 1. Fetch search-relevant venues from Database
-    const dbWhere: any = {
-      // catgegory: {
-      //   in: ['NIGHT CLUB', 'BAR', 'LOUNGE', 'SPORTS BAR', 'HOTEL BAR'],
-      // },
+    const dbWhere: Prisma.VenueWhereInput = {
+      latitude: {
+        gte: minLat,
+        lte: maxLat,
+      },
+      longitude: {
+        gte: minLng,
+        lte: maxLng,
+      },
     };
 
     if (search) {
-      const searchOR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { location: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-        { catgegory: { contains: search, mode: 'insensitive' } },
-        { subcategory: { contains: search, mode: 'insensitive' } },
+      const searchOR: Prisma.VenueWhereInput[] = [
+        { name: { contains: search, mode: QueryMode.insensitive } },
+        { location: { contains: search, mode: QueryMode.insensitive } },
+        { description: { contains: search, mode: QueryMode.insensitive } },
+        { catgegory: { contains: search, mode: QueryMode.insensitive } },
+        { subcategory: { contains: search, mode: QueryMode.insensitive } },
       ];
-      dbWhere.AND = [{ OR: searchOR }];
+
+      dbWhere.OR = searchOR;
     }
 
     const dbVenues = await this.prisma.client.venue.findMany({

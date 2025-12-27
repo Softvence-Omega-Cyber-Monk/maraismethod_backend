@@ -13,8 +13,8 @@ import { VenueHelperService } from './venue-helper.service';
 @Injectable()
 export class VenueVoteService {
   private readonly logger = new Logger(VenueVoteService.name);
-  private readonly MAX_DISTANCE_MILES = 0.621371; // 1 KM in miles
-  private readonly VOTE_COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
+  private readonly MAX_DISTANCE_MILES = 10;
+  private readonly VOTE_COOLDOWN_MS = 30 * 1000; // 30 seconds
 
   constructor(
     private readonly prisma: PrismaService,
@@ -33,11 +33,18 @@ export class VenueVoteService {
     // Get or create venue
     const venue = await this.getOrCreateVenue(venueId, dto);
 
+    const adminSetting =
+      await this.prisma.client.adminSetting.findFirstOrThrow();
+
     // Validate user proximity
-    this.validateUserProximity(dto.latitude, dto.longitude, venue);
+    if (adminSetting.shouldValidateLocation) {
+      this.validateUserProximity(dto.latitude, dto.longitude, venue);
+    }
 
     // Check vote cooldown
-    await this.checkVoteCooldown(userId, venue.id);
+    if (adminSetting.shouldValidateTime) {
+      await this.checkVoteCooldown(userId, venue.id);
+    }
 
     // Create vote
     const vote = await this.prisma.client.votes.create({
@@ -276,12 +283,12 @@ export class VenueVoteService {
     if (recentVote) {
       const timeLeft = Math.ceil(
         (recentVote.createdAt.getTime() + this.VOTE_COOLDOWN_MS - Date.now()) /
-          1000 /
-          60,
+          1000,
       );
+
       throw new AppError(
         429,
-        `You can vote again in ${timeLeft} minutes. Please wait before voting again.`,
+        `You can vote again in ${timeLeft} seconds. Please wait before voting again.`,
       );
     }
   }

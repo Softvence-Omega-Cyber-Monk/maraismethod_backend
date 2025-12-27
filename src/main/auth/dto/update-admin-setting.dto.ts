@@ -11,4 +11,16 @@ export class UpdateAdminSettingDto {
   @IsOptional()
   @IsBoolean()
   showSearchBarInApp?: boolean;
+
+  @ApiPropertyOptional({ description: 'Validate User location while voting' })
+  @IsOptional()
+  @IsBoolean()
+  shouldValidateLocation?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Validate User both frequency while voting',
+  })
+  @IsOptional()
+  @IsBoolean()
+  shouldValidateTime?: boolean;
 }

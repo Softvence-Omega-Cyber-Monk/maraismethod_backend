@@ -48,37 +48,50 @@ export class VenueHelperService {
 
     if (!venue) return VenueStatusEnum.CLOSED;
 
-    const votes = venue.votes;
+    // Determine Eastern Time 8:00 AM today
+    const easternNow = DateTime.now().setZone('America/New_York');
+    let voteDayStart = easternNow.set({
+      hour: 8,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
 
-    if (votes.length > 0) {
-      const openVotes = votes.filter((v) => v.isOpen).length;
-      const closedVotes = votes.filter((v) => !v.isOpen).length;
+    // If now is before 8 AM ET, move start to 8 AM yesterday
+    if (easternNow < voteDayStart) {
+      voteDayStart = voteDayStart.minus({ days: 1 });
+    }
+
+    // Filter votes created since voteDayStart
+    const todayVotes = venue.votes.filter(
+      (v) => DateTime.fromJSDate(v.createdAt).toUTC() >= voteDayStart.toUTC(),
+    );
+
+    if (todayVotes.length > 0) {
+      const openVotes = todayVotes.filter((v) => v.isOpen).length;
+      const closedVotes = todayVotes.filter((v) => !v.isOpen).length;
 
       return openVotes >= closedVotes
         ? VenueStatusEnum.OPEN
         : VenueStatusEnum.CLOSED;
     }
 
-    // Fallback to start/end times if no votes exist
+    // Fallback to start/end times if no votes today
     if (venue.startTime && venue.endTime) {
-      // Get the venue's local timezone using Google API
       const timezone = await this.googleMapsService.getTimezone(
         venue.latitude,
         venue.longitude,
       );
 
-      const now = DateTime.now().setZone(timezone);
-      const currentTimeStr = now.toFormat('HH:mm');
+      const nowLocal = DateTime.now().setZone(timezone);
+      const currentTimeStr = nowLocal.toFormat('HH:mm');
 
-      // Simple string comparison for HH:mm format
       if (venue.startTime <= venue.endTime) {
-        // Normal case (e.g., 09:00 - 22:00)
         return currentTimeStr >= venue.startTime &&
           currentTimeStr <= venue.endTime
           ? VenueStatusEnum.OPEN
           : VenueStatusEnum.CLOSED;
       } else {
-        // Overnight case (e.g., 22:00 - 04:00)
         return currentTimeStr >= venue.startTime ||
           currentTimeStr <= venue.endTime
           ? VenueStatusEnum.OPEN

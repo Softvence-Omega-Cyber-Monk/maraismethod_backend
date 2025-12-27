@@ -3,7 +3,9 @@ model AdminSetting {
 
   pushNotificationsEnabled Boolean @default(true)
   adminLoginTFAEnabled     Boolean @default(false)
-  showSearchBarInApp      Boolean @default(true)
+  showSearchBarInApp       Boolean @default(true)
+  shouldValidateLocation   Boolean @default(false)
+  shouldValidateTime       Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

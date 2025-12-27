@@ -3,15 +3,15 @@ model Venue {
 
   name          String
   googlePlaceId String? @unique // Google Places API place_id for deduplication
-  catgegory   String
-  subcategory String
+  catgegory     String
+  subcategory   String
 
   location  String
   latitude  Float
   longitude Float
 
-  startTime  String?
-  endTime    String?
+  startTime String?
+  endTime   String?
 
   description String?
 
@@ -45,4 +45,3 @@ model Votes {
   @@index([userId, venueId, createdAt(sort: Desc)])
   @@map("votes")
 }
-
