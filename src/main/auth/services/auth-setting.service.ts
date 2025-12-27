@@ -10,7 +10,7 @@ export class AuthSettingService {
 
   @HandleError('Failed to get settings')
   async getSettings(userId: string) {
-    const [user, adminSettings] = await Promise.all([
+    const [user, adminSettings] = await this.prisma.client.$transaction([
       this.prisma.client.user.findUniqueOrThrow({ where: { id: userId } }),
       this.prisma.client.adminSetting.findFirstOrThrow(),
     ]);

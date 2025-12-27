@@ -19,6 +19,8 @@ export class AdminSettingService implements OnModuleInit {
         data: {
           pushNotificationsEnabled: true,
           showSearchBarInApp: true,
+          shouldValidateLocation: true,
+          shouldValidateTime: true,
         },
       });
       this.logger.log('[CREATE] Admin settings created with default values');

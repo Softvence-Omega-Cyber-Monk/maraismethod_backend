@@ -29,6 +29,8 @@ export type AdminSettingMinAggregateOutputType = {
   pushNotificationsEnabled: boolean | null
   adminLoginTFAEnabled: boolean | null
   showSearchBarInApp: boolean | null
+  shouldValidateLocation: boolean | null
+  shouldValidateTime: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +40,8 @@ export type AdminSettingMaxAggregateOutputType = {
   pushNotificationsEnabled: boolean | null
   adminLoginTFAEnabled: boolean | null
   showSearchBarInApp: boolean | null
+  shouldValidateLocation: boolean | null
+  shouldValidateTime: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +51,8 @@ export type AdminSettingCountAggregateOutputType = {
   pushNotificationsEnabled: number
   adminLoginTFAEnabled: number
   showSearchBarInApp: number
+  shouldValidateLocation: number
+  shouldValidateTime: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +64,8 @@ export type AdminSettingMinAggregateInputType = {
   pushNotificationsEnabled?: true
   adminLoginTFAEnabled?: true
   showSearchBarInApp?: true
+  shouldValidateLocation?: true
+  shouldValidateTime?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +75,8 @@ export type AdminSettingMaxAggregateInputType = {
   pushNotificationsEnabled?: true
   adminLoginTFAEnabled?: true
   showSearchBarInApp?: true
+  shouldValidateLocation?: true
+  shouldValidateTime?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +86,8 @@ export type AdminSettingCountAggregateInputType = {
   pushNotificationsEnabled?: true
   adminLoginTFAEnabled?: true
   showSearchBarInApp?: true
+  shouldValidateLocation?: true
+  shouldValidateTime?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +170,8 @@ export type AdminSettingGroupByOutputType = {
   pushNotificationsEnabled: boolean
   adminLoginTFAEnabled: boolean
   showSearchBarInApp: boolean
+  shouldValidateLocation: boolean
+  shouldValidateTime: boolean
   createdAt: Date
   updatedAt: Date
   _count: AdminSettingCountAggregateOutputType | null
@@ -188,6 +202,8 @@ export type AdminSettingWhereInput = {
   pushNotificationsEnabled?: Prisma.BoolFilter<"AdminSetting"> | boolean
   adminLoginTFAEnabled?: Prisma.BoolFilter<"AdminSetting"> | boolean
   showSearchBarInApp?: Prisma.BoolFilter<"AdminSetting"> | boolean
+  shouldValidateLocation?: Prisma.BoolFilter<"AdminSetting"> | boolean
+  shouldValidateTime?: Prisma.BoolFilter<"AdminSetting"> | boolean
   createdAt?: Prisma.DateTimeFilter<"AdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminSetting"> | Date | string
 }
@@ -197,6 +213,8 @@ export type AdminSettingOrderByWithRelationInput = {
   pushNotificationsEnabled?: Prisma.SortOrder
   adminLoginTFAEnabled?: Prisma.SortOrder
   showSearchBarInApp?: Prisma.SortOrder
+  shouldValidateLocation?: Prisma.SortOrder
+  shouldValidateTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -209,6 +227,8 @@ export type AdminSettingWhereUniqueInput = Prisma.AtLeast<{
   pushNotificationsEnabled?: Prisma.BoolFilter<"AdminSetting"> | boolean
   adminLoginTFAEnabled?: Prisma.BoolFilter<"AdminSetting"> | boolean
   showSearchBarInApp?: Prisma.BoolFilter<"AdminSetting"> | boolean
+  shouldValidateLocation?: Prisma.BoolFilter<"AdminSetting"> | boolean
+  shouldValidateTime?: Prisma.BoolFilter<"AdminSetting"> | boolean
   createdAt?: Prisma.DateTimeFilter<"AdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminSetting"> | Date | string
 }, "id">
@@ -218,6 +238,8 @@ export type AdminSettingOrderByWithAggregationInput = {
   pushNotificationsEnabled?: Prisma.SortOrder
   adminLoginTFAEnabled?: Prisma.SortOrder
   showSearchBarInApp?: Prisma.SortOrder
+  shouldValidateLocation?: Prisma.SortOrder
+  shouldValidateTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AdminSettingCountOrderByAggregateInput
@@ -233,6 +255,8 @@ export type AdminSettingScalarWhereWithAggregatesInput = {
   pushNotificationsEnabled?: Prisma.BoolWithAggregatesFilter<"AdminSetting"> | boolean
   adminLoginTFAEnabled?: Prisma.BoolWithAggregatesFilter<"AdminSetting"> | boolean
   showSearchBarInApp?: Prisma.BoolWithAggregatesFilter<"AdminSetting"> | boolean
+  shouldValidateLocation?: Prisma.BoolWithAggregatesFilter<"AdminSetting"> | boolean
+  shouldValidateTime?: Prisma.BoolWithAggregatesFilter<"AdminSetting"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AdminSetting"> | Date | string
 }
@@ -242,6 +266,8 @@ export type AdminSettingCreateInput = {
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -251,6 +277,8 @@ export type AdminSettingUncheckedCreateInput = {
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -260,6 +288,8 @@ export type AdminSettingUpdateInput = {
   pushNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adminLoginTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showSearchBarInApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateLocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateTime?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -269,6 +299,8 @@ export type AdminSettingUncheckedUpdateInput = {
   pushNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adminLoginTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showSearchBarInApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateLocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateTime?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -278,6 +310,8 @@ export type AdminSettingCreateManyInput = {
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -287,6 +321,8 @@ export type AdminSettingUpdateManyMutationInput = {
   pushNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adminLoginTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showSearchBarInApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateLocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateTime?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -296,6 +332,8 @@ export type AdminSettingUncheckedUpdateManyInput = {
   pushNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adminLoginTFAEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showSearchBarInApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateLocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shouldValidateTime?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -305,6 +343,8 @@ export type AdminSettingCountOrderByAggregateInput = {
   pushNotificationsEnabled?: Prisma.SortOrder
   adminLoginTFAEnabled?: Prisma.SortOrder
   showSearchBarInApp?: Prisma.SortOrder
+  shouldValidateLocation?: Prisma.SortOrder
+  shouldValidateTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -314,6 +354,8 @@ export type AdminSettingMaxOrderByAggregateInput = {
   pushNotificationsEnabled?: Prisma.SortOrder
   adminLoginTFAEnabled?: Prisma.SortOrder
   showSearchBarInApp?: Prisma.SortOrder
+  shouldValidateLocation?: Prisma.SortOrder
+  shouldValidateTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -323,6 +365,8 @@ export type AdminSettingMinOrderByAggregateInput = {
   pushNotificationsEnabled?: Prisma.SortOrder
   adminLoginTFAEnabled?: Prisma.SortOrder
   showSearchBarInApp?: Prisma.SortOrder
+  shouldValidateLocation?: Prisma.SortOrder
+  shouldValidateTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -334,6 +378,8 @@ export type AdminSettingSelect<ExtArgs extends runtime.Types.Extensions.Internal
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminSetting"]>
@@ -343,6 +389,8 @@ export type AdminSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminSetting"]>
@@ -352,6 +400,8 @@ export type AdminSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["adminSetting"]>
@@ -361,11 +411,13 @@ export type AdminSettingSelectScalar = {
   pushNotificationsEnabled?: boolean
   adminLoginTFAEnabled?: boolean
   showSearchBarInApp?: boolean
+  shouldValidateLocation?: boolean
+  shouldValidateTime?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AdminSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pushNotificationsEnabled" | "adminLoginTFAEnabled" | "showSearchBarInApp" | "createdAt" | "updatedAt", ExtArgs["result"]["adminSetting"]>
+export type AdminSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pushNotificationsEnabled" | "adminLoginTFAEnabled" | "showSearchBarInApp" | "shouldValidateLocation" | "shouldValidateTime" | "createdAt" | "updatedAt", ExtArgs["result"]["adminSetting"]>
 
 export type $AdminSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AdminSetting"
@@ -375,6 +427,8 @@ export type $AdminSettingPayload<ExtArgs extends runtime.Types.Extensions.Intern
     pushNotificationsEnabled: boolean
     adminLoginTFAEnabled: boolean
     showSearchBarInApp: boolean
+    shouldValidateLocation: boolean
+    shouldValidateTime: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["adminSetting"]>
@@ -804,6 +858,8 @@ export interface AdminSettingFieldRefs {
   readonly pushNotificationsEnabled: Prisma.FieldRef<"AdminSetting", 'Boolean'>
   readonly adminLoginTFAEnabled: Prisma.FieldRef<"AdminSetting", 'Boolean'>
   readonly showSearchBarInApp: Prisma.FieldRef<"AdminSetting", 'Boolean'>
+  readonly shouldValidateLocation: Prisma.FieldRef<"AdminSetting", 'Boolean'>
+  readonly shouldValidateTime: Prisma.FieldRef<"AdminSetting", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"AdminSetting", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AdminSetting", 'DateTime'>
 }

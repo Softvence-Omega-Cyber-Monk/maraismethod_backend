@@ -11,59 +11,98 @@ export class AuthGetProfileService {
     private readonly authUtils: AuthUtilsService,
   ) {}
 
+  // -------------------------------
+  // LEVEL SYSTEM HELPERS
+  // -------------------------------
+
+  /** XP required for a given level */
+  private calculateXpForLevel(level: number): number {
+    return 10 * level * level; // XP curve formula
+  }
+
+  /** Determine level from total points */
+  private getLevelFromPoints(totalPoints: number): number {
+    let level = 1;
+
+    while (totalPoints >= this.calculateXpForLevel(level)) {
+      level++;
+    }
+
+    return level - 1; // last valid level
+  }
+
+  /** Level labels (auto fallbacks after 8) */
+  private getLevelLabel(level: number): string {
+    const labels = [
+      'Beginner', // 1
+      'Bronze', // 2
+      'Silver', // 3
+      'Gold', // 4
+      'Diamond', // 5
+      'Master', // 6
+      'Grandmaster', // 7
+      'Legend', // 8
+    ];
+
+    return labels[level - 1] || `Level ${level}`;
+  }
+
+  // -------------------------------
+  // MAIN PROFILE SERVICE
+  // -------------------------------
+
   @HandleError("Can't get user profile")
   async getProfile(userId: string) {
     const profileResponse = await this.findUserBy('id', userId);
     const user = profileResponse.data;
 
-    // Fetch total points from votes
+    // Fetch vote points (each open vote = 1 point)
     const totalPoints = await this.prisma.client.votes.count({
-      where: { userId, isOpen: true }, // counting only open votes
+      where: { userId, isOpen: true },
     });
 
-    // Define levels with labels
-    const LEVELS = [
-      { level: 1, minPoints: 0, maxPoints: 10, label: 'Beginner' },
-      { level: 2, minPoints: 11, maxPoints: 25, label: 'Intermediate' },
-      { level: 3, minPoints: 26, maxPoints: 50, label: 'Advanced' },
-      { level: 4, minPoints: 51, maxPoints: 100, label: 'Expert' },
-    ];
+    // Determine levels
+    const currentLevel = this.getLevelFromPoints(totalPoints);
+    const nextLevel = currentLevel + 1;
 
-    // Determine current level (default to first level if no points)
-    const currentLevel =
-      LEVELS.find(
-        (lvl) => totalPoints >= lvl.minPoints && totalPoints <= lvl.maxPoints,
-      ) || LEVELS[0];
+    // XP requirements
+    const currentLevelXP = this.calculateXpForLevel(currentLevel);
+    const nextLevelXP = this.calculateXpForLevel(nextLevel);
 
-    // Points calculations
-    const pointsInCurrentLevel = Math.max(
-      totalPoints - currentLevel.minPoints,
-      0,
-    );
-    const pointsNeededForLevel =
-      currentLevel.maxPoints - currentLevel.minPoints;
-    const pointsRemaining = Math.max(currentLevel.maxPoints - totalPoints, 0);
+    // Progress analytics
+    const pointsInCurrentLevel = totalPoints - currentLevelXP;
+    const pointsNeededForLevel = nextLevelXP - currentLevelXP;
+    const pointsRemaining = Math.max(nextLevelXP - totalPoints, 0);
     const progressPercentage =
       pointsNeededForLevel > 0
         ? Math.floor((pointsInCurrentLevel / pointsNeededForLevel) * 100)
         : 100;
 
-    // Attach level analytics to user
+    // Build response payload
     const dataWithLevel = {
       ...user,
       levelAnalytics: {
-        currentLevel: currentLevel.level,
-        levelLabel: currentLevel.label,
+        currentLevel,
+        levelLabel: this.getLevelLabel(currentLevel),
+
+        totalPoints,
+
+        nextLevel,
+        nextLevelLabel: this.getLevelLabel(nextLevel),
+
         pointsInCurrentLevel,
         pointsNeededForLevel,
         pointsRemaining,
-        totalPoints,
         progressPercentage,
       },
     };
 
     return successResponse(dataWithLevel, 'User data fetched successfully');
   }
+
+  // -------------------------------
+  // Helper — Find User
+  // -------------------------------
 
   private async findUserBy(
     key: 'id' | 'email',
@@ -80,12 +119,10 @@ export class AuthGetProfileService {
       },
     });
 
-    // Extract only the main user fields
+    // Sanitized + relational structure
     const { notifications, ...mainUser } = user;
-
     const sanitizedUser = await this.authUtils.sanitizeUser(mainUser);
 
-    // Rebuild the full object: sanitized user + full raw relations
     const data = {
       ...sanitizedUser,
       notifications,
