@@ -48,6 +48,10 @@ export class AuthSettingService {
           dto.pushNotificationsEnabled ?? settings.pushNotificationsEnabled,
         showSearchBarInApp:
           dto.showSearchBarInApp ?? settings.showSearchBarInApp,
+        shouldValidateLocation:
+          dto.shouldValidateLocation ?? settings.shouldValidateLocation,
+        shouldValidateTime:
+          dto.shouldValidateTime ?? settings.shouldValidateTime,
       },
     });
 
