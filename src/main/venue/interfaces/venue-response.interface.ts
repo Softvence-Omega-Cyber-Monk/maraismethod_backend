@@ -21,6 +21,7 @@ export interface VenueResponse {
   description?: string | null;
   startTime?: string | null;
   endTime?: string | null;
+  closedDays?: string[] | null;
   imageUrl: string | null;
   image?: any;
   createdAt?: Date;

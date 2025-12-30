@@ -96,6 +96,29 @@ export class GoogleMapsService {
       const baseKeywords = 'night club bar lounge sports bar hotel bar';
       const keyword = search ? `${search} ${baseKeywords}` : baseKeywords;
 
+      if (search && search.trim() !== '') {
+        const response = await this.client.textSearch({
+          params: {
+            query: keyword,
+            key: this.apiKey,
+          },
+        });
+
+        if (!response.data.results) return [];
+
+        const results = this.mapPlaces(
+          response.data.results,
+          latitude,
+          longitude,
+        );
+
+        if (enrichWithDetails) {
+          await this.enrichPlacesWithDetails(results);
+        }
+
+        return results;
+      }
+
       const response = await this.client.placesNearby({
         params: {
           location: { lat: latitude, lng: longitude },
@@ -112,43 +135,12 @@ export class GoogleMapsService {
         return [];
       }
 
-      const results: GooglePlaceResult[] = [];
+      const results = this.mapPlaces(
+        response.data.results,
+        latitude,
+        longitude,
+      );
 
-      for (const place of response.data.results) {
-        // Skip non-venue types (neighborhoods, political boundaries, etc.)
-        if (this.shouldSkipPlace(place.types || [])) {
-          continue;
-        }
-
-        let imageUrl = '';
-        if (place.photos?.length) {
-          const photoRef = place.photos[0].photo_reference;
-          imageUrl = this.getPlacePhotoUrl(photoRef, 400);
-        }
-
-        // Extract opening hours for today from nearby search (limited data)
-        const { openTime, closeTime } = this.extractTodayHours(
-          place?.opening_hours?.periods,
-        );
-
-        results.push({
-          placeId: place.place_id || '',
-          name: place.name || 'Unknown',
-          location: place.vicinity || place.formatted_address || '',
-          latitude: place.geometry?.location?.lat ?? latitude,
-          longitude: place.geometry?.location?.lng ?? longitude,
-          imageUrl,
-          category: this.extractCategory(place.types || []),
-          subcategory: this.extractSubcategory(place.types || []),
-          types: place.types || [],
-          openNow: place.opening_hours?.open_now ?? null,
-          openingHours: place.opening_hours,
-          openTime,
-          closeTime,
-        });
-      }
-
-      // If enrichWithDetails is true, fetch full details for places with missing hours
       if (enrichWithDetails) {
         await this.enrichPlacesWithDetails(results);
       }
@@ -161,6 +153,49 @@ export class GoogleMapsService {
       );
       return [];
     }
+  }
+
+  private mapPlaces(
+    places: any[],
+    fallbackLat?: number,
+    fallbackLng?: number,
+  ): GooglePlaceResult[] {
+    const results: GooglePlaceResult[] = [];
+
+    for (const place of places) {
+      // Skip irrelevant places (political boundaries etc.)
+      if (this.shouldSkipPlace(place.types || [])) continue;
+
+      // Handle photo
+      let imageUrl = '';
+      if (place.photos?.length) {
+        const photoRef = place.photos[0].photo_reference;
+        imageUrl = this.getPlacePhotoUrl(photoRef, 400);
+      }
+
+      // Extract today's opening hours
+      const { openTime, closeTime } = this.extractTodayHours(
+        place?.opening_hours?.periods,
+      );
+
+      results.push({
+        placeId: place.place_id || '',
+        name: place.name || 'Unknown',
+        location: place.vicinity || place.formatted_address || '',
+        latitude: place.geometry?.location?.lat ?? fallbackLat ?? 0,
+        longitude: place.geometry?.location?.lng ?? fallbackLng ?? 0,
+        imageUrl,
+        category: this.extractCategory(place.types || []),
+        subcategory: this.extractSubcategory(place.types || []),
+        types: place.types || [],
+        openNow: place.opening_hours?.open_now ?? null,
+        openingHours: place.opening_hours,
+        openTime,
+        closeTime,
+      });
+    }
+
+    return results;
   }
 
   /**

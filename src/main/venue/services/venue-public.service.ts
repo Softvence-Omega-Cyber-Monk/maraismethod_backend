@@ -29,30 +29,9 @@ export class VenuePublicService {
   async getVenuesByLocation(dto: GetPublicVenuesDto): Promise<TResponse<any>> {
     const { page = 1, limit = 20, search, latitude, longitude } = dto;
 
-    // Convert km to degrees
-    const RADIUS_KM = 5;
-    const ONE_DEG_LAT_KM = 111;
+    let dbWhere: Prisma.VenueWhereInput = {};
 
-    const latDelta = RADIUS_KM / ONE_DEG_LAT_KM;
-    const lonDelta = RADIUS_KM / (111 * Math.cos((latitude * Math.PI) / 180));
-
-    const minLat = latitude - latDelta;
-    const maxLat = latitude + latDelta;
-    const minLng = longitude - lonDelta;
-    const maxLng = longitude + lonDelta;
-
-    // 1. Fetch search-relevant venues from Database
-    const dbWhere: Prisma.VenueWhereInput = {
-      latitude: {
-        gte: minLat,
-        lte: maxLat,
-      },
-      longitude: {
-        gte: minLng,
-        lte: maxLng,
-      },
-    };
-
+    // If search parameter is provided, search all venues without location filter
     if (search) {
       const searchOR: Prisma.VenueWhereInput[] = [
         { name: { contains: search, mode: QueryMode.insensitive } },
@@ -63,6 +42,30 @@ export class VenuePublicService {
       ];
 
       dbWhere.OR = searchOR;
+    } else {
+      // Only apply location filter if no search parameter
+      // Convert km to degrees
+      const RADIUS_KM = 5;
+      const ONE_DEG_LAT_KM = 111;
+
+      const latDelta = RADIUS_KM / ONE_DEG_LAT_KM;
+      const lonDelta = RADIUS_KM / (111 * Math.cos((latitude * Math.PI) / 180));
+
+      const minLat = latitude - latDelta;
+      const maxLat = latitude + latDelta;
+      const minLng = longitude - lonDelta;
+      const maxLng = longitude + lonDelta;
+
+      dbWhere = {
+        latitude: {
+          gte: minLat,
+          lte: maxLat,
+        },
+        longitude: {
+          gte: minLng,
+          lte: maxLng,
+        },
+      };
     }
 
     const dbVenues = await this.prisma.client.venue.findMany({
@@ -136,6 +139,7 @@ export class VenuePublicService {
           image: venue.image,
           startTime: this.helper.formatTimeToAmPm(venue.startTime),
           endTime: this.helper.formatTimeToAmPm(venue.endTime),
+          closedDays: venue.closedDays || null,
           distance: parseFloat(distance.toFixed(2)),
           status: venueStatus,
           lastVoteUpdate,
@@ -365,6 +369,7 @@ export class VenuePublicService {
         image: venue.image,
         startTime: this.helper.formatTimeToAmPm(venue.startTime),
         endTime: this.helper.formatTimeToAmPm(venue.endTime),
+        closedDays: venue.closedDays || null,
         distance,
         status: venueStatus,
         lastVoteUpdate,

@@ -83,6 +83,7 @@ export type VenueCountAggregateOutputType = {
   longitude: number
   startTime: number
   endTime: number
+  closedDays: number
   description: number
   imageId: number
   imageUrl: number
@@ -149,6 +150,7 @@ export type VenueCountAggregateInputType = {
   longitude?: true
   startTime?: true
   endTime?: true
+  closedDays?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -254,6 +256,7 @@ export type VenueGroupByOutputType = {
   longitude: number
   startTime: string | null
   endTime: string | null
+  closedDays: string[]
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -295,6 +298,7 @@ export type VenueWhereInput = {
   longitude?: Prisma.FloatFilter<"Venue"> | number
   startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
   endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
+  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
@@ -315,6 +319,7 @@ export type VenueOrderByWithRelationInput = {
   longitude?: Prisma.SortOrder
   startTime?: Prisma.SortOrderInput | Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -339,6 +344,7 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   longitude?: Prisma.FloatFilter<"Venue"> | number
   startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
   endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
+  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
@@ -358,6 +364,7 @@ export type VenueOrderByWithAggregationInput = {
   longitude?: Prisma.SortOrder
   startTime?: Prisma.SortOrderInput | Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -384,6 +391,7 @@ export type VenueScalarWhereWithAggregatesInput = {
   longitude?: Prisma.FloatWithAggregatesFilter<"Venue"> | number
   startTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   endTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
+  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
@@ -402,6 +410,7 @@ export type VenueCreateInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -421,6 +430,7 @@ export type VenueUncheckedCreateInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -440,6 +450,7 @@ export type VenueUpdateInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -459,6 +470,7 @@ export type VenueUncheckedUpdateInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,6 +490,7 @@ export type VenueCreateManyInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -496,6 +509,7 @@ export type VenueUpdateManyMutationInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -513,6 +527,7 @@ export type VenueUncheckedUpdateManyInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -536,6 +551,7 @@ export type VenueCountOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -626,6 +642,15 @@ export type VenueUncheckedUpdateOneWithoutImageNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VenueUpdateToOneWithWhereWithoutImageInput, Prisma.VenueUpdateWithoutImageInput>, Prisma.VenueUncheckedUpdateWithoutImageInput>
 }
 
+export type VenueCreateclosedDaysInput = {
+  set: string[]
+}
+
+export type VenueUpdateclosedDaysInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 export type VenueCreateNestedOneWithoutVotesInput = {
   create?: Prisma.XOR<Prisma.VenueCreateWithoutVotesInput, Prisma.VenueUncheckedCreateWithoutVotesInput>
   connectOrCreate?: Prisma.VenueCreateOrConnectWithoutVotesInput
@@ -651,6 +676,7 @@ export type VenueCreateWithoutImageInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -669,6 +695,7 @@ export type VenueUncheckedCreateWithoutImageInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -703,6 +730,7 @@ export type VenueUpdateWithoutImageInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -721,6 +749,7 @@ export type VenueUncheckedUpdateWithoutImageInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -739,6 +768,7 @@ export type VenueCreateWithoutVotesInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   createdAt?: Date | string
@@ -757,6 +787,7 @@ export type VenueUncheckedCreateWithoutVotesInput = {
   longitude: number
   startTime?: string | null
   endTime?: string | null
+  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -791,6 +822,7 @@ export type VenueUpdateWithoutVotesInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,6 +841,7 @@ export type VenueUncheckedUpdateWithoutVotesInput = {
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -858,6 +891,7 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   longitude?: boolean
   startTime?: boolean
   endTime?: boolean
+  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -879,6 +913,7 @@ export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   longitude?: boolean
   startTime?: boolean
   endTime?: boolean
+  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -898,6 +933,7 @@ export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   longitude?: boolean
   startTime?: boolean
   endTime?: boolean
+  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -917,6 +953,7 @@ export type VenueSelectScalar = {
   longitude?: boolean
   startTime?: boolean
   endTime?: boolean
+  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -924,7 +961,7 @@ export type VenueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
+export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "closedDays" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
 export type VenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
@@ -954,6 +991,7 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     longitude: number
     startTime: string | null
     endTime: string | null
+    closedDays: string[]
     description: string | null
     imageId: string | null
     imageUrl: string | null
@@ -1394,6 +1432,7 @@ export interface VenueFieldRefs {
   readonly longitude: Prisma.FieldRef<"Venue", 'Float'>
   readonly startTime: Prisma.FieldRef<"Venue", 'String'>
   readonly endTime: Prisma.FieldRef<"Venue", 'String'>
+  readonly closedDays: Prisma.FieldRef<"Venue", 'String[]'>
   readonly description: Prisma.FieldRef<"Venue", 'String'>
   readonly imageId: Prisma.FieldRef<"Venue", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Venue", 'String'>
