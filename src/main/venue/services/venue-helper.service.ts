@@ -48,26 +48,32 @@ export class VenueHelperService {
 
     if (!venue) return VenueStatusEnum.CLOSED;
 
-    // Check if venue is closed today due to closedDays
+    // Get venue's timezone based on its location
+    const timezone = await this.googleMapsService.getTimezone(
+      venue.latitude,
+      venue.longitude,
+    );
+
+    // Check if venue is closed today based on venue's local timezone
     const today = DateTime.now()
-      .setZone('America/New_York')
+      .setZone(timezone)
       .toFormat('EEEE')
       .toLowerCase();
     if (venue.closedDays && venue.closedDays.includes(today)) {
       return VenueStatusEnum.CLOSED;
     }
 
-    // Determine Eastern Time 8:00 AM today
-    const easternNow = DateTime.now().setZone('America/New_York');
-    let voteDayStart = easternNow.set({
+    // Determine venue's local time 8:00 AM today
+    const venueNow = DateTime.now().setZone(timezone);
+    let voteDayStart = venueNow.set({
       hour: 8,
       minute: 0,
       second: 0,
       millisecond: 0,
     });
 
-    // If now is before 8 AM ET, move start to 8 AM yesterday
-    if (easternNow < voteDayStart) {
+    // If now is before 8 AM local time, move start to 8 AM yesterday
+    if (venueNow < voteDayStart) {
       voteDayStart = voteDayStart.minus({ days: 1 });
     }
 
