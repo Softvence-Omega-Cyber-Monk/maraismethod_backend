@@ -129,7 +129,8 @@ export class VenueHelperService {
     if (!lastVote?.createdAt) {
       return fallbackStatus
         ? `Currently ${fallbackStatus.toLowerCase()}`
-        : 'Status updated 0 minutes ago';
+        : 'Last updated 0 minutes ago';
+      // return 'Last updated 0 minutes ago';
     }
 
     const now = DateTime.now();
