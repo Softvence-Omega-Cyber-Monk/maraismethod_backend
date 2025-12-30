@@ -12,6 +12,7 @@ model Venue {
 
   startTime String?
   endTime   String?
+  closedDays String[]
 
   description String?
 

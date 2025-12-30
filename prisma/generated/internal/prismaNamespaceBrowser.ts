@@ -226,6 +226,7 @@ export const VenueScalarFieldEnum = {
   longitude: 'longitude',
   startTime: 'startTime',
   endTime: 'endTime',
+  closedDays: 'closedDays',
   description: 'description',
   imageId: 'imageId',
   imageUrl: 'imageUrl',

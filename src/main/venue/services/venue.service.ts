@@ -55,6 +55,7 @@ export class VenueService {
         longitude: dto.longitude,
         startTime: dto.startTime,
         endTime: dto.endTime,
+        closedDays: dto.closedDays || [],
         description: dto.description,
         ...(fileInstance && {
           image: {
@@ -120,6 +121,7 @@ export class VenueService {
         longitude: dto.longitude,
         startTime: dto.startTime,
         endTime: dto.endTime,
+        closedDays: dto.closedDays,
         description: dto.description,
         ...(fileInstance && {
           image: {

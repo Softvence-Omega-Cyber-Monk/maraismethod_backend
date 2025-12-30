@@ -48,6 +48,15 @@ export class VenueHelperService {
 
     if (!venue) return VenueStatusEnum.CLOSED;
 
+    // Check if venue is closed today due to closedDays
+    const today = DateTime.now()
+      .setZone('America/New_York')
+      .toFormat('EEEE')
+      .toLowerCase();
+    if (venue.closedDays && venue.closedDays.includes(today)) {
+      return VenueStatusEnum.CLOSED;
+    }
+
     // Determine Eastern Time 8:00 AM today
     const easternNow = DateTime.now().setZone('America/New_York');
     let voteDayStart = easternNow.set({
@@ -197,6 +206,7 @@ export class VenueHelperService {
       source: 'google',
       startTime: this.formatTimeToAmPm(startTime),
       endTime: this.formatTimeToAmPm(endTime),
+      closedDays: null, // Google venues don't have closedDays data
     };
   }
 
