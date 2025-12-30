@@ -38,6 +38,7 @@ export class GetVenuesService {
     let candidateVenues = await this.prisma.client.venue.findMany({
       where: venueWhere,
       include: { votes: true },
+      orderBy: { createdAt: 'desc' },
     });
 
     // Step 2: apply boatCount filter if provided
