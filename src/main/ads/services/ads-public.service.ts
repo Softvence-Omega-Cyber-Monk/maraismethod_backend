@@ -2,13 +2,20 @@ import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
+import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma';
+import { DateTime } from 'luxon';
 import { GetAdsDto } from '../dto/get-ads.dto';
 
 @Injectable()
 export class AdsPublicService {
-  constructor(private readonly prisma: PrismaService) {}
+  private logger = new Logger(AdsPublicService.name);
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly googleMapsService: GoogleMapsService,
+  ) {}
 
   /**
    * Calculate distance between two coordinates using Haversine formula
@@ -29,10 +36,36 @@ export class AdsPublicService {
 
   /**
    * Check if an advertisement is currently active (within date range)
+   * Uses user's timezone for accurate date checking
    */
-  private isAdActive(ad: { startDate: Date; endDate: Date }): boolean {
-    const now = new Date();
-    return now >= ad.startDate && now <= ad.endDate;
+  private async isAdActive(
+    ad: { startDate: Date; endDate: Date },
+    userLatitude?: number,
+    userLongitude?: number,
+  ): Promise<boolean> {
+    let now: DateTime = DateTime.now();
+
+    // If user location is provided, get user's timezone
+    if (userLatitude && userLongitude) {
+      try {
+        const timezone = await this.googleMapsService.getTimezone(
+          userLatitude,
+          userLongitude,
+        );
+        now = DateTime.now().setZone(timezone).toUTC();
+      } catch (error) {
+        this.logger.error(
+          `Failed to get timezone for user location (${userLatitude}, ${userLongitude}): ${error}`,
+        );
+        // Fallback to UTC if timezone lookup fails
+        now = DateTime.now().setZone('UTC').toUTC();
+      }
+    }
+
+    const adStart = DateTime.fromJSDate(ad.startDate).setZone(now.zone);
+    const adEnd = DateTime.fromJSDate(ad.endDate).setZone(now.zone);
+
+    return now >= adStart && now <= adEnd;
   }
 
   @HandleError('Failed to get advertisements')
@@ -44,7 +77,7 @@ export class AdsPublicService {
     const { search, isActive, page = 1, limit = 10 } = dto;
 
     // Build where clause
-    const where: any = {};
+    const where: Prisma.AdvertisementWhereInput = {};
 
     if (search) {
       where.OR = [
@@ -75,8 +108,8 @@ export class AdsPublicService {
     });
 
     // Filter by distance and process
-    const processedAds = advertisements
-      .map((ad) => {
+    const processedAds = await Promise.all(
+      advertisements.map(async (ad: any) => {
         const distance = this.calculateDistance(
           userLatitude,
           userLongitude,
@@ -97,20 +130,29 @@ export class AdsPublicService {
           fileUrl: ad.fileUrl,
           file: ad.file,
           distance: parseFloat(distance.toFixed(2)),
-          isActive: this.isAdActive(ad),
+          isActive: await this.isAdActive(ad, userLatitude, userLongitude),
           analytics: ad.advertisementAnalytics,
           createdAt: ad.createdAt,
           updatedAt: ad.updatedAt,
         };
-      })
-      // Filter: only show ads where user is within the ad's range
-      .filter((ad) => ad.distance <= ad.adShowRangeInMiles)
-      // Sort by distance (closest first)
-      .sort((a, b) => a.distance - b.distance);
+      }),
+    );
+
+    // Filter: only show ads where user is within ad's range
+    const filteredAds = processedAds.filter(
+      (ad: { distance: number; adShowRangeInMiles: number }) =>
+        ad.distance <= ad.adShowRangeInMiles,
+    );
+
+    // Sort by distance (closest first)
+    const sortedAds = filteredAds.sort(
+      (a: { distance: number }, b: { distance: number }) =>
+        a.distance - b.distance,
+    );
 
     // Pagination
     const skip = (page - 1) * limit;
-    const paginatedAds = processedAds.slice(skip, skip + limit);
+    const paginatedAds = sortedAds.slice(skip, skip + limit);
 
     return successResponse(
       {
