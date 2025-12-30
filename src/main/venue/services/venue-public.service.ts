@@ -82,6 +82,9 @@ export class VenuePublicService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     // 2. Fetch venues from Google API (via cache)
