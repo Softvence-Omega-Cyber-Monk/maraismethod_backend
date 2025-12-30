@@ -1,12 +1,23 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
+
+export enum CloseDayEnum {
+  monday = 'monday',
+  tuesday = 'tuesday',
+  wednesday = 'wednesday',
+  thursday = 'thursday',
+  friday = 'friday',
+  saturday = 'saturday',
+  sunday = 'sunday',
+}
 
 export class CreateVenueDto {
   @ApiProperty({
@@ -84,20 +95,18 @@ export class CreateVenueDto {
   endTime?: string;
 
   @ApiPropertyOptional({
-    example: ['sunday', 'monday'],
     description: 'Days when venue is closed',
-    enum: [
-      'sunday',
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-    ],
-    isArray: true,
+    example: [CloseDayEnum.monday, CloseDayEnum.friday],
+  })
+  @Transform(({ value }) => {
+    console.info(value);
+    if (typeof value === 'string') {
+      return value.split(',').map((v) => v.trim());
+    }
+    return value;
   })
   @IsArray()
+  @IsEnum(CloseDayEnum, { each: true })
   @IsOptional()
   closedDays?: string[];
 
