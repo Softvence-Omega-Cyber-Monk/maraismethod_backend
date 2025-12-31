@@ -1,7 +1,7 @@
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetAdsDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -11,14 +11,14 @@ export class GetAdsDto extends PaginationDto {
   @IsString()
   search?: string;
 
-  // @ApiPropertyOptional({
-  //   description: 'Filter by active status (within date range)',
-  //   example: true,
-  // })
-  // @IsOptional()
-  // @Transform(({ value }) => value === 'true' || value === true)
-  // @IsBoolean()
-  // isActive?: boolean;
+  @ApiPropertyOptional({
+    description: 'Filter by active status (within date range)',
+    example: true,
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsBoolean()
+  isActive?: boolean;
 }
 
 export class GetAdsByLocationDto extends GetAdsDto {
