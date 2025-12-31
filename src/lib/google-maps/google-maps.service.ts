@@ -164,7 +164,7 @@ export class GoogleMapsService {
 
     for (const place of places) {
       // Skip irrelevant places (political boundaries etc.)
-      if (this.shouldSkipPlace(place.types || [])) continue;
+      // if (this.shouldSkipPlace(place.types || [])) continue;
 
       // Handle photo
       let imageUrl = '';
