@@ -74,7 +74,7 @@ export class AdsPublicService {
     userLongitude: number,
     dto: GetAdsDto,
   ): Promise<TResponse<any>> {
-    const { search, isActive, page = 1, limit = 10 } = dto;
+    const { search, page = 1, limit = 10 } = dto;
 
     // Build where clause
     const where: Prisma.AdvertisementWhereInput = {};
@@ -88,15 +88,15 @@ export class AdsPublicService {
     }
 
     // Filter by active status if specified
-    if (isActive !== undefined) {
-      const now = new Date();
-      if (isActive) {
-        where.startDate = { lte: now };
-        where.endDate = { gte: now };
-      } else {
-        where.OR = [{ startDate: { gt: now } }, { endDate: { lt: now } }];
-      }
-    }
+    // if (isActive !== undefined) {
+    //   const now = new Date();
+    //   if (isActive) {
+    //     where.startDate = { lte: now };
+    //     where.endDate = { gte: now };
+    //   } else {
+    //     where.OR = [{ startDate: { gt: now } }, { endDate: { lt: now } }];
+    //   }
+    // }
 
     // Get all advertisements
     const advertisements = await this.prisma.client.advertisement.findMany({

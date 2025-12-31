@@ -99,7 +99,7 @@ export class GoogleMapsService {
       if (search && search.trim() !== '') {
         const response = await this.client.textSearch({
           params: {
-            query: keyword,
+            query: search,
             key: this.apiKey,
           },
         });
