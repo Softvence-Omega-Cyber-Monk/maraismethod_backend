@@ -56,9 +56,9 @@ export class AuthGetProfileService {
     const profileResponse = await this.findUserBy('id', userId);
     const user = profileResponse.data;
 
-    // Fetch vote points (each open vote = 1 point)
+    // Fetch vote points (each vote = 1 point)
     const totalPoints = await this.prisma.client.votes.count({
-      where: { userId, isOpen: true },
+      where: { userId },
     });
 
     // Determine levels
