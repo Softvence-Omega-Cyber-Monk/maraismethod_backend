@@ -86,6 +86,11 @@ export class VenueCacheService {
       search,
     );
 
+    // this.logger.debug(
+    //   `Fetched ${places.length} places from Google Places for ${cacheKey}`,
+    //   places,
+    // );
+
     // Store in cache (both the list and individual places)
     await this.cacheManager.set(cacheKey, places, CACHE_TTL_MS);
 

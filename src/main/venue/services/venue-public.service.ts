@@ -89,24 +89,26 @@ export class VenuePublicService {
 
     // 2. Fetch venues from Google API (via cache)
     // Set enrichDetails=true to get full opening hours for all places
-    let googlePlaces = await this.venueCacheService.getCachedPlaces(
+    const googlePlaces = await this.venueCacheService.getCachedPlaces(
       latitude,
       longitude,
       5000,
       search,
     );
 
+    this.logger.debug(`Fetched ${googlePlaces.length} Google Places`);
+
     // Filter Google results by search term
-    if (search) {
-      const searchLower = search.toLowerCase();
-      googlePlaces = googlePlaces.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchLower) ||
-          p.location.toLowerCase().includes(searchLower) ||
-          p.category.toLowerCase().includes(searchLower) ||
-          p.subcategory.toLowerCase().includes(searchLower),
-      );
-    }
+    // if (search) {
+    //   const searchLower = search.toLowerCase();
+    //   googlePlaces = googlePlaces.filter(
+    //     (p) =>
+    //       p.name.toLowerCase().includes(searchLower) ||
+    //       p.location.toLowerCase().includes(searchLower) ||
+    //       p.category.toLowerCase().includes(searchLower) ||
+    //       p.subcategory.toLowerCase().includes(searchLower),
+    //   );
+    // }
 
     // 3. Process database venues
     const processedDbVenues: VenueResponse[] = await Promise.all(
@@ -186,9 +188,20 @@ export class VenuePublicService {
       });
 
     const googleVenuesRaw = await Promise.all(googleVenuesPromises);
-    const googleVenues = googleVenuesRaw.filter((v) =>
-      allowedCategories.includes(v.category),
-    );
+    // const googleVenues = googleVenuesRaw.filter((v) =>
+    //   allowedCategories.includes(v.category),
+    // );
+    let googleVenues: VenueResponse[];
+
+    if (search) {
+      // If search exists, include all transformed Google venues (except duplicates)
+      googleVenues = googleVenuesRaw;
+    } else {
+      // No search query → apply allowedCategories filter
+      googleVenues = googleVenuesRaw.filter((v) =>
+        allowedCategories.includes(v.category),
+      );
+    }
 
     // 6. Merge and sort by distance
     const allVenues = [...processedDbVenues, ...googleVenues];

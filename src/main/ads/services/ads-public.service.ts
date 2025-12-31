@@ -79,6 +79,12 @@ export class AdsPublicService {
     // Build where clause
     const where: Prisma.AdvertisementWhereInput = {};
 
+    this.logger.log(
+      `Getting advertisements for page ${page} and limit ${limit}`,
+      userLatitude,
+      userLongitude,
+    );
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
