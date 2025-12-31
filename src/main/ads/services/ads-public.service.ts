@@ -87,17 +87,6 @@ export class AdsPublicService {
       ];
     }
 
-    // Filter by active status if specified
-    // if (isActive !== undefined) {
-    //   const now = new Date();
-    //   if (isActive) {
-    //     where.startDate = { lte: now };
-    //     where.endDate = { gte: now };
-    //   } else {
-    //     where.OR = [{ startDate: { gt: now } }, { endDate: { lt: now } }];
-    //   }
-    // }
-
     // Get all advertisements
     const advertisements = await this.prisma.client.advertisement.findMany({
       where,
@@ -107,7 +96,7 @@ export class AdsPublicService {
       },
     });
 
-    // Filter by distance and process
+    // Filter by distance + process
     const processedAds = await Promise.all(
       advertisements.map(async (ad: any) => {
         const distance = this.calculateDistance(
@@ -138,17 +127,14 @@ export class AdsPublicService {
       }),
     );
 
-    // Filter: only show ads where user is within ad's range
+    // Filter: within radius
     const filteredAds = processedAds.filter(
       (ad: { distance: number; adShowRangeInMiles: number }) =>
-        ad.distance <= ad.adShowRangeInMiles,
+        ad.distance <= ad.adShowRangeInMiles + 0.2,
     );
 
-    // Sort by distance (closest first)
-    const sortedAds = filteredAds.sort(
-      (a: { distance: number }, b: { distance: number }) =>
-        a.distance - b.distance,
-    );
+    // Sort by distance
+    const sortedAds = filteredAds.sort((a, b) => a.distance - b.distance);
 
     // Pagination
     const skip = (page - 1) * limit;
@@ -158,10 +144,10 @@ export class AdsPublicService {
       {
         advertisements: paginatedAds,
         pagination: {
-          total: processedAds.length,
+          total: sortedAds.length,
           page,
           limit,
-          totalPages: Math.ceil(processedAds.length / limit),
+          totalPages: Math.ceil(sortedAds.length / limit),
         },
       },
       'Advertisements retrieved successfully',
