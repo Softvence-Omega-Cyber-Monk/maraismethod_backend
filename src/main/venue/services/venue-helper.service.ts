@@ -1,7 +1,7 @@
 import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
 import {
-    GoogleMapsService,
-    GooglePlaceResult,
+  GoogleMapsService,
+  GooglePlaceResult,
 } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';

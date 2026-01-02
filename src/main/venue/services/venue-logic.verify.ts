@@ -1,4 +1,3 @@
-
 import { DateTime } from 'luxon';
 import { VenueStatusEnum } from '../dto/get-venues.dto';
 import { VenueHelperService } from './venue-helper.service';
@@ -19,7 +18,10 @@ const mockGoogleMapsService = {
 let currentVenueMock: any = null;
 
 async function runTests() {
-  const service = new VenueHelperService(mockPrismaService, mockGoogleMapsService);
+  const service = new VenueHelperService(
+    mockPrismaService,
+    mockGoogleMapsService,
+  );
   console.log('--- Starting Venue Logic Verification ---');
 
   const now = DateTime.now();
@@ -30,10 +32,10 @@ async function runTests() {
   // Set hours to be in the past
   const pastStart = now.minus({ hours: 4 }).toFormat('HH:mm');
   const pastEnd = now.minus({ hours: 2 }).toFormat('HH:mm');
-  
+
   currentVenueMock = {
     id: 'test-venue-1',
-    latitude: 41.8781, 
+    latitude: 41.8781,
     longitude: -87.6298, // Chicago
     closedDays: [],
     startTime: pastStart,
@@ -90,12 +92,12 @@ async function runTests() {
   const openEnd = venueTime.plus({ hours: 5 }).toFormat('HH:mm');
 
   // Case A: Vote BEFORE boundary (should be ignored -> default to OPEN due to hours)
-  // Wait, if ignored, it falls back to hours. 
+  // Wait, if ignored, it falls back to hours.
   // To verify it IS ignored, we should set votes to indicate CLOSED.
   // If the vote is counted, result is CLOSED. If ignored, default OPEN.
-  
+
   const oldVoteDate = boundary.minus({ minutes: 1 }).toJSDate();
-  
+
   currentVenueMock = {
     id: 'test-venue-3',
     latitude: 41.8781,
@@ -104,19 +106,21 @@ async function runTests() {
     startTime: openStart,
     endTime: openEnd,
     votes: [
-      { isOpen: false, createdAt: oldVoteDate } // Vote says CLOSED
+      { isOpen: false, createdAt: oldVoteDate }, // Vote says CLOSED
     ],
   };
 
   status = await service.getVenueStatus('test-venue-3');
-  // Needs 1 vote to swing it? 
+  // Needs 1 vote to swing it?
   // Logic: if todayVotes > 0.
   // Here expected todayVotes = 0.
   // Fallback -> OPEN.
   if (status === VenueStatusEnum.OPEN) {
     console.log('✅ Passed: Old vote (before 8 AM ET) is ignored.');
   } else {
-    console.error(`❌ Failed: Expected OPEN, got ${status}. Old vote was likely counted.`);
+    console.error(
+      `❌ Failed: Expected OPEN, got ${status}. Old vote was likely counted.`,
+    );
   }
 
   // Case B: Vote AFTER boundary (should be counted)
@@ -130,7 +134,7 @@ async function runTests() {
     startTime: openStart,
     endTime: openEnd,
     votes: [
-      { isOpen: false, createdAt: newVoteDate } // Vote says CLOSED
+      { isOpen: false, createdAt: newVoteDate }, // Vote says CLOSED
     ],
   };
 
@@ -140,7 +144,9 @@ async function runTests() {
   if (status === VenueStatusEnum.CLOSED) {
     console.log('✅ Passed: New vote (after 8 AM ET) is counted.');
   } else {
-    console.error(`❌ Failed: Expected CLOSED, got ${status}. New vote was likely ignored.`);
+    console.error(
+      `❌ Failed: Expected CLOSED, got ${status}. New vote was likely ignored.`,
+    );
   }
 }
 
