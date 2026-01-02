@@ -48,40 +48,18 @@ export class VenueHelperService {
 
     if (!venue) return VenueStatusEnum.CLOSED;
 
-    // Get venue's timezone based on its location
     const timezone = await this.googleMapsService.getTimezone(
       venue.latitude,
       venue.longitude,
     );
 
-    // 1. Check STRICT operating hours first
-    // If outside start/end time, it is always CLOSED, regardless of votes.
-    const nowLocal = DateTime.now().setZone(timezone);
+    // 1. Check STRICT operating hours
+    // Convert DB hours to Google-like periods for unified logic
+    const periods = this.convertDBHoursToPeriods(venue);
+    const isStrictlyOpen = this.isWithinPeriods(periods, timezone);
 
-    // Check closed days
-    const dayName = nowLocal.toFormat('EEEE').toLowerCase();
-    if (venue.closedDays && venue.closedDays.includes(dayName)) {
+    if (!isStrictlyOpen) {
       return VenueStatusEnum.CLOSED;
-    }
-
-    // Check operating times
-    if (venue.startTime && venue.endTime) {
-      const currentTimeStr = nowLocal.toFormat('HH:mm');
-      let isOpenTime = false;
-
-      if (venue.startTime <= venue.endTime) {
-        // e.g. 09:00 to 17:00
-        isOpenTime =
-          currentTimeStr >= venue.startTime && currentTimeStr <= venue.endTime;
-      } else {
-        // Overnight, e.g. 22:00 to 04:00
-        isOpenTime =
-          currentTimeStr >= venue.startTime || currentTimeStr <= venue.endTime;
-      }
-
-      if (!isOpenTime) {
-        return VenueStatusEnum.CLOSED;
-      }
     }
 
     // 2. Voting Logic - Restarts at 8 AM Eastern Time (ET)
@@ -94,13 +72,10 @@ export class VenueHelperService {
       millisecond: 0,
     });
 
-    // If now is before 8 AM ET, the voting day belongs to the previous day (started yesterday 8 AM)
     if (nowEt < voteDayStart) {
       voteDayStart = voteDayStart.minus({ days: 1 });
     }
 
-    // Filter votes created since voteDayStart
-    // voteDayStart and v.createdAt are both absolute points in time, so direct comparison works
     const todayVotes = venue.votes.filter(
       (v) => DateTime.fromJSDate(v.createdAt) >= voteDayStart,
     );
@@ -114,12 +89,97 @@ export class VenueHelperService {
         : VenueStatusEnum.CLOSED;
     }
 
-    // Fallback: If within operating hours (passed check #1) and NO votes -> OPEN
-    if (venue.startTime && venue.endTime) {
-      return VenueStatusEnum.OPEN;
+    return VenueStatusEnum.OPEN; // Default to OPEN if within hours and no votes
+  }
+
+  /**
+   * Check if the current time in the given timezone falls within any of the provided periods.
+   */
+  private isWithinPeriods(periods: any[], timezone: string): boolean {
+    if (!periods || periods.length === 0) return false;
+
+    const now = DateTime.now().setZone(timezone);
+    const currentDay = now.weekday === 7 ? 0 : now.weekday; // Google: 0=Sun, 6=Sat
+    const currentTimeStr = now.toFormat('HHmm');
+
+    for (const period of periods) {
+      const openDay = period.open.day;
+      const openTime = period.open.time;
+      const closeDay = period.close?.day;
+      const closeTime = period.close?.time;
+
+      if (closeDay === undefined || closeTime === undefined) {
+        // Venue is open 24/7 or has no close time
+        return true;
+      }
+
+      // Check if current time falls within this period
+      if (openDay === closeDay) {
+        // Same day: e.g. 0900 to 1700
+        if (
+          currentDay === openDay &&
+          currentTimeStr >= openTime &&
+          currentTimeStr <= closeTime
+        ) {
+          return true;
+        }
+      } else {
+        // Crosses day boundary: e.g. Sunday 1700 to Monday 0400
+        // We are in this period if:
+        // 1. It's the openDay and we are after openTime
+        if (currentDay === openDay && currentTimeStr >= openTime) {
+          return true;
+        }
+        // 2. It's the closeDay and we are before closeTime
+        if (currentDay === closeDay && currentTimeStr <= closeTime) {
+          return true;
+        }
+        // 3. It's a day in between (not applicable for simple pairs, but for some Google data it might be)
+      }
     }
 
-    return VenueStatusEnum.CLOSED;
+    return false;
+  }
+
+  /**
+   * Helper to convert Database Venue hours/closedDays to Google-like periods
+   */
+  private convertDBHoursToPeriods(venue: any): any[] {
+    if (!venue.startTime || !venue.endTime) return [];
+
+    const periods: any[] = [];
+    const days = [0, 1, 2, 3, 4, 5, 6]; // 0=Sun
+    const dayMapping: Record<string, number> = {
+      sunday: 0,
+      monday: 1,
+      tuesday: 2,
+      wednesday: 3,
+      thursday: 4,
+      friday: 5,
+      saturday: 6,
+    };
+
+    const closedDaysSet = new Set(
+      (venue.closedDays || []).map((d: string) => dayMapping[d.toLowerCase()]),
+    );
+    const startTimeStr = venue.startTime.replace(':', '');
+    const endTimeStr = venue.endTime.replace(':', '');
+
+    for (const day of days) {
+      if (closedDaysSet.has(day)) continue;
+
+      let closeDay = day;
+      if (startTimeStr > endTimeStr) {
+        closeDay = (day + 1) % 7;
+      }
+
+      periods.push({
+        open: { day, time: startTimeStr },
+        close: { day: closeDay, time: endTimeStr },
+      });
+    }
+
+    return periods;
   }
 
   async getLastVoteUpdate(
@@ -179,13 +239,9 @@ export class VenueHelperService {
       place.longitude,
     );
 
-    let status = VenueStatusEnum.CLOSED; // Default
-    if (place.openNow === true) {
-      status = VenueStatusEnum.OPEN;
-    }
-
     let startTime: string = place.openTime || 'N/A';
     let endTime: string = place.closeTime || 'N/A';
+    const periods: any[] = place.openingHours?.periods || [];
 
     // If we have openingHours from Google Details, extract for today using local timezone
     if (place.openingHours?.periods) {
@@ -196,6 +252,12 @@ export class VenueHelperService {
       if (openTime) startTime = openTime;
       if (closeTime) endTime = closeTime;
     }
+
+    // Strict Hours Check
+    const isStrictlyOpen = this.isWithinPeriods(periods, timezone);
+    const status = isStrictlyOpen
+      ? VenueStatusEnum.OPEN
+      : VenueStatusEnum.CLOSED;
 
     return {
       id: `google_${place.placeId}`,
