@@ -1,7 +1,7 @@
 import { calculateDistanceInMiles, toRad } from '@/common/utils/distance.util';
 import {
-  GoogleMapsService,
-  GooglePlaceResult,
+    GoogleMapsService,
+    GooglePlaceResult,
 } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
@@ -54,32 +54,55 @@ export class VenueHelperService {
       venue.longitude,
     );
 
-    // Check if venue is closed today based on venue's local timezone
-    const today = DateTime.now()
-      .setZone(timezone)
-      .toFormat('EEEE')
-      .toLowerCase();
-    if (venue.closedDays && venue.closedDays.includes(today)) {
+    // 1. Check STRICT operating hours first
+    // If outside start/end time, it is always CLOSED, regardless of votes.
+    const nowLocal = DateTime.now().setZone(timezone);
+
+    // Check closed days
+    const dayName = nowLocal.toFormat('EEEE').toLowerCase();
+    if (venue.closedDays && venue.closedDays.includes(dayName)) {
       return VenueStatusEnum.CLOSED;
     }
 
-    // Determine venue's local time 8:00 AM today
-    const venueNow = DateTime.now().setZone(timezone);
-    let voteDayStart = venueNow.set({
+    // Check operating times
+    if (venue.startTime && venue.endTime) {
+      const currentTimeStr = nowLocal.toFormat('HH:mm');
+      let isOpenTime = false;
+
+      if (venue.startTime <= venue.endTime) {
+        // e.g. 09:00 to 17:00
+        isOpenTime =
+          currentTimeStr >= venue.startTime && currentTimeStr <= venue.endTime;
+      } else {
+        // Overnight, e.g. 22:00 to 04:00
+        isOpenTime =
+          currentTimeStr >= venue.startTime || currentTimeStr <= venue.endTime;
+      }
+
+      if (!isOpenTime) {
+        return VenueStatusEnum.CLOSED;
+      }
+    }
+
+    // 2. Voting Logic - Restarts at 8 AM Eastern Time (ET)
+    const etZone = 'America/New_York';
+    const nowEt = DateTime.now().setZone(etZone);
+    let voteDayStart = nowEt.set({
       hour: 8,
       minute: 0,
       second: 0,
       millisecond: 0,
     });
 
-    // If now is before 8 AM local time, move start to 8 AM yesterday
-    if (venueNow < voteDayStart) {
+    // If now is before 8 AM ET, the voting day belongs to the previous day (started yesterday 8 AM)
+    if (nowEt < voteDayStart) {
       voteDayStart = voteDayStart.minus({ days: 1 });
     }
 
     // Filter votes created since voteDayStart
+    // voteDayStart and v.createdAt are both absolute points in time, so direct comparison works
     const todayVotes = venue.votes.filter(
-      (v) => DateTime.fromJSDate(v.createdAt).toUTC() >= voteDayStart.toUTC(),
+      (v) => DateTime.fromJSDate(v.createdAt) >= voteDayStart,
     );
 
     if (todayVotes.length > 0) {
@@ -91,27 +114,9 @@ export class VenueHelperService {
         : VenueStatusEnum.CLOSED;
     }
 
-    // Fallback to start/end times if no votes today
+    // Fallback: If within operating hours (passed check #1) and NO votes -> OPEN
     if (venue.startTime && venue.endTime) {
-      const timezone = await this.googleMapsService.getTimezone(
-        venue.latitude,
-        venue.longitude,
-      );
-
-      const nowLocal = DateTime.now().setZone(timezone);
-      const currentTimeStr = nowLocal.toFormat('HH:mm');
-
-      if (venue.startTime <= venue.endTime) {
-        return currentTimeStr >= venue.startTime &&
-          currentTimeStr <= venue.endTime
-          ? VenueStatusEnum.OPEN
-          : VenueStatusEnum.CLOSED;
-      } else {
-        return currentTimeStr >= venue.startTime ||
-          currentTimeStr <= venue.endTime
-          ? VenueStatusEnum.OPEN
-          : VenueStatusEnum.CLOSED;
-      }
+      return VenueStatusEnum.OPEN;
     }
 
     return VenueStatusEnum.CLOSED;
