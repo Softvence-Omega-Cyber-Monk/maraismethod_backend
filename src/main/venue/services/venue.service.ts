@@ -6,7 +6,7 @@ import { S3Service } from '@/lib/file/services/s3.service';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { FileInstance, OperatingHours } from '@prisma';
+import { FileInstance } from '@prisma';
 import { CreateVenueDto } from '../dto/create-venue.dto';
 import { UpdateVenueDto } from '../dto/update-venue.dto';
 
@@ -69,8 +69,8 @@ export class VenueService {
         operatingHours: {
           createMany: {
             data:
-              dto.operatingHours?.map((oh: OperatingHours) => ({
-                day: oh.day,
+              dto.operatingHours?.map((oh: any) => ({
+                day: oh.day % 7, // Convert 1-7 (Mon-Sun) to 0-6 (Sun-Sat)
                 startTime: oh.startTime,
                 endTime: oh.endTime,
               })) || [],
@@ -96,7 +96,7 @@ export class VenueService {
   @HandleError('Failed to update venue')
   async update(
     id: string,
-    dto: UpdateVenueDto['coreInfo'],
+    data: UpdateVenueDto,
     file?: Express.Multer.File,
   ): Promise<TResponse<any>> {
     // Check if venue exists
@@ -104,9 +104,12 @@ export class VenueService {
       where: { id },
     });
 
-    if (!dto) {
+    if (!data || !data.coreInfo) {
       throw new AppError(400, 'No data provided for update');
     }
+
+    const dto = this.parsePipe.transform(data.coreInfo);
+    this.logger.debug(`Updating venue ${id} with data:`, dto);
 
     // Validate coordinates if provided
     if (dto.latitude !== undefined && dto.longitude !== undefined) {
@@ -149,17 +152,18 @@ export class VenueService {
         longitude: dto.longitude,
         description: dto.description,
         source: 'database',
-        operatingHours: {
-          deleteMany: {},
-          createMany: {
-            data:
-              dto.operatingHours?.map((oh) => ({
-                day: oh.day,
+        ...(dto.operatingHours && {
+          operatingHours: {
+            deleteMany: {},
+            createMany: {
+              data: dto.operatingHours.map((oh: any) => ({
+                day: oh.day % 7, // Convert 1-7 (Mon-Sun) to 0-6 (Sun-Sat)
                 startTime: oh.startTime,
                 endTime: oh.endTime,
-              })) || [],
+              })),
+            },
           },
-        },
+        }),
 
         ...(fileInstance && {
           image: {
@@ -167,6 +171,10 @@ export class VenueService {
           },
           imageUrl: fileInstance.url,
         }),
+      },
+      include: {
+        image: true,
+        operatingHours: true,
       },
     });
 
