@@ -43,6 +43,7 @@ export class VenueHelperService {
         votes: {
           orderBy: { createdAt: 'desc' },
         },
+        operatingHours: true,
       },
     });
 
@@ -142,39 +143,26 @@ export class VenueHelperService {
   }
 
   /**
-   * Helper to convert Database Venue hours/closedDays to Google-like periods
+   * Helper to convert Database Venue operatingHours to Google-like periods
    */
   private convertDBHoursToPeriods(venue: any): any[] {
-    if (!venue.startTime || !venue.endTime) return [];
+    if (!venue.operatingHours || venue.operatingHours.length === 0) return [];
 
     const periods: any[] = [];
-    const days = [0, 1, 2, 3, 4, 5, 6]; // 0=Sun
-    const dayMapping: Record<string, number> = {
-      sunday: 0,
-      monday: 1,
-      tuesday: 2,
-      wednesday: 3,
-      thursday: 4,
-      friday: 5,
-      saturday: 6,
-    };
 
-    const closedDaysSet = new Set(
-      (venue.closedDays || []).map((d: string) => dayMapping[d.toLowerCase()]),
-    );
-    const startTimeStr = venue.startTime.replace(':', '');
-    const endTimeStr = venue.endTime.replace(':', '');
+    for (const oh of venue.operatingHours) {
+      if (!oh.startTime || !oh.endTime) continue;
 
-    for (const day of days) {
-      if (closedDaysSet.has(day)) continue;
+      const startTimeStr = oh.startTime.replace(/:/g, '');
+      const endTimeStr = oh.endTime.replace(/:/g, '');
 
-      let closeDay = day;
+      let closeDay = oh.day;
       if (startTimeStr > endTimeStr) {
-        closeDay = (day + 1) % 7;
+        closeDay = (oh.day + 1) % 7;
       }
 
       periods.push({
-        open: { day, time: startTimeStr },
+        open: { day: oh.day, time: startTimeStr },
         close: { day: closeDay, time: endTimeStr },
       });
     }
@@ -221,16 +209,73 @@ export class VenueHelperService {
     return `Last updated ${result} ago`;
   }
 
+  extractClosedDays(operatingHours?: any[]): string[] {
+    if (!operatingHours || operatingHours.length === 0) return [];
+    const openDays = new Set(operatingHours.map((oh) => oh.day));
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    const closedDays: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      if (!openDays.has(i)) {
+        closedDays.push(dayNames[i]);
+      }
+    }
+    return closedDays;
+  }
+
+  extractTodayHoursFromOperatingHours(
+    operatingHours: any[],
+    timezone: string,
+  ): { startTime: string; endTime: string } {
+    const now = DateTime.now().setZone(timezone);
+    const currentDay = now.weekday === 7 ? 0 : now.weekday; // Google: 0=Sun, 6=Sat
+
+    const todayHours = operatingHours.find((oh) => oh.day === currentDay);
+    return {
+      startTime: this.formatTimeToAmPm(todayHours?.startTime || null),
+      endTime: this.formatTimeToAmPm(todayHours?.endTime || null),
+    };
+  }
+
+  async getVenueOperationalDetails(
+    latitude: number,
+    longitude: number,
+    operatingHours: any[],
+  ): Promise<{ startTime: string; endTime: string; closedDays: string[] }> {
+    const timezone = await this.googleMapsService.getTimezone(
+      latitude,
+      longitude,
+    );
+    const { startTime, endTime } = this.extractTodayHoursFromOperatingHours(
+      operatingHours,
+      timezone,
+    );
+    return {
+      startTime,
+      endTime,
+      closedDays: this.extractClosedDays(operatingHours),
+    };
+  }
+
   async transformGooglePlaceToVenue(
     place: GooglePlaceResult,
     userLatitude: number,
     userLongitude: number,
   ): Promise<VenueResponse> {
-    const distance = this.calculateDistance(
-      userLatitude,
-      userLongitude,
-      place.latitude,
-      place.longitude,
+    const distance = parseFloat(
+      this.calculateDistance(
+        userLatitude,
+        userLongitude,
+        place.latitude,
+        place.longitude,
+      ).toFixed(2),
     );
 
     // Get the venue's local timezone
@@ -239,8 +284,8 @@ export class VenueHelperService {
       place.longitude,
     );
 
-    let startTime: string = place.openTime || 'N/A';
-    let endTime: string = place.closeTime || 'N/A';
+    let startTime: string = 'N/A';
+    let endTime: string = 'N/A';
     const periods: any[] = place.openingHours?.periods || [];
 
     // If we have openingHours from Google Details, extract for today using local timezone
@@ -268,7 +313,7 @@ export class VenueHelperService {
       location: place.location,
       latitude: place.latitude,
       longitude: place.longitude,
-      distance: parseFloat(distance.toFixed(2)),
+      distance,
       status,
       imageUrl: place.imageUrl,
       lastVoteUpdate: 'Last updated 0 minutes ago',
@@ -280,7 +325,8 @@ export class VenueHelperService {
       source: 'google',
       startTime: this.formatTimeToAmPm(startTime),
       endTime: this.formatTimeToAmPm(endTime),
-      closedDays: null, // Google venues don't have closedDays data
+      closedDays: this.extractClosedDays(place.operatingHours),
+      operatingHours: place.operatingHours,
     };
   }
 

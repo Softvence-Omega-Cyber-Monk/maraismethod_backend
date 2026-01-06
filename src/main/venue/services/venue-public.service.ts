@@ -81,7 +81,9 @@ export class VenuePublicService {
             votes: true,
           },
         },
+        operatingHours: true,
       },
+
       orderBy: {
         createdAt: 'desc',
       },
@@ -142,10 +144,14 @@ export class VenuePublicService {
           description: venue.description,
           imageUrl: venue.imageUrl,
           image: venue.image,
-          startTime: this.helper.formatTimeToAmPm(venue.startTime),
-          endTime: this.helper.formatTimeToAmPm(venue.endTime),
-          closedDays: venue.closedDays || null,
+          ...(await this.helper.getVenueOperationalDetails(
+            venue.latitude,
+            venue.longitude,
+            venue.operatingHours,
+          )),
+          operatingHours: venue.operatingHours,
           distance: parseFloat(distance.toFixed(2)),
+
           status: venueStatus,
           lastVoteUpdate,
           voteStats: {
@@ -254,6 +260,7 @@ export class VenuePublicService {
               votes: true,
             },
           },
+          operatingHours: true,
         },
       });
 
@@ -269,11 +276,6 @@ export class VenuePublicService {
       if (!details) {
         throw new AppError(404, 'Venue details not found from Google');
       }
-
-      // Extract opening hours for today
-      const { openTime, closeTime } = this.googleMapsService.extractTodayHours(
-        details.opening_hours?.periods,
-      );
 
       const googlePlaceResult: GooglePlaceResult = {
         placeId: googlePlaceId,
@@ -294,8 +296,9 @@ export class VenuePublicService {
         types: details.types || [],
         openNow: details.opening_hours?.open_now ?? null,
         openingHours: details.opening_hours,
-        openTime,
-        closeTime,
+        operatingHours: this.googleMapsService.extractAllWeekHours(
+          details.opening_hours?.periods,
+        ),
       };
 
       const venueResponse = await this.helper.transformGooglePlaceToVenue(
@@ -327,6 +330,7 @@ export class VenuePublicService {
             votes: true,
           },
         },
+        operatingHours: true,
       },
     });
 
@@ -383,10 +387,14 @@ export class VenuePublicService {
         description: venue.description,
         imageUrl: venue.imageUrl,
         image: venue.image,
-        startTime: this.helper.formatTimeToAmPm(venue.startTime),
-        endTime: this.helper.formatTimeToAmPm(venue.endTime),
-        closedDays: venue.closedDays || null,
+        ...(await this.helper.getVenueOperationalDetails(
+          venue.latitude,
+          venue.longitude,
+          venue.operatingHours,
+        )),
+        operatingHours: venue.operatingHours,
         distance,
+
         status: venueStatus,
         lastVoteUpdate,
         voteStats: {

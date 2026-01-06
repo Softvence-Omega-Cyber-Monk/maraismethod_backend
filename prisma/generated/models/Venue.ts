@@ -45,8 +45,6 @@ export type VenueMinAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
-  startTime: string | null
-  endTime: string | null
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -64,8 +62,6 @@ export type VenueMaxAggregateOutputType = {
   location: string | null
   latitude: number | null
   longitude: number | null
-  startTime: string | null
-  endTime: string | null
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -83,9 +79,6 @@ export type VenueCountAggregateOutputType = {
   location: number
   latitude: number
   longitude: number
-  startTime: number
-  endTime: number
-  closedDays: number
   description: number
   imageId: number
   imageUrl: number
@@ -115,8 +108,6 @@ export type VenueMinAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  startTime?: true
-  endTime?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -134,8 +125,6 @@ export type VenueMaxAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  startTime?: true
-  endTime?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -153,9 +142,6 @@ export type VenueCountAggregateInputType = {
   location?: true
   latitude?: true
   longitude?: true
-  startTime?: true
-  endTime?: true
-  closedDays?: true
   description?: true
   imageId?: true
   imageUrl?: true
@@ -260,9 +246,6 @@ export type VenueGroupByOutputType = {
   location: string
   latitude: number
   longitude: number
-  startTime: string | null
-  endTime: string | null
-  closedDays: string[]
   description: string | null
   imageId: string | null
   imageUrl: string | null
@@ -303,9 +286,6 @@ export type VenueWhereInput = {
   location?: Prisma.StringFilter<"Venue"> | string
   latitude?: Prisma.FloatFilter<"Venue"> | number
   longitude?: Prisma.FloatFilter<"Venue"> | number
-  startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
-  endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
-  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
@@ -314,6 +294,7 @@ export type VenueWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   image?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
   votes?: Prisma.VotesListRelationFilter
+  operatingHours?: Prisma.OperatingHoursListRelationFilter
 }
 
 export type VenueOrderByWithRelationInput = {
@@ -325,9 +306,6 @@ export type VenueOrderByWithRelationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -336,6 +314,7 @@ export type VenueOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   image?: Prisma.FileInstanceOrderByWithRelationInput
   votes?: Prisma.VotesOrderByRelationAggregateInput
+  operatingHours?: Prisma.OperatingHoursOrderByRelationAggregateInput
 }
 
 export type VenueWhereUniqueInput = Prisma.AtLeast<{
@@ -351,9 +330,6 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   location?: Prisma.StringFilter<"Venue"> | string
   latitude?: Prisma.FloatFilter<"Venue"> | number
   longitude?: Prisma.FloatFilter<"Venue"> | number
-  startTime?: Prisma.StringNullableFilter<"Venue"> | string | null
-  endTime?: Prisma.StringNullableFilter<"Venue"> | string | null
-  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
   source?: Prisma.EnumVenueSourceFilter<"Venue"> | $Enums.VenueSource
@@ -361,6 +337,7 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   image?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
   votes?: Prisma.VotesListRelationFilter
+  operatingHours?: Prisma.OperatingHoursListRelationFilter
 }, "id" | "googlePlaceId" | "imageId">
 
 export type VenueOrderByWithAggregationInput = {
@@ -372,9 +349,6 @@ export type VenueOrderByWithAggregationInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -400,9 +374,6 @@ export type VenueScalarWhereWithAggregatesInput = {
   location?: Prisma.StringWithAggregatesFilter<"Venue"> | string
   latitude?: Prisma.FloatWithAggregatesFilter<"Venue"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Venue"> | number
-  startTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
-  endTime?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
-  closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
@@ -420,9 +391,6 @@ export type VenueCreateInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   source?: $Enums.VenueSource
@@ -430,6 +398,7 @@ export type VenueCreateInput = {
   updatedAt?: Date | string
   image?: Prisma.FileInstanceCreateNestedOneWithoutVenuesInput
   votes?: Prisma.VotesCreateNestedManyWithoutVenueInput
+  operatingHours?: Prisma.OperatingHoursCreateNestedManyWithoutVenueInput
 }
 
 export type VenueUncheckedCreateInput = {
@@ -441,9 +410,6 @@ export type VenueUncheckedCreateInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -451,6 +417,7 @@ export type VenueUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutVenueInput
+  operatingHours?: Prisma.OperatingHoursUncheckedCreateNestedManyWithoutVenueInput
 }
 
 export type VenueUpdateInput = {
@@ -462,9 +429,6 @@ export type VenueUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
@@ -472,6 +436,7 @@ export type VenueUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.FileInstanceUpdateOneWithoutVenuesNestedInput
   votes?: Prisma.VotesUpdateManyWithoutVenueNestedInput
+  operatingHours?: Prisma.OperatingHoursUpdateManyWithoutVenueNestedInput
 }
 
 export type VenueUncheckedUpdateInput = {
@@ -483,9 +448,6 @@ export type VenueUncheckedUpdateInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,6 +455,7 @@ export type VenueUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUncheckedUpdateManyWithoutVenueNestedInput
+  operatingHours?: Prisma.OperatingHoursUncheckedUpdateManyWithoutVenueNestedInput
 }
 
 export type VenueCreateManyInput = {
@@ -504,9 +467,6 @@ export type VenueCreateManyInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
@@ -524,9 +484,6 @@ export type VenueUpdateManyMutationInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
@@ -543,9 +500,6 @@ export type VenueUncheckedUpdateManyInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -568,9 +522,6 @@ export type VenueCountOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
-  endTime?: Prisma.SortOrder
-  closedDays?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -593,8 +544,6 @@ export type VenueMaxOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
-  endTime?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -612,8 +561,6 @@ export type VenueMinOrderByAggregateInput = {
   location?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
-  endTime?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -664,17 +611,22 @@ export type VenueUncheckedUpdateOneWithoutImageNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VenueUpdateToOneWithWhereWithoutImageInput, Prisma.VenueUpdateWithoutImageInput>, Prisma.VenueUncheckedUpdateWithoutImageInput>
 }
 
-export type VenueCreateclosedDaysInput = {
-  set: string[]
-}
-
-export type VenueUpdateclosedDaysInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
 export type EnumVenueSourceFieldUpdateOperationsInput = {
   set?: $Enums.VenueSource
+}
+
+export type VenueCreateNestedOneWithoutOperatingHoursInput = {
+  create?: Prisma.XOR<Prisma.VenueCreateWithoutOperatingHoursInput, Prisma.VenueUncheckedCreateWithoutOperatingHoursInput>
+  connectOrCreate?: Prisma.VenueCreateOrConnectWithoutOperatingHoursInput
+  connect?: Prisma.VenueWhereUniqueInput
+}
+
+export type VenueUpdateOneRequiredWithoutOperatingHoursNestedInput = {
+  create?: Prisma.XOR<Prisma.VenueCreateWithoutOperatingHoursInput, Prisma.VenueUncheckedCreateWithoutOperatingHoursInput>
+  connectOrCreate?: Prisma.VenueCreateOrConnectWithoutOperatingHoursInput
+  upsert?: Prisma.VenueUpsertWithoutOperatingHoursInput
+  connect?: Prisma.VenueWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VenueUpdateToOneWithWhereWithoutOperatingHoursInput, Prisma.VenueUpdateWithoutOperatingHoursInput>, Prisma.VenueUncheckedUpdateWithoutOperatingHoursInput>
 }
 
 export type VenueCreateNestedOneWithoutVotesInput = {
@@ -700,15 +652,13 @@ export type VenueCreateWithoutImageInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesCreateNestedManyWithoutVenueInput
+  operatingHours?: Prisma.OperatingHoursCreateNestedManyWithoutVenueInput
 }
 
 export type VenueUncheckedCreateWithoutImageInput = {
@@ -720,15 +670,13 @@ export type VenueUncheckedCreateWithoutImageInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutVenueInput
+  operatingHours?: Prisma.OperatingHoursUncheckedCreateNestedManyWithoutVenueInput
 }
 
 export type VenueCreateOrConnectWithoutImageInput = {
@@ -756,15 +704,13 @@ export type VenueUpdateWithoutImageInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUpdateManyWithoutVenueNestedInput
+  operatingHours?: Prisma.OperatingHoursUpdateManyWithoutVenueNestedInput
 }
 
 export type VenueUncheckedUpdateWithoutImageInput = {
@@ -776,10 +722,96 @@ export type VenueUncheckedUpdateWithoutImageInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  votes?: Prisma.VotesUncheckedUpdateManyWithoutVenueNestedInput
+  operatingHours?: Prisma.OperatingHoursUncheckedUpdateManyWithoutVenueNestedInput
+}
+
+export type VenueCreateWithoutOperatingHoursInput = {
+  id?: string
+  name: string
+  googlePlaceId?: string | null
+  catgegory: string
+  subcategory: string
+  location: string
+  latitude: number
+  longitude: number
+  description?: string | null
+  imageUrl?: string | null
+  source?: $Enums.VenueSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  image?: Prisma.FileInstanceCreateNestedOneWithoutVenuesInput
+  votes?: Prisma.VotesCreateNestedManyWithoutVenueInput
+}
+
+export type VenueUncheckedCreateWithoutOperatingHoursInput = {
+  id?: string
+  name: string
+  googlePlaceId?: string | null
+  catgegory: string
+  subcategory: string
+  location: string
+  latitude: number
+  longitude: number
+  description?: string | null
+  imageId?: string | null
+  imageUrl?: string | null
+  source?: $Enums.VenueSource
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  votes?: Prisma.VotesUncheckedCreateNestedManyWithoutVenueInput
+}
+
+export type VenueCreateOrConnectWithoutOperatingHoursInput = {
+  where: Prisma.VenueWhereUniqueInput
+  create: Prisma.XOR<Prisma.VenueCreateWithoutOperatingHoursInput, Prisma.VenueUncheckedCreateWithoutOperatingHoursInput>
+}
+
+export type VenueUpsertWithoutOperatingHoursInput = {
+  update: Prisma.XOR<Prisma.VenueUpdateWithoutOperatingHoursInput, Prisma.VenueUncheckedUpdateWithoutOperatingHoursInput>
+  create: Prisma.XOR<Prisma.VenueCreateWithoutOperatingHoursInput, Prisma.VenueUncheckedCreateWithoutOperatingHoursInput>
+  where?: Prisma.VenueWhereInput
+}
+
+export type VenueUpdateToOneWithWhereWithoutOperatingHoursInput = {
+  where?: Prisma.VenueWhereInput
+  data: Prisma.XOR<Prisma.VenueUpdateWithoutOperatingHoursInput, Prisma.VenueUncheckedUpdateWithoutOperatingHoursInput>
+}
+
+export type VenueUpdateWithoutOperatingHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catgegory?: Prisma.StringFieldUpdateOperationsInput | string
+  subcategory?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  image?: Prisma.FileInstanceUpdateOneWithoutVenuesNestedInput
+  votes?: Prisma.VotesUpdateManyWithoutVenueNestedInput
+}
+
+export type VenueUncheckedUpdateWithoutOperatingHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  googlePlaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catgegory?: Prisma.StringFieldUpdateOperationsInput | string
+  subcategory?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -796,15 +828,13 @@ export type VenueCreateWithoutVotesInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
   source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   image?: Prisma.FileInstanceCreateNestedOneWithoutVenuesInput
+  operatingHours?: Prisma.OperatingHoursCreateNestedManyWithoutVenueInput
 }
 
 export type VenueUncheckedCreateWithoutVotesInput = {
@@ -816,15 +846,13 @@ export type VenueUncheckedCreateWithoutVotesInput = {
   location: string
   latitude: number
   longitude: number
-  startTime?: string | null
-  endTime?: string | null
-  closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
   source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
+  operatingHours?: Prisma.OperatingHoursUncheckedCreateNestedManyWithoutVenueInput
 }
 
 export type VenueCreateOrConnectWithoutVotesInput = {
@@ -852,15 +880,13 @@ export type VenueUpdateWithoutVotesInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.FileInstanceUpdateOneWithoutVenuesNestedInput
+  operatingHours?: Prisma.OperatingHoursUpdateManyWithoutVenueNestedInput
 }
 
 export type VenueUncheckedUpdateWithoutVotesInput = {
@@ -872,15 +898,13 @@ export type VenueUncheckedUpdateWithoutVotesInput = {
   location?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operatingHours?: Prisma.OperatingHoursUncheckedUpdateManyWithoutVenueNestedInput
 }
 
 
@@ -890,10 +914,12 @@ export type VenueUncheckedUpdateWithoutVotesInput = {
 
 export type VenueCountOutputType = {
   votes: number
+  operatingHours: number
 }
 
 export type VenueCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   votes?: boolean | VenueCountOutputTypeCountVotesArgs
+  operatingHours?: boolean | VenueCountOutputTypeCountOperatingHoursArgs
 }
 
 /**
@@ -913,6 +939,13 @@ export type VenueCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.VotesWhereInput
 }
 
+/**
+ * VenueCountOutputType without action
+ */
+export type VenueCountOutputTypeCountOperatingHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OperatingHoursWhereInput
+}
+
 
 export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -923,9 +956,6 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -934,6 +964,7 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
+  operatingHours?: boolean | Prisma.Venue$operatingHoursArgs<ExtArgs>
   _count?: boolean | Prisma.VenueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["venue"]>
 
@@ -946,9 +977,6 @@ export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -967,9 +995,6 @@ export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -988,9 +1013,6 @@ export type VenueSelectScalar = {
   location?: boolean
   latitude?: boolean
   longitude?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  closedDays?: boolean
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
@@ -999,10 +1021,11 @@ export type VenueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "closedDays" | "description" | "imageId" | "imageUrl" | "source" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
+export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "description" | "imageId" | "imageUrl" | "source" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
 export type VenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
+  operatingHours?: boolean | Prisma.Venue$operatingHoursArgs<ExtArgs>
   _count?: boolean | Prisma.VenueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1017,6 +1040,7 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     image: Prisma.$FileInstancePayload<ExtArgs> | null
     votes: Prisma.$VotesPayload<ExtArgs>[]
+    operatingHours: Prisma.$OperatingHoursPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1027,9 +1051,6 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     location: string
     latitude: number
     longitude: number
-    startTime: string | null
-    endTime: string | null
-    closedDays: string[]
     description: string | null
     imageId: string | null
     imageUrl: string | null
@@ -1432,6 +1453,7 @@ export interface Prisma__VenueClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   image<T extends Prisma.Venue$imageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venue$imageArgs<ExtArgs>>): Prisma.Prisma__FileInstanceClient<runtime.Types.Result.GetResult<Prisma.$FileInstancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   votes<T extends Prisma.Venue$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venue$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VotesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  operatingHours<T extends Prisma.Venue$operatingHoursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venue$operatingHoursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OperatingHoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1469,9 +1491,6 @@ export interface VenueFieldRefs {
   readonly location: Prisma.FieldRef<"Venue", 'String'>
   readonly latitude: Prisma.FieldRef<"Venue", 'Float'>
   readonly longitude: Prisma.FieldRef<"Venue", 'Float'>
-  readonly startTime: Prisma.FieldRef<"Venue", 'String'>
-  readonly endTime: Prisma.FieldRef<"Venue", 'String'>
-  readonly closedDays: Prisma.FieldRef<"Venue", 'String[]'>
   readonly description: Prisma.FieldRef<"Venue", 'String'>
   readonly imageId: Prisma.FieldRef<"Venue", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Venue", 'String'>
@@ -1914,6 +1933,30 @@ export type Venue$votesArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.VotesScalarFieldEnum | Prisma.VotesScalarFieldEnum[]
+}
+
+/**
+ * Venue.operatingHours
+ */
+export type Venue$operatingHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OperatingHours
+   */
+  select?: Prisma.OperatingHoursSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OperatingHours
+   */
+  omit?: Prisma.OperatingHoursOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OperatingHoursInclude<ExtArgs> | null
+  where?: Prisma.OperatingHoursWhereInput
+  orderBy?: Prisma.OperatingHoursOrderByWithRelationInput | Prisma.OperatingHoursOrderByWithRelationInput[]
+  cursor?: Prisma.OperatingHoursWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OperatingHoursScalarFieldEnum | Prisma.OperatingHoursScalarFieldEnum[]
 }
 
 /**

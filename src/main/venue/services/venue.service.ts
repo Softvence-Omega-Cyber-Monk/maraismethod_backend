@@ -53,11 +53,19 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        closedDays: dto.closedDays || [],
         description: dto.description,
         source: 'database',
+        operatingHours: {
+          createMany: {
+            data:
+              dto.operatingHours?.map((oh) => ({
+                day: oh.day,
+                startTime: oh.startTime,
+                endTime: oh.endTime,
+              })) || [],
+          },
+        },
+
         ...(fileInstance && {
           image: {
             connect: fileInstance,
@@ -120,11 +128,20 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        closedDays: dto.closedDays,
         description: dto.description,
         source: 'database',
+        operatingHours: {
+          deleteMany: {},
+          createMany: {
+            data:
+              dto.operatingHours?.map((oh) => ({
+                day: oh.day,
+                startTime: oh.startTime,
+                endTime: oh.endTime,
+              })) || [],
+          },
+        },
+
         ...(fileInstance && {
           image: {
             connect: fileInstance,
