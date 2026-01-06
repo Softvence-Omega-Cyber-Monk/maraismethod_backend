@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 
 export enum CloseDayEnum {
@@ -18,7 +19,33 @@ export enum CloseDayEnum {
   sunday = 'sunday',
 }
 
-export class CreateVenueDto {
+export class OperatingHourDto {
+  @ApiProperty({
+    example: 1,
+    description: 'Day of the week (1 = Monday, 7 = Sunday)',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  day: number;
+
+  @ApiPropertyOptional({
+    example: '09:00',
+    description: 'Opening time in HH:mm format',
+  })
+  @IsString()
+  @IsOptional()
+  startTime?: string;
+
+  @ApiPropertyOptional({
+    example: '18:00',
+    description: 'Closing time in HH:mm format',
+  })
+  @IsString()
+  @IsOptional()
+  endTime?: string;
+}
+
+export class CreateVenueCoreInfoDto {
   @ApiProperty({
     example: 'The Grand Hall',
     description: 'Name of the venue',
@@ -79,16 +106,20 @@ export class CreateVenueDto {
 
   @ApiPropertyOptional({
     description: 'Operating hours per day',
-    type: [Object],
-    example: [{ day: 1, startTime: '09:00', endTime: '18:00' }],
+    type: () => [OperatingHourDto],
   })
-  @IsArray()
   @IsOptional()
-  operatingHours?: {
-    day: number;
-    startTime?: string;
-    endTime?: string;
-  }[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OperatingHourDto)
+  operatingHours?: OperatingHourDto[];
+}
+
+export class CreateVenueDto {
+  @ApiProperty({ type: () => CreateVenueCoreInfoDto })
+  @ValidateNested()
+  @Type(() => CreateVenueCoreInfoDto)
+  coreInfo: CreateVenueCoreInfoDto;
 
   @ApiPropertyOptional({
     type: 'string',

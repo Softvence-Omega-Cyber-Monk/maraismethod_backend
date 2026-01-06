@@ -14,12 +14,16 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateVenueDto } from '../dto/create-venue.dto';
+import {
+  CreateVenueCoreInfoDto,
+  CreateVenueDto,
+} from '../dto/create-venue.dto';
 import { GetVenuesDto } from '../dto/get-venues.dto';
 import { UpdateVenueDto } from '../dto/update-venue.dto';
 import { GetVenuesService } from '../services/get-venues.service';
@@ -39,12 +43,13 @@ export class VenueController {
   @ApiOperation({ summary: 'Create a new venue' })
   @ValidateAuth()
   @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: () => CreateVenueDto })
   @UseInterceptors(FileInterceptor('image'))
   create(
-    @Body() createVenueDto: CreateVenueDto,
+    @Body() dto: { coreInfo: CreateVenueCoreInfoDto },
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.venueService.create(createVenueDto, file);
+    return this.venueService.create(dto, file);
   }
 
   @Patch(':id')
@@ -58,7 +63,7 @@ export class VenueController {
     @Body() updateVenueDto: UpdateVenueDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.venueService.update(id, updateVenueDto, file);
+    return this.venueService.update(id, updateVenueDto['coreInfo'], file);
   }
 
   @Delete(':id')
