@@ -10,8 +10,8 @@ model Venue {
   latitude  Float
   longitude Float
 
-  startTime String?
-  endTime   String?
+  startTime  String?
+  endTime    String?
   closedDays String[]
 
   description String?
@@ -22,10 +22,17 @@ model Venue {
 
   votes Votes[]
 
+  source VenueSource @default(database)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("venues")
+}
+
+enum VenueSource {
+  google
+  database
 }
 
 model Votes {

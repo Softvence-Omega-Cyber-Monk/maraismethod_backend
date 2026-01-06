@@ -57,6 +57,7 @@ export class VenueService {
         endTime: dto.endTime,
         closedDays: dto.closedDays || [],
         description: dto.description,
+        source: 'database',
         ...(fileInstance && {
           image: {
             connect: fileInstance,
@@ -123,6 +124,7 @@ export class VenueService {
         endTime: dto.endTime,
         closedDays: dto.closedDays,
         description: dto.description,
+        source: 'database',
         ...(fileInstance && {
           image: {
             connect: fileInstance,

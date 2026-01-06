@@ -50,6 +50,7 @@ export type VenueMinAggregateOutputType = {
   description: string | null
   imageId: string | null
   imageUrl: string | null
+  source: $Enums.VenueSource | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type VenueMaxAggregateOutputType = {
   description: string | null
   imageId: string | null
   imageUrl: string | null
+  source: $Enums.VenueSource | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +89,7 @@ export type VenueCountAggregateOutputType = {
   description: number
   imageId: number
   imageUrl: number
+  source: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -117,6 +120,7 @@ export type VenueMinAggregateInputType = {
   description?: true
   imageId?: true
   imageUrl?: true
+  source?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -135,6 +139,7 @@ export type VenueMaxAggregateInputType = {
   description?: true
   imageId?: true
   imageUrl?: true
+  source?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +159,7 @@ export type VenueCountAggregateInputType = {
   description?: true
   imageId?: true
   imageUrl?: true
+  source?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +266,7 @@ export type VenueGroupByOutputType = {
   description: string | null
   imageId: string | null
   imageUrl: string | null
+  source: $Enums.VenueSource
   createdAt: Date
   updatedAt: Date
   _count: VenueCountAggregateOutputType | null
@@ -302,6 +309,7 @@ export type VenueWhereInput = {
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
+  source?: Prisma.EnumVenueSourceFilter<"Venue"> | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   image?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
@@ -323,6 +331,7 @@ export type VenueOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   image?: Prisma.FileInstanceOrderByWithRelationInput
@@ -347,6 +356,7 @@ export type VenueWhereUniqueInput = Prisma.AtLeast<{
   closedDays?: Prisma.StringNullableListFilter<"Venue">
   description?: Prisma.StringNullableFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Venue"> | string | null
+  source?: Prisma.EnumVenueSourceFilter<"Venue"> | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Venue"> | Date | string
   image?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
@@ -368,6 +378,7 @@ export type VenueOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.VenueCountOrderByAggregateInput
@@ -395,6 +406,7 @@ export type VenueScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageId?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Venue"> | string | null
+  source?: Prisma.EnumVenueSourceWithAggregatesFilter<"Venue"> | $Enums.VenueSource
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Venue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Venue"> | Date | string
 }
@@ -413,6 +425,7 @@ export type VenueCreateInput = {
   closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   image?: Prisma.FileInstanceCreateNestedOneWithoutVenuesInput
@@ -434,6 +447,7 @@ export type VenueUncheckedCreateInput = {
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutVenueInput
@@ -453,6 +467,7 @@ export type VenueUpdateInput = {
   closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.FileInstanceUpdateOneWithoutVenuesNestedInput
@@ -474,6 +489,7 @@ export type VenueUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUncheckedUpdateManyWithoutVenueNestedInput
@@ -494,6 +510,7 @@ export type VenueCreateManyInput = {
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -512,6 +529,7 @@ export type VenueUpdateManyMutationInput = {
   closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -531,6 +549,7 @@ export type VenueUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -555,6 +574,7 @@ export type VenueCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -578,6 +598,7 @@ export type VenueMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -596,6 +617,7 @@ export type VenueMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -651,6 +673,10 @@ export type VenueUpdateclosedDaysInput = {
   push?: string | string[]
 }
 
+export type EnumVenueSourceFieldUpdateOperationsInput = {
+  set?: $Enums.VenueSource
+}
+
 export type VenueCreateNestedOneWithoutVotesInput = {
   create?: Prisma.XOR<Prisma.VenueCreateWithoutVotesInput, Prisma.VenueUncheckedCreateWithoutVotesInput>
   connectOrCreate?: Prisma.VenueCreateOrConnectWithoutVotesInput
@@ -679,6 +705,7 @@ export type VenueCreateWithoutImageInput = {
   closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesCreateNestedManyWithoutVenueInput
@@ -698,6 +725,7 @@ export type VenueUncheckedCreateWithoutImageInput = {
   closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutVenueInput
@@ -733,6 +761,7 @@ export type VenueUpdateWithoutImageInput = {
   closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUpdateManyWithoutVenueNestedInput
@@ -752,6 +781,7 @@ export type VenueUncheckedUpdateWithoutImageInput = {
   closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUncheckedUpdateManyWithoutVenueNestedInput
@@ -771,6 +801,7 @@ export type VenueCreateWithoutVotesInput = {
   closedDays?: Prisma.VenueCreateclosedDaysInput | string[]
   description?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
   image?: Prisma.FileInstanceCreateNestedOneWithoutVenuesInput
@@ -791,6 +822,7 @@ export type VenueUncheckedCreateWithoutVotesInput = {
   description?: string | null
   imageId?: string | null
   imageUrl?: string | null
+  source?: $Enums.VenueSource
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -825,6 +857,7 @@ export type VenueUpdateWithoutVotesInput = {
   closedDays?: Prisma.VenueUpdateclosedDaysInput | string[]
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   image?: Prisma.FileInstanceUpdateOneWithoutVenuesNestedInput
@@ -845,6 +878,7 @@ export type VenueUncheckedUpdateWithoutVotesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumVenueSourceFieldUpdateOperationsInput | $Enums.VenueSource
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -895,6 +929,7 @@ export type VenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
+  source?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
@@ -917,6 +952,7 @@ export type VenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
+  source?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
@@ -937,6 +973,7 @@ export type VenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
+  source?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
@@ -957,11 +994,12 @@ export type VenueSelectScalar = {
   description?: boolean
   imageId?: boolean
   imageUrl?: boolean
+  source?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "closedDays" | "description" | "imageId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
+export type VenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "googlePlaceId" | "catgegory" | "subcategory" | "location" | "latitude" | "longitude" | "startTime" | "endTime" | "closedDays" | "description" | "imageId" | "imageUrl" | "source" | "createdAt" | "updatedAt", ExtArgs["result"]["venue"]>
 export type VenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.Venue$imageArgs<ExtArgs>
   votes?: boolean | Prisma.Venue$votesArgs<ExtArgs>
@@ -995,6 +1033,7 @@ export type $VenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string | null
     imageId: string | null
     imageUrl: string | null
+    source: $Enums.VenueSource
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["venue"]>
@@ -1436,6 +1475,7 @@ export interface VenueFieldRefs {
   readonly description: Prisma.FieldRef<"Venue", 'String'>
   readonly imageId: Prisma.FieldRef<"Venue", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Venue", 'String'>
+  readonly source: Prisma.FieldRef<"Venue", 'VenueSource'>
   readonly createdAt: Prisma.FieldRef<"Venue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Venue", 'DateTime'>
 }

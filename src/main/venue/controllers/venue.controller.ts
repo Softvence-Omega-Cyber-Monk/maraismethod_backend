@@ -69,8 +69,14 @@ export class VenueController {
   }
 
   @Get('admin/list')
-  @ApiOperation({ summary: 'Get venues with filters (Admin)' })
+  @ApiOperation({ summary: 'Get created venues with filters (Admin)' })
   async getVenuesAdmin(@Query() dto: GetVenuesDto) {
+    return this.getVenuesService.getCreatedVenues(dto);
+  }
+
+  @Get('admin/list/all')
+  @ApiOperation({ summary: 'Get all venues with filters (Admin)' })
+  async getAllVenuesAdmin(@Query() dto: GetVenuesDto) {
     return this.getVenuesService.getAllVenues(dto);
   }
 

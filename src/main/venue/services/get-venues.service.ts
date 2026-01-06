@@ -13,6 +13,63 @@ export class GetVenuesService {
   constructor(private readonly prisma: PrismaService) {}
 
   @HandleError('Failed to get venues')
+  async getCreatedVenues(dto: GetVenuesDto) {
+    const page = dto.page && dto.page > 0 ? dto.page : 1;
+    const limit = dto.limit && dto.limit > 0 ? dto.limit : 10;
+    const skip = (page - 1) * limit;
+
+    const venueWhere: Prisma.VenueWhereInput = {
+      source: 'database',
+    };
+
+    if (dto.category) venueWhere.catgegory = dto.category;
+    if (dto.subcategory) venueWhere.subcategory = dto.subcategory;
+
+    if (dto.search) {
+      const q = dto.search;
+      venueWhere.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
+        { location: { contains: q, mode: 'insensitive' } },
+        { catgegory: { contains: q, mode: 'insensitive' } },
+        { subcategory: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
+    // Step 1: fetch all candidate venues matching category/search filters
+    let candidateVenues = await this.prisma.client.venue.findMany({
+      where: venueWhere,
+      include: { votes: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Step 2: apply boatCount filter if provided
+    if (dto.boatCount) {
+      const minBoatCount = Number(dto.boatCount);
+      candidateVenues = candidateVenues.filter(
+        (v) => (v.votes?.length ?? 0) >= minBoatCount,
+      );
+    }
+
+    // Step 3: total count after filters
+    const total = candidateVenues.length;
+
+    // Step 4: apply pagination
+    const paginatedVenues = candidateVenues.slice(skip, skip + limit);
+
+    // Step 5: transform each venue with stats
+    const transformedVenues = await Promise.all(
+      paginatedVenues.map((venue) => this.transformVenueWithStats(venue)),
+    );
+
+    return successPaginatedResponse(
+      transformedVenues,
+      { total, page, limit },
+      'Venues found',
+    );
+  }
+
+  @HandleError('Failed to get venues')
   async getAllVenues(dto: GetVenuesDto) {
     const page = dto.page && dto.page > 0 ? dto.page : 1;
     const limit = dto.limit && dto.limit > 0 ? dto.limit : 10;

@@ -55,3 +55,11 @@ export const UserStatus = {
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const VenueSource = {
+  google: 'google',
+  database: 'database'
+} as const
+
+export type VenueSource = (typeof VenueSource)[keyof typeof VenueSource]

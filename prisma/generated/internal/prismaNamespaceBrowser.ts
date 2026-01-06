@@ -230,6 +230,7 @@ export const VenueScalarFieldEnum = {
   description: 'description',
   imageId: 'imageId',
   imageUrl: 'imageUrl',
+  source: 'source',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -338,6 +338,23 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
 }
 
+export type EnumVenueSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.VenueSource | Prisma.EnumVenueSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel> | $Enums.VenueSource
+}
+
+export type EnumVenueSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VenueSource | Prisma.EnumVenueSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVenueSourceWithAggregatesFilter<$PrismaModel> | $Enums.VenueSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -635,6 +652,23 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumVenueSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.VenueSource | Prisma.EnumVenueSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel> | $Enums.VenueSource
+}
+
+export type NestedEnumVenueSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VenueSource | Prisma.EnumVenueSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VenueSource[] | Prisma.ListEnumVenueSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVenueSourceWithAggregatesFilter<$PrismaModel> | $Enums.VenueSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVenueSourceFilter<$PrismaModel>
 }
 
 
