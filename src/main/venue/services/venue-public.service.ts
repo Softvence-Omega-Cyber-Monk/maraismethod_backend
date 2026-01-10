@@ -100,18 +100,6 @@ export class VenuePublicService {
 
     this.logger.debug(`Fetched ${googlePlaces.length} Google Places`);
 
-    // Filter Google results by search term
-    // if (search) {
-    //   const searchLower = search.toLowerCase();
-    //   googlePlaces = googlePlaces.filter(
-    //     (p) =>
-    //       p.name.toLowerCase().includes(searchLower) ||
-    //       p.location.toLowerCase().includes(searchLower) ||
-    //       p.category.toLowerCase().includes(searchLower) ||
-    //       p.subcategory.toLowerCase().includes(searchLower),
-    //   );
-    // }
-
     // 3. Process database venues
     const processedDbVenues: VenueResponse[] = await Promise.all(
       dbVenues.map(async (venue) => {
@@ -394,7 +382,6 @@ export class VenuePublicService {
         )),
         operatingHours: venue.operatingHours,
         distance,
-
         status: venueStatus,
         lastVoteUpdate,
         voteStats: {

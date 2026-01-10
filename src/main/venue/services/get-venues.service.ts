@@ -5,7 +5,7 @@ import {
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Venue, Votes } from '@prisma';
+import { OperatingHours, Prisma, Venue, Votes } from '@prisma';
 import { GetVenuesDto } from '../dto/get-venues.dto';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class GetVenuesService {
     // Step 1: fetch all candidate venues matching category/search filters
     let candidateVenues = await this.prisma.client.venue.findMany({
       where: venueWhere,
-      include: { votes: true },
+      include: { votes: true, operatingHours: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -94,7 +94,7 @@ export class GetVenuesService {
     // Step 1: fetch all candidate venues matching category/search filters
     let candidateVenues = await this.prisma.client.venue.findMany({
       where: venueWhere,
-      include: { votes: true },
+      include: { votes: true, operatingHours: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -128,7 +128,7 @@ export class GetVenuesService {
   async getSingleVenue(id: string) {
     const venue = await this.prisma.client.venue.findUniqueOrThrow({
       where: { id },
-      include: { votes: true },
+      include: { votes: true, operatingHours: true },
     });
 
     const transformedVenue = await this.transformVenueWithStats(venue);
@@ -136,7 +136,9 @@ export class GetVenuesService {
     return successResponse(transformedVenue, 'Venue found');
   }
 
-  private transformVenueWithStats = (venue: Venue & { votes: Votes[] }) => {
+  private transformVenueWithStats = (
+    venue: Venue & { votes: Votes[]; operatingHours: OperatingHours[] },
+  ) => {
     const votes = venue.votes ?? [];
 
     const total = votes.length;
