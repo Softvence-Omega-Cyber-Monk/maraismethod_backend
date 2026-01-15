@@ -144,7 +144,45 @@ export class VenueCacheService {
       }
     }
 
-    this.logger.debug(`Place ${placeId} not found in cache or nearby search`);
+    // If still not found, fetch from Google Places API directly
+    this.logger.debug(
+      `Cache miss for place ${placeId}, fetching directly from Google Places API`,
+    );
+    const details = await this.googlePlacesService.getPlaceDetails(placeId);
+
+    if (details) {
+      // Map to GooglePlaceResult
+      const place: GooglePlaceResult = {
+        placeId: details.place_id,
+        name: details.name,
+        location: details.vicinity || details.formatted_address || '',
+        latitude: details.geometry?.location?.lat ?? 0,
+        longitude: details.geometry?.location?.lng ?? 0,
+        category: this.googlePlacesService.extractCategory(details.types || []),
+        subcategory: this.googlePlacesService.extractSubcategory(
+          details.types || [],
+        ),
+        types: details.types || [],
+        imageUrl: details.photos?.length
+          ? this.googlePlacesService.getPlacePhotoUrl(
+              details.photos[0].photo_reference,
+            )
+          : '',
+        openNow: details.opening_hours?.open_now ?? null,
+        openingHours: details.opening_hours,
+        operatingHours: this.googlePlacesService.extractAllWeekHours(
+          details.opening_hours?.periods,
+        ),
+      };
+
+      // Cache it
+      await this.cacheManager.set(cacheKey, place, CACHE_TTL_MS);
+      return place;
+    }
+
+    this.logger.debug(
+      `Place ${placeId} not found in cache or Google Places API`,
+    );
     return null;
   }
 

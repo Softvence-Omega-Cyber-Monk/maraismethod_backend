@@ -1,12 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 
 export enum CloseDayEnum {
@@ -19,7 +19,33 @@ export enum CloseDayEnum {
   sunday = 'sunday',
 }
 
-export class CreateVenueDto {
+export class OperatingHourDto {
+  @ApiProperty({
+    example: 1,
+    description: 'Day of the week (1 = Monday, 7 = Sunday)',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  day: number;
+
+  @ApiPropertyOptional({
+    example: '09:00',
+    description: 'Opening time in HH:mm format',
+  })
+  @IsString()
+  @IsOptional()
+  startTime?: string;
+
+  @ApiPropertyOptional({
+    example: '18:00',
+    description: 'Closing time in HH:mm format',
+  })
+  @IsString()
+  @IsOptional()
+  endTime?: string;
+}
+
+export class CreateVenueCoreInfoDto {
   @ApiProperty({
     example: 'The Grand Hall',
     description: 'Name of the venue',
@@ -79,36 +105,21 @@ export class CreateVenueDto {
   description?: string;
 
   @ApiPropertyOptional({
-    example: '09:00',
-    description: 'Start time (HH:mm)',
+    description: 'Operating hours per day',
+    type: () => [OperatingHourDto],
   })
-  @IsString()
   @IsOptional()
-  startTime?: string;
-
-  @ApiPropertyOptional({
-    example: '22:00',
-    description: 'End time (HH:mm)',
-  })
-  @IsString()
-  @IsOptional()
-  endTime?: string;
-
-  @ApiPropertyOptional({
-    description: 'Days when venue is closed',
-    example: [CloseDayEnum.monday, CloseDayEnum.friday],
-  })
-  @Transform(({ value }) => {
-    console.info(value);
-    if (typeof value === 'string') {
-      return value.split(',').map((v) => v.trim());
-    }
-    return value;
-  })
   @IsArray()
-  @IsEnum(CloseDayEnum, { each: true })
-  @IsOptional()
-  closedDays?: string[];
+  @ValidateNested({ each: true })
+  @Type(() => OperatingHourDto)
+  operatingHours?: OperatingHourDto[];
+}
+
+export class CreateVenueDto {
+  @ApiProperty({ type: () => CreateVenueCoreInfoDto })
+  @ValidateNested()
+  @Type(() => CreateVenueCoreInfoDto)
+  coreInfo: CreateVenueCoreInfoDto;
 
   @ApiPropertyOptional({
     type: 'string',

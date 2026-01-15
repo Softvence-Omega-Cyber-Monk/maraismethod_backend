@@ -68,6 +68,11 @@ export type User = Prisma.UserModel
  */
 export type Venue = Prisma.VenueModel
 /**
+ * Model OperatingHours
+ * 
+ */
+export type OperatingHours = Prisma.OperatingHoursModel
+/**
  * Model Votes
  * 
  */

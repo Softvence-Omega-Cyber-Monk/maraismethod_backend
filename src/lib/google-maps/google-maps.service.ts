@@ -17,8 +17,11 @@ export interface GooglePlaceResult {
   types: string[];
   openNow?: boolean | null;
   openingHours?: any;
-  openTime?: string | null;
-  closeTime?: string | null;
+  operatingHours?: {
+    day: number;
+    startTime: string | null;
+    endTime: string | null;
+  }[];
 }
 
 export interface PlacePhoto {
@@ -173,11 +176,6 @@ export class GoogleMapsService {
         imageUrl = this.getPlacePhotoUrl(photoRef, 400);
       }
 
-      // Extract today's opening hours
-      const { openTime, closeTime } = this.extractTodayHours(
-        place?.opening_hours?.periods,
-      );
-
       results.push({
         placeId: place.place_id || '',
         name: place.name || 'Unknown',
@@ -190,8 +188,7 @@ export class GoogleMapsService {
         types: place.types || [],
         openNow: place.opening_hours?.open_now ?? null,
         openingHours: place.opening_hours,
-        openTime,
-        closeTime,
+        operatingHours: this.extractAllWeekHours(place?.opening_hours?.periods),
       });
     }
 
@@ -227,7 +224,7 @@ export class GoogleMapsService {
     places: GooglePlaceResult[],
   ): Promise<void> {
     const placesToEnrich = places.filter(
-      (p) => !p.openTime || !p.closeTime || !p.openingHours?.periods,
+      (p) => !p.operatingHours || p.operatingHours.length === 0,
     );
 
     if (placesToEnrich.length === 0) return;
@@ -259,12 +256,10 @@ export class GoogleMapsService {
               place.openingHours = details.opening_hours;
               place.openNow = details.opening_hours.open_now ?? null;
 
-              // Extract today's hours
-              const { openTime, closeTime } = this.extractTodayHours(
+              // Extract all hours
+              place.operatingHours = this.extractAllWeekHours(
                 details.opening_hours.periods,
               );
-              place.openTime = openTime;
-              place.closeTime = closeTime;
             }
           } catch (error) {
             this.logger.warn(
@@ -385,6 +380,41 @@ export class GoogleMapsService {
 
   getPlacePhotoUrl(photoReference: string, maxWidth: number = 400): string {
     return `${this.baseUrl}/place/photo?photo_reference=${photoReference}&maxwidth=${maxWidth}&key=${this.apiKey}`;
+  }
+
+  /**
+   * Extract all opening hours from Google's periods array
+   */
+  extractAllWeekHours(periods?: OpeningHoursPeriod[]): {
+    day: number;
+    startTime: string | null;
+    endTime: string | null;
+  }[] {
+    if (!periods || periods.length === 0) {
+      return [];
+    }
+
+    const results: {
+      day: number;
+      startTime: string | null;
+      endTime: string | null;
+    }[] = [];
+
+    for (const period of periods) {
+      if (period.open) {
+        results.push({
+          day: period.open.day,
+          startTime: period.open.time
+            ? this.formatGoogleTime(period.open.time)
+            : null,
+          endTime: period.close?.time
+            ? this.formatGoogleTime(period.close.time)
+            : null,
+        });
+      }
+    }
+
+    return results;
   }
 
   /**

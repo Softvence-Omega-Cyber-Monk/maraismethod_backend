@@ -61,6 +61,7 @@ export const ModelName = {
   AdminSetting: 'AdminSetting',
   User: 'User',
   Venue: 'Venue',
+  OperatingHours: 'OperatingHours',
   Votes: 'Votes'
 } as const
 
@@ -224,17 +225,26 @@ export const VenueScalarFieldEnum = {
   location: 'location',
   latitude: 'latitude',
   longitude: 'longitude',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  closedDays: 'closedDays',
   description: 'description',
   imageId: 'imageId',
   imageUrl: 'imageUrl',
+  source: 'source',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type VenueScalarFieldEnum = (typeof VenueScalarFieldEnum)[keyof typeof VenueScalarFieldEnum]
+
+
+export const OperatingHoursScalarFieldEnum = {
+  id: 'id',
+  venueId: 'venueId',
+  day: 'day',
+  startTime: 'startTime',
+  endTime: 'endTime'
+} as const
+
+export type OperatingHoursScalarFieldEnum = (typeof OperatingHoursScalarFieldEnum)[keyof typeof OperatingHoursScalarFieldEnum]
 
 
 export const VotesScalarFieldEnum = {

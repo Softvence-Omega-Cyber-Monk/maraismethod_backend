@@ -14,14 +14,21 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateVenueDto } from '../dto/create-venue.dto';
+import {
+  CreateVenueCoreInfoDto,
+  CreateVenueDto,
+} from '../dto/create-venue.dto';
 import { GetVenuesDto } from '../dto/get-venues.dto';
-import { UpdateVenueDto } from '../dto/update-venue.dto';
+import {
+  UpdateVenueCoreInfoDto,
+  UpdateVenueDto,
+} from '../dto/update-venue.dto';
 import { GetVenuesService } from '../services/get-venues.service';
 import { VenueService } from '../services/venue.service';
 
@@ -39,23 +46,28 @@ export class VenueController {
   @ApiOperation({ summary: 'Create a new venue' })
   @ValidateAuth()
   @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: () => CreateVenueDto })
   @UseInterceptors(FileInterceptor('image'))
   create(
-    @Body() createVenueDto: CreateVenueDto,
+    @Body() dto: { coreInfo: CreateVenueCoreInfoDto },
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.venueService.create(createVenueDto, file);
+    return this.venueService.create(dto, file);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a venue' })
   @ApiParam({ name: 'id', description: 'Venue ID' })
+  @ApiBody({ type: () => UpdateVenueDto })
   @ValidateAuth()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
-    @Body() updateVenueDto: UpdateVenueDto,
+    @Body()
+    updateVenueDto: {
+      coreInfo?: UpdateVenueCoreInfoDto;
+    },
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.venueService.update(id, updateVenueDto, file);
@@ -69,8 +81,14 @@ export class VenueController {
   }
 
   @Get('admin/list')
-  @ApiOperation({ summary: 'Get venues with filters (Admin)' })
+  @ApiOperation({ summary: 'Get created venues with filters (Admin)' })
   async getVenuesAdmin(@Query() dto: GetVenuesDto) {
+    return this.getVenuesService.getCreatedVenues(dto);
+  }
+
+  @Get('admin/list/all')
+  @ApiOperation({ summary: 'Get all venues with filters (Admin)' })
+  async getAllVenuesAdmin(@Query() dto: GetVenuesDto) {
     return this.getVenuesService.getAllVenues(dto);
   }
 

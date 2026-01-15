@@ -10,22 +10,40 @@ model Venue {
   latitude  Float
   longitude Float
 
-  startTime String?
-  endTime   String?
-  closedDays String[]
-
   description String?
 
   imageId  String?       @unique
   imageUrl String?
   image    FileInstance? @relation(fields: [imageId], references: [id], onDelete: SetNull)
 
-  votes Votes[]
+  votes          Votes[]
+  operatingHours OperatingHours[]
+
+  source VenueSource @default(database)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("venues")
+}
+
+model OperatingHours {
+  id String @id @default(uuid())
+
+  venueId String
+  venue   Venue  @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  day       Int // 0 (Sun) to 6 (Sat)
+  startTime String? // "HH:mm" or "HHmm"
+  endTime   String? // "HH:mm" or "HHmm"
+
+  @@unique([venueId, day])
+  @@map("operating_hours")
+}
+
+enum VenueSource {
+  google
+  database
 }
 
 model Votes {

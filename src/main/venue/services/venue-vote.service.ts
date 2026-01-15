@@ -169,8 +169,17 @@ export class VenueVoteService {
         location: googlePlace.location,
         latitude: googlePlace.latitude,
         longitude: googlePlace.longitude,
-        startTime: googlePlace.openTime,
-        endTime: googlePlace.closeTime,
+        source: 'google',
+        operatingHours: {
+          createMany: {
+            data:
+              googlePlace.operatingHours?.map((oh) => ({
+                day: oh.day,
+                startTime: oh.startTime,
+                endTime: oh.endTime,
+              })) || [],
+          },
+        },
         ...(imageInstance && {
           image: {
             connect: { id: imageInstance.id },

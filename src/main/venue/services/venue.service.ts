@@ -1,16 +1,20 @@
 import { successResponse, TResponse } from '@/common/utils/response.util';
 import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
+import { ParseJsonPipe } from '@/core/pipe/parse-json.pipe';
 import { S3Service } from '@/lib/file/services/s3.service';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { FileInstance } from '@prisma';
 import { CreateVenueDto } from '../dto/create-venue.dto';
 import { UpdateVenueDto } from '../dto/update-venue.dto';
 
 @Injectable()
 export class VenueService {
+  private readonly logger = new Logger(VenueService.name);
+  private readonly parsePipe = new ParseJsonPipe();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly s3: S3Service,
@@ -19,9 +23,16 @@ export class VenueService {
 
   @HandleError('Failed to create venue')
   async create(
-    dto: CreateVenueDto,
+    data: CreateVenueDto,
     file?: Express.Multer.File,
   ): Promise<TResponse<any>> {
+    if (!data || !data.coreInfo) {
+      throw new AppError(HttpStatus.BAD_REQUEST, 'Invalid request body');
+    }
+
+    const dto = this.parsePipe.transform(data.coreInfo);
+    this.logger.debug(`Creating venue with data:`, dto);
+
     // Validate coordinates using Google Maps
     const isValidCoordinates = await this.googleMaps.validateCoordinates(
       dto.latitude,
@@ -53,16 +64,29 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        closedDays: dto.closedDays || [],
         description: dto.description,
+        source: 'database',
+        operatingHours: {
+          createMany: {
+            data:
+              dto.operatingHours?.map((oh: any) => ({
+                day: oh.day % 7, // Convert 1-7 (Mon-Sun) to 0-6 (Sun-Sat)
+                startTime: oh.startTime,
+                endTime: oh.endTime,
+              })) || [],
+          },
+        },
+
         ...(fileInstance && {
           image: {
             connect: fileInstance,
           },
           imageUrl: fileInstance.url,
         }),
+      },
+      include: {
+        image: true,
+        operatingHours: true,
       },
     });
 
@@ -72,13 +96,20 @@ export class VenueService {
   @HandleError('Failed to update venue')
   async update(
     id: string,
-    dto: UpdateVenueDto,
+    data: UpdateVenueDto,
     file?: Express.Multer.File,
   ): Promise<TResponse<any>> {
     // Check if venue exists
     const venueExists = await this.prisma.client.venue.findUniqueOrThrow({
       where: { id },
     });
+
+    if (!data || !data.coreInfo) {
+      throw new AppError(400, 'No data provided for update');
+    }
+
+    const dto = this.parsePipe.transform(data.coreInfo);
+    this.logger.debug(`Updating venue ${id} with data:`, dto);
 
     // Validate coordinates if provided
     if (dto.latitude !== undefined && dto.longitude !== undefined) {
@@ -119,16 +150,31 @@ export class VenueService {
         location: dto.location,
         latitude: dto.latitude,
         longitude: dto.longitude,
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        closedDays: dto.closedDays,
         description: dto.description,
+        source: 'database',
+        ...(dto.operatingHours && {
+          operatingHours: {
+            deleteMany: {},
+            createMany: {
+              data: dto.operatingHours.map((oh: any) => ({
+                day: oh.day % 7, // Convert 1-7 (Mon-Sun) to 0-6 (Sun-Sat)
+                startTime: oh.startTime,
+                endTime: oh.endTime,
+              })),
+            },
+          },
+        }),
+
         ...(fileInstance && {
           image: {
             connect: fileInstance,
           },
           imageUrl: fileInstance.url,
         }),
+      },
+      include: {
+        image: true,
+        operatingHours: true,
       },
     });
 

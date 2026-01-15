@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.1.0
- * Query Engine version: ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba
+ * Prisma Client JS version: 7.2.0
+ * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.1.0",
-  engine: "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba"
+  client: "7.2.0",
+  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
 }
 
 /**
@@ -394,6 +394,7 @@ export const ModelName = {
   AdminSetting: 'AdminSetting',
   User: 'User',
   Venue: 'Venue',
+  OperatingHours: 'OperatingHours',
   Votes: 'Votes'
 } as const
 
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "advertisement" | "advertisementAnalytics" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "adminSetting" | "user" | "venue" | "votes"
+    modelProps: "advertisement" | "advertisementAnalytics" | "userOtp" | "refreshToken" | "fileInstance" | "notification" | "userNotification" | "adminSetting" | "user" | "venue" | "operatingHours" | "votes"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1154,6 +1155,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OperatingHours: {
+      payload: Prisma.$OperatingHoursPayload<ExtArgs>
+      fields: Prisma.OperatingHoursFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OperatingHoursFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OperatingHoursFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        findFirst: {
+          args: Prisma.OperatingHoursFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OperatingHoursFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        findMany: {
+          args: Prisma.OperatingHoursFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>[]
+        }
+        create: {
+          args: Prisma.OperatingHoursCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        createMany: {
+          args: Prisma.OperatingHoursCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OperatingHoursCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>[]
+        }
+        delete: {
+          args: Prisma.OperatingHoursDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        update: {
+          args: Prisma.OperatingHoursUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        deleteMany: {
+          args: Prisma.OperatingHoursDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OperatingHoursUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OperatingHoursUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>[]
+        }
+        upsert: {
+          args: Prisma.OperatingHoursUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OperatingHoursPayload>
+        }
+        aggregate: {
+          args: Prisma.OperatingHoursAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOperatingHours>
+        }
+        groupBy: {
+          args: Prisma.OperatingHoursGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OperatingHoursGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OperatingHoursCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OperatingHoursCountAggregateOutputType> | number
+        }
+      }
+    }
     Votes: {
       payload: Prisma.$VotesPayload<ExtArgs>
       fields: Prisma.VotesFieldRefs
@@ -1411,17 +1486,26 @@ export const VenueScalarFieldEnum = {
   location: 'location',
   latitude: 'latitude',
   longitude: 'longitude',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  closedDays: 'closedDays',
   description: 'description',
   imageId: 'imageId',
   imageUrl: 'imageUrl',
+  source: 'source',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type VenueScalarFieldEnum = (typeof VenueScalarFieldEnum)[keyof typeof VenueScalarFieldEnum]
+
+
+export const OperatingHoursScalarFieldEnum = {
+  id: 'id',
+  venueId: 'venueId',
+  day: 'day',
+  startTime: 'startTime',
+  endTime: 'endTime'
+} as const
+
+export type OperatingHoursScalarFieldEnum = (typeof OperatingHoursScalarFieldEnum)[keyof typeof OperatingHoursScalarFieldEnum]
 
 
 export const VotesScalarFieldEnum = {
@@ -1628,6 +1712,20 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'VenueSource'
+ */
+export type EnumVenueSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VenueSource'>
+    
+
+
+/**
+ * Reference to a field of type 'VenueSource[]'
+ */
+export type ListEnumVenueSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VenueSource[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1733,6 +1831,7 @@ export type GlobalOmitConfig = {
   adminSetting?: Prisma.AdminSettingOmit
   user?: Prisma.UserOmit
   venue?: Prisma.VenueOmit
+  operatingHours?: Prisma.OperatingHoursOmit
   votes?: Prisma.VotesOmit
 }
 
