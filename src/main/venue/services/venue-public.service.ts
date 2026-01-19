@@ -100,9 +100,7 @@ export class VenuePublicService {
 
     // Sync: Find Google places that exist in our database but weren't in initial dbVenues
     const initialDbPlaceIds = new Set(
-      dbVenues
-        .map((v) => v.googlePlaceId)
-        .filter((id): id is string => !!id),
+      dbVenues.map((v) => v.googlePlaceId).filter((id): id is string => !!id),
     );
     const googlePlaceIdsToFetch = googlePlaces
       .map((p) => p.placeId)
@@ -134,7 +132,6 @@ export class VenuePublicService {
     }
 
     this.logger.debug(`Fetched ${googlePlaces.length} Google Places`);
-
 
     // 3. Process database venues
     const processedDbVenues: VenueResponse[] = await Promise.all(
