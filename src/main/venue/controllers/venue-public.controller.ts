@@ -22,6 +22,17 @@ export class VenuePublicController {
     return this.venuePublicService.getVenuesByLocation(dto);
   }
 
+  @Get('google/:placeId')
+  @ApiOperation({
+    summary: 'Get venue details by Google Place ID (for SDK integration)',
+  })
+  getVenueByGooglePlaceId(
+    @Param('placeId') placeId: string,
+    @Query() dto: GetSingleVenueDto,
+  ) {
+    return this.venuePublicService.getVenueByGooglePlaceId(placeId, dto);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get venue details by ID)' })
   getVenueById(@Param('id') id: string, @Query() dto: GetSingleVenueDto) {
