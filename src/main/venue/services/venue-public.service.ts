@@ -68,7 +68,7 @@ export class VenuePublicService {
       };
     }
 
-    const dbVenues = await this.prisma.client.venue.findMany({
+    let dbVenues = await this.prisma.client.venue.findMany({
       where: dbWhere,
       include: {
         image: true,
@@ -98,7 +98,43 @@ export class VenuePublicService {
       search,
     );
 
+    // Sync: Find Google places that exist in our database but weren't in initial dbVenues
+    const initialDbPlaceIds = new Set(
+      dbVenues
+        .map((v) => v.googlePlaceId)
+        .filter((id): id is string => !!id),
+    );
+    const googlePlaceIdsToFetch = googlePlaces
+      .map((p) => p.placeId)
+      .filter((id) => !initialDbPlaceIds.has(id));
+
+    if (googlePlaceIdsToFetch.length > 0) {
+      const additionalDbVenues = await this.prisma.client.venue.findMany({
+        where: {
+          googlePlaceId: { in: googlePlaceIdsToFetch },
+        },
+        include: {
+          image: true,
+          votes: {
+            orderBy: { createdAt: 'desc' },
+            take: 100,
+          },
+          _count: {
+            select: {
+              votes: true,
+            },
+          },
+          operatingHours: true,
+        },
+      });
+
+      if (additionalDbVenues.length > 0) {
+        dbVenues = [...dbVenues, ...additionalDbVenues];
+      }
+    }
+
     this.logger.debug(`Fetched ${googlePlaces.length} Google Places`);
+
 
     // 3. Process database venues
     const processedDbVenues: VenueResponse[] = await Promise.all(
