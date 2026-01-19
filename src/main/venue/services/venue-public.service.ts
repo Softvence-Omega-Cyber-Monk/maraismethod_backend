@@ -313,7 +313,6 @@ export class VenuePublicService {
 
     // Regular database venue lookup
 
-
     // Regular database venue lookup
     const venue = await this.prisma.client.venue.findUnique({
       where: { id: venueId },
