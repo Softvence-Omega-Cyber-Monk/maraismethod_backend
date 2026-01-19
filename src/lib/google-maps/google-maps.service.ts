@@ -100,24 +100,53 @@ export class GoogleMapsService {
       const keyword = search ? `${search} ${baseKeywords}` : baseKeywords;
 
       if (search && search.trim() !== '') {
-        const response = await this.client.textSearch({
+        const response = await this.client.placeAutocomplete({
           params: {
-            query: search,
+            input: search,
             key: this.apiKey,
           },
         });
 
-        if (!response.data.results) return [];
+        if (!response.data.predictions) return [];
 
-        const results = this.mapPlaces(
-          response.data.results,
-          latitude,
-          longitude,
+        const results: GooglePlaceResult[] = [];
+
+        // Fetch details for predictions to get coordinates, types, etc.
+        // Limiting to 10 for performance
+        await Promise.all(
+          response.data.predictions.slice(0, 20).map(async (prediction) => {
+            try {
+              const details = await this.getPlaceDetails(prediction.place_id);
+              if (details) {
+                // Skip if it's a political boundary or other non-venue
+                // if (this.shouldSkipPlace(details.types || [])) return;
+
+                results.push({
+                  placeId: prediction.place_id,
+                  name: details.name,
+                  location: details.formatted_address || details.vicinity || '',
+                  latitude: details.geometry?.location?.lat ?? 0,
+                  longitude: details.geometry?.location?.lng ?? 0,
+                  category: this.extractCategory(details.types || []),
+                  subcategory: this.extractSubcategory(details.types || []),
+                  types: details.types || [],
+                  imageUrl: details.photos?.[0]
+                    ? this.getPlacePhotoUrl(details.photos[0].photo_reference)
+                    : '',
+                  openNow: details.opening_hours?.open_now ?? null,
+                  openingHours: details.opening_hours,
+                  operatingHours: this.extractAllWeekHours(
+                    details.opening_hours?.periods,
+                  ),
+                });
+              }
+            } catch (error) {
+              this.logger.warn(
+                `Failed to fetch details for ${prediction.place_id}: ${error.message}`,
+              );
+            }
+          }),
         );
-
-        if (enrichWithDetails) {
-          await this.enrichPlacesWithDetails(results);
-        }
 
         return results;
       }
@@ -167,7 +196,7 @@ export class GoogleMapsService {
 
     for (const place of places) {
       // Skip irrelevant places (political boundaries etc.)
-      if (this.shouldSkipPlace(place.types || [])) continue;
+      // if (this.shouldSkipPlace(place.types || [])) continue;
 
       // Handle photo
       let imageUrl = '';
@@ -306,7 +335,7 @@ export class GoogleMapsService {
       const params = {
         place_id: placeId,
         fields:
-          'name,geometry,vicinity,formatted_address,photos,types,opening_hours,business_status,rating,user_ratings_total,website,formatted_phone_number',
+          'place_id,name,geometry,vicinity,formatted_address,photos,types,opening_hours,business_status,rating,user_ratings_total,website,formatted_phone_number',
         key: this.apiKey,
       };
 
