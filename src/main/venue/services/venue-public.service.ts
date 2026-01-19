@@ -224,85 +224,94 @@ export class VenuePublicService {
   }
 
   @HandleError('Failed to get venue details')
+  async getVenueByGooglePlaceId(
+    googlePlaceId: string,
+    dto: GetSingleVenueDto,
+  ): Promise<TResponse<any>> {
+    // Check if this Google venue exists in database first
+    const dbVenue = await this.prisma.client.venue.findFirst({
+      where: { googlePlaceId },
+      include: {
+        image: true,
+        votes: {
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+        },
+        _count: {
+          select: {
+            votes: true,
+          },
+        },
+        operatingHours: true,
+      },
+    });
+
+    // If found in database, return database version with full details
+    if (dbVenue) {
+      return this.getDatabaseVenueDetails(dbVenue, dto);
+    }
+
+    // Fetch full details from Google for specific venue
+    const details = await this.googleMapsService.getPlaceDetails(googlePlaceId);
+
+    if (!details) {
+      throw new AppError(404, 'Venue details not found from Google');
+    }
+
+    const googlePlaceResult: GooglePlaceResult = {
+      placeId: googlePlaceId,
+      name: details.name || 'Unknown',
+      location: details.vicinity || details.formatted_address || '',
+      latitude: details.geometry?.location?.lat,
+      longitude: details.geometry?.location?.lng,
+      category: this.googleMapsService.extractCategory(details.types || []),
+      subcategory: this.googleMapsService.extractSubcategory(
+        details.types || [],
+      ),
+      imageUrl: details.photos?.[0]
+        ? this.googleMapsService.getPlacePhotoUrl(
+            details.photos[0].photo_reference,
+            400,
+          )
+        : '',
+      types: details.types || [],
+      openNow: details.opening_hours?.open_now ?? null,
+      openingHours: details.opening_hours,
+      operatingHours: this.googleMapsService.extractAllWeekHours(
+        details.opening_hours?.periods,
+      ),
+    };
+
+    const venueResponse = await this.helper.transformGooglePlaceToVenue(
+      googlePlaceResult,
+      dto.latitude,
+      dto.longitude,
+    );
+
+    return successResponse(
+      {
+        ...venueResponse,
+        recentVotes: [],
+      },
+      'Venue details retrieved successfully',
+    );
+  }
+
+  @HandleError('Failed to get venue details')
   async getVenueById(
     venueId: string,
     dto: GetSingleVenueDto,
   ): Promise<TResponse<any>> {
     // Check if this is a Google venue ID (starts with "google_")
+
     const isGoogleVenue = venueId.startsWith('google_');
 
     if (isGoogleVenue) {
       const googlePlaceId = venueId.replace('google_', '');
-
-      // Check if this Google venue exists in database first
-      const dbVenue = await this.prisma.client.venue.findFirst({
-        where: { googlePlaceId },
-        include: {
-          image: true,
-          votes: {
-            orderBy: { createdAt: 'desc' },
-            take: 50,
-          },
-          _count: {
-            select: {
-              votes: true,
-            },
-          },
-          operatingHours: true,
-        },
-      });
-
-      // If found in database, return database version with full details
-      if (dbVenue) {
-        return this.getDatabaseVenueDetails(dbVenue, dto);
-      }
-
-      // Fetch full details from Google for specific venue
-      const details =
-        await this.googleMapsService.getPlaceDetails(googlePlaceId);
-
-      if (!details) {
-        throw new AppError(404, 'Venue details not found from Google');
-      }
-
-      const googlePlaceResult: GooglePlaceResult = {
-        placeId: googlePlaceId,
-        name: details.name || 'Unknown',
-        location: details.vicinity || details.formatted_address || '',
-        latitude: details.geometry?.location?.lat,
-        longitude: details.geometry?.location?.lng,
-        category: this.googleMapsService.extractCategory(details.types || []),
-        subcategory: this.googleMapsService.extractSubcategory(
-          details.types || [],
-        ),
-        imageUrl: details.photos?.[0]
-          ? this.googleMapsService.getPlacePhotoUrl(
-              details.photos[0].photo_reference,
-              400,
-            )
-          : '',
-        types: details.types || [],
-        openNow: details.opening_hours?.open_now ?? null,
-        openingHours: details.opening_hours,
-        operatingHours: this.googleMapsService.extractAllWeekHours(
-          details.opening_hours?.periods,
-        ),
-      };
-
-      const venueResponse = await this.helper.transformGooglePlaceToVenue(
-        googlePlaceResult,
-        dto.latitude,
-        dto.longitude,
-      );
-
-      return successResponse(
-        {
-          ...venueResponse,
-          recentVotes: [],
-        },
-        'Venue details retrieved successfully',
-      );
+      return this.getVenueByGooglePlaceId(googlePlaceId, dto);
     }
+
+    // Regular database venue lookup
 
     // Regular database venue lookup
     const venue = await this.prisma.client.venue.findUnique({
