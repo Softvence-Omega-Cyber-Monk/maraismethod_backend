@@ -50,7 +50,7 @@ export class StatisticsService {
   async getRecentVenues(): Promise<TResponse<any>> {
     const venues = await this.prisma.client.venue.findMany({
       where: {
-        source: 'database'
+        source: 'database',
       },
       take: 5,
       orderBy: {
