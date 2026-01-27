@@ -51,6 +51,7 @@ export type AdvertisementMinAggregateOutputType = {
   status: $Enums.AdvertisementStatus | null
   fileId: string | null
   fileUrl: string | null
+  link: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type AdvertisementMaxAggregateOutputType = {
   status: $Enums.AdvertisementStatus | null
   fileId: string | null
   fileUrl: string | null
+  link: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -85,6 +87,7 @@ export type AdvertisementCountAggregateOutputType = {
   status: number
   fileId: number
   fileUrl: number
+  link: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +119,7 @@ export type AdvertisementMinAggregateInputType = {
   status?: true
   fileId?: true
   fileUrl?: true
+  link?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -133,6 +137,7 @@ export type AdvertisementMaxAggregateInputType = {
   status?: true
   fileId?: true
   fileUrl?: true
+  link?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -150,6 +155,7 @@ export type AdvertisementCountAggregateInputType = {
   status?: true
   fileId?: true
   fileUrl?: true
+  link?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -254,6 +260,7 @@ export type AdvertisementGroupByOutputType = {
   status: $Enums.AdvertisementStatus
   fileId: string | null
   fileUrl: string | null
+  link: string | null
   createdAt: Date
   updatedAt: Date
   _count: AdvertisementCountAggregateOutputType | null
@@ -294,6 +301,7 @@ export type AdvertisementWhereInput = {
   status?: Prisma.EnumAdvertisementStatusFilter<"Advertisement"> | $Enums.AdvertisementStatus
   fileId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Advertisement"> | string | null
+  link?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   file?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
@@ -313,6 +321,7 @@ export type AdvertisementOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   fileId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  link?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   file?: Prisma.FileInstanceOrderByWithRelationInput
@@ -335,6 +344,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   endDate?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   status?: Prisma.EnumAdvertisementStatusFilter<"Advertisement"> | $Enums.AdvertisementStatus
   fileUrl?: Prisma.StringNullableFilter<"Advertisement"> | string | null
+  link?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   file?: Prisma.XOR<Prisma.FileInstanceNullableScalarRelationFilter, Prisma.FileInstanceWhereInput> | null
@@ -354,6 +364,7 @@ export type AdvertisementOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   fileId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  link?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AdvertisementCountOrderByAggregateInput
@@ -379,6 +390,7 @@ export type AdvertisementScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumAdvertisementStatusWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementStatus
   fileId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
+  link?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Advertisement"> | Date | string
 }
@@ -395,6 +407,7 @@ export type AdvertisementCreateInput = {
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   file?: Prisma.FileInstanceCreateNestedOneWithoutAdvertisementsInput
@@ -414,6 +427,7 @@ export type AdvertisementUncheckedCreateInput = {
   status?: $Enums.AdvertisementStatus
   fileId?: string | null
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedCreateNestedOneWithoutAdvertisementInput
@@ -431,6 +445,7 @@ export type AdvertisementUpdateInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   file?: Prisma.FileInstanceUpdateOneWithoutAdvertisementsNestedInput
@@ -450,6 +465,7 @@ export type AdvertisementUncheckedUpdateInput = {
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedUpdateOneWithoutAdvertisementNestedInput
@@ -468,6 +484,7 @@ export type AdvertisementCreateManyInput = {
   status?: $Enums.AdvertisementStatus
   fileId?: string | null
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -484,6 +501,7 @@ export type AdvertisementUpdateManyMutationInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -501,6 +519,7 @@ export type AdvertisementUncheckedUpdateManyInput = {
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -518,6 +537,7 @@ export type AdvertisementCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  link?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -541,6 +561,7 @@ export type AdvertisementMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  link?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -558,6 +579,7 @@ export type AdvertisementMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  link?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -668,6 +690,7 @@ export type AdvertisementCreateWithoutAdvertisementAnalyticsInput = {
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   file?: Prisma.FileInstanceCreateNestedOneWithoutAdvertisementsInput
@@ -686,6 +709,7 @@ export type AdvertisementUncheckedCreateWithoutAdvertisementAnalyticsInput = {
   status?: $Enums.AdvertisementStatus
   fileId?: string | null
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -718,6 +742,7 @@ export type AdvertisementUpdateWithoutAdvertisementAnalyticsInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   file?: Prisma.FileInstanceUpdateOneWithoutAdvertisementsNestedInput
@@ -736,6 +761,7 @@ export type AdvertisementUncheckedUpdateWithoutAdvertisementAnalyticsInput = {
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -752,6 +778,7 @@ export type AdvertisementCreateWithoutFileInput = {
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsCreateNestedOneWithoutAdvertisementInput
@@ -769,6 +796,7 @@ export type AdvertisementUncheckedCreateWithoutFileInput = {
   endDate: Date | string
   status?: $Enums.AdvertisementStatus
   fileUrl?: string | null
+  link?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedCreateNestedOneWithoutAdvertisementInput
@@ -802,6 +830,7 @@ export type AdvertisementUpdateWithoutFileInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsUpdateOneWithoutAdvertisementNestedInput
@@ -819,6 +848,7 @@ export type AdvertisementUncheckedUpdateWithoutFileInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisementAnalytics?: Prisma.AdvertisementAnalyticsUncheckedUpdateOneWithoutAdvertisementNestedInput
@@ -839,6 +869,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   fileId?: boolean
   fileUrl?: boolean
+  link?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
@@ -858,6 +889,7 @@ export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   fileId?: boolean
   fileUrl?: boolean
+  link?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
@@ -876,6 +908,7 @@ export type AdvertisementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   fileId?: boolean
   fileUrl?: boolean
+  link?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
@@ -894,11 +927,12 @@ export type AdvertisementSelectScalar = {
   status?: boolean
   fileId?: boolean
   fileUrl?: boolean
+  link?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "latitude" | "longitude" | "adShowRangeInMiles" | "startDate" | "endDate" | "status" | "fileId" | "fileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
+export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "latitude" | "longitude" | "adShowRangeInMiles" | "startDate" | "endDate" | "status" | "fileId" | "fileUrl" | "link" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
 export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   file?: boolean | Prisma.Advertisement$fileArgs<ExtArgs>
   advertisementAnalytics?: boolean | Prisma.Advertisement$advertisementAnalyticsArgs<ExtArgs>
@@ -929,6 +963,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: $Enums.AdvertisementStatus
     fileId: string | null
     fileUrl: string | null
+    link: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["advertisement"]>
@@ -1368,6 +1403,7 @@ export interface AdvertisementFieldRefs {
   readonly status: Prisma.FieldRef<"Advertisement", 'AdvertisementStatus'>
   readonly fileId: Prisma.FieldRef<"Advertisement", 'String'>
   readonly fileUrl: Prisma.FieldRef<"Advertisement", 'String'>
+  readonly link: Prisma.FieldRef<"Advertisement", 'String'>
   readonly createdAt: Prisma.FieldRef<"Advertisement", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Advertisement", 'DateTime'>
 }

@@ -94,6 +94,7 @@ export const AdvertisementScalarFieldEnum = {
   status: 'status',
   fileId: 'fileId',
   fileUrl: 'fileUrl',
+  link: 'link',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

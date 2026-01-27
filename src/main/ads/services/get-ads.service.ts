@@ -1,6 +1,6 @@
 import {
-  successPaginatedResponse,
-  successResponse,
+    successPaginatedResponse,
+    successResponse,
 } from '@/common/utils/response.util';
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { PrismaService } from '@/lib/prisma/prisma.service';
@@ -72,6 +72,7 @@ export class GetAdsService {
 
       return {
         ...ad,
+        contentType: ad.file?.fileType || null,
         isActive: now >= ad.startDate && now <= ad.endDate,
         analytics: {
           impressions,
@@ -106,6 +107,7 @@ export class GetAdsService {
 
     const transformedAd = {
       ...advertisement,
+      contentType: advertisement.file?.fileType || null,
       isActive: now >= advertisement.startDate && now <= advertisement.endDate,
       analytics: {
         impressions,
