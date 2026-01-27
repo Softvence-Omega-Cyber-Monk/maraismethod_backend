@@ -9,7 +9,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Min
+  Min,
 } from 'class-validator';
 
 export class CreateAdDto {
