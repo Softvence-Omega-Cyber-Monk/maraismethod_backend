@@ -49,6 +49,9 @@ export class StatisticsService {
   @HandleError('Failed to fetch recent venues')
   async getRecentVenues(): Promise<TResponse<any>> {
     const venues = await this.prisma.client.venue.findMany({
+      where: {
+        source: 'database',
+      },
       take: 5,
       orderBy: {
         createdAt: 'desc',
