@@ -19,6 +19,8 @@ model Advertisement {
   fileUrl String?
   file    FileInstance? @relation(fields: [fileId], references: [id], onDelete: SetNull)
 
+  link String? // Optional URL for users to visit when clicking the ad
+
   advertisementAnalytics AdvertisementAnalytics?
 
   createdAt DateTime @default(now())

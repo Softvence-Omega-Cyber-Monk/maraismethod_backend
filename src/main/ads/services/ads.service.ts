@@ -65,6 +65,7 @@ export class AdsService {
         status: dto.status as AdvertisementStatus,
         startDate,
         endDate,
+        link: dto.link,
         ...(fileInstance && {
           file: {
             connect: fileInstance,
@@ -151,6 +152,7 @@ export class AdsService {
         status: dto.status as AdvertisementStatus,
         startDate: dto.startDate ? new Date(dto.startDate) : undefined,
         endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+        link: dto.link,
         ...(fileInstance && {
           file: {
             connect: fileInstance,

@@ -126,6 +126,8 @@ export class AdsPublicService {
           endDate: ad.endDate,
           fileUrl: ad.fileUrl,
           file: ad.file,
+          contentType: ad.file?.fileType || null,
+          link: ad.link,
           distance: parseFloat(distance.toFixed(2)),
           isActive: await this.isAdActive(ad, userLatitude, userLongitude),
           analytics: ad.advertisementAnalytics,
@@ -217,6 +219,8 @@ export class AdsPublicService {
         endDate: advertisement.endDate,
         fileUrl: advertisement.fileUrl,
         file: advertisement.file,
+        contentType: advertisement.file?.fileType || null,
+        link: advertisement.link,
         distance,
         isActive: this.isAdActive(advertisement),
         analytics: {

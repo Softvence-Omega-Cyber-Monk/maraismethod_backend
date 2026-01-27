@@ -9,7 +9,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Min,
+  Min
 } from 'class-validator';
 
 export class CreateAdDto {
@@ -97,4 +97,12 @@ export class CreateAdDto {
   })
   @IsOptional()
   file?: Express.Multer.File;
+
+  @ApiPropertyOptional({
+    example: 'https://example.com/promo',
+    description: 'Optional URL for users to visit when clicking the ad',
+  })
+  @IsString()
+  @IsOptional()
+  link?: string;
 }
