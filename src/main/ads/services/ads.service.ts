@@ -180,4 +180,40 @@ export class AdsService {
 
     return successResponse(null, 'Advertisement deleted successfully');
   }
+
+  /**
+   * Increment impressions for a list of advertisement IDs
+   */
+  async incrementImpressions(adIds: string[]) {
+    if (!adIds.length) return;
+
+    try {
+      // In Prisma 7, we can use updateMany with increment if the provider supports it
+      // or use a loop/raw SQL. Promise.all is safe for pagination limits.
+      await Promise.all(
+        adIds.map((id) =>
+          this.prisma.client.advertisementAnalytics.update({
+            where: { advertisementId: id },
+            data: { impressions: { increment: 1 } },
+          }),
+        ),
+      );
+    } catch (error) {
+      console.error(`[AdsService] Failed to increment impressions: ${error}`);
+    }
+  }
+
+  /**
+   * Increment clicks for a single advertisement ID
+   */
+  async incrementClick(adId: string) {
+    try {
+      await this.prisma.client.advertisementAnalytics.update({
+        where: { advertisementId: adId },
+        data: { clicks: { increment: 1 } },
+      });
+    } catch (error) {
+      console.error(`[AdsService] Failed to increment click: ${error}`);
+    }
+  }
 }

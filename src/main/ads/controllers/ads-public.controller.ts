@@ -10,7 +10,8 @@ export class AdsPublicController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get advertisements by user location (within ad range)',
+    summary:
+      'Get advertisements by user location (within ad range) (records impressions)',
   })
   getAdsByLocation(@Query() dto: GetAdsByLocationDto) {
     return this.adsPublicService.getAdsByLocation(
@@ -22,7 +23,7 @@ export class AdsPublicController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get advertisement details by ID (records impression)',
+    summary: 'Get advertisement details by ID (records click)',
   })
   @ApiParam({ name: 'id', description: 'Advertisement ID' })
   getAdById(@Param('id') id: string, @Query() dto: GetAdByIdDto) {
