@@ -8,6 +8,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma';
 import { DateTime } from 'luxon';
 import { GetAdsDto } from '../dto/get-ads.dto';
+import { AdsService } from './ads.service';
 
 @Injectable()
 export class AdsPublicService {
@@ -15,6 +16,7 @@ export class AdsPublicService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly googleMapsService: GoogleMapsService,
+    private readonly adsService: AdsService,
   ) {}
 
   /**
@@ -146,6 +148,13 @@ export class AdsPublicService {
     const skip = (page - 1) * limit;
     const paginatedAds = sortedAds.slice(skip, skip + limit);
 
+    // Increment impressions in background for the ads that are actually shown
+    if (paginatedAds.length > 0) {
+      const adIds = paginatedAds.map((ad) => ad.id);
+      // We don't await this to keep the response fast
+      this.adsService.incrementImpressions(adIds);
+    }
+
     return successResponse(
       {
         advertisements: paginatedAds,
@@ -178,14 +187,9 @@ export class AdsPublicService {
       throw new AppError(404, 'Advertisement not found');
     }
 
-    // Increment impressions
+    // Increment clicks (since retrieving details means the user clicked the ad)
     if (advertisement.advertisementAnalytics) {
-      await this.prisma.client.advertisementAnalytics.update({
-        where: { id: advertisement.advertisementAnalytics.id },
-        data: {
-          impressions: { increment: 1 },
-        },
-      });
+      await this.adsService.incrementClick(advertisement.id);
     }
 
     let distance: number | null = null;
@@ -216,9 +220,8 @@ export class AdsPublicService {
         distance,
         isActive: this.isAdActive(advertisement),
         analytics: {
-          impressions:
-            (advertisement.advertisementAnalytics?.impressions ?? 0) + 1,
-          clicks: advertisement.advertisementAnalytics?.clicks ?? 0,
+          impressions: advertisement.advertisementAnalytics?.impressions ?? 0,
+          clicks: (advertisement.advertisementAnalytics?.clicks ?? 0) + 1,
         },
         createdAt: advertisement.createdAt,
         updatedAt: advertisement.updatedAt,
