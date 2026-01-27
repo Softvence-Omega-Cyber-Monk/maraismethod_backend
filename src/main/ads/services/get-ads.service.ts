@@ -1,6 +1,6 @@
 import {
-    successPaginatedResponse,
-    successResponse,
+  successPaginatedResponse,
+  successResponse,
 } from '@/common/utils/response.util';
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { PrismaService } from '@/lib/prisma/prisma.service';
