@@ -193,6 +193,8 @@ export class S3Service {
         return 'audio/aac';
       case 'pdf':
         return 'application/pdf';
+      case 'mov':
+        return 'video/quicktime';
       default:
         return 'application/octet-stream';
     }
