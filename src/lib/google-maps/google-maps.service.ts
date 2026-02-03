@@ -19,6 +19,7 @@ export interface GooglePlaceResult {
   openingHours?: any;
   operatingHours?: {
     day: number;
+    label: string;
     startTime: string | null;
     endTime: string | null;
   }[];
@@ -416,6 +417,7 @@ export class GoogleMapsService {
    */
   extractAllWeekHours(periods?: OpeningHoursPeriod[]): {
     day: number;
+    label: string;
     startTime: string | null;
     endTime: string | null;
   }[] {
@@ -423,8 +425,19 @@ export class GoogleMapsService {
       return [];
     }
 
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+
     const results: {
       day: number;
+      label: string;
       startTime: string | null;
       endTime: string | null;
     }[] = [];
@@ -433,6 +446,7 @@ export class GoogleMapsService {
       if (period.open) {
         results.push({
           day: period.open.day,
+          label: dayNames[period.open.day],
           startTime: period.open.time
             ? this.formatGoogleTime(period.open.time)
             : null,
