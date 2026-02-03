@@ -2,6 +2,7 @@ import { VenueStatusEnum } from '../dto/get-venues.dto';
 
 export interface OperatingHoursResponse {
   day: number;
+  label: string;
   startTime: string | null;
   endTime: string | null;
 }
