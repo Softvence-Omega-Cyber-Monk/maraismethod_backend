@@ -7,10 +7,14 @@ import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { OperatingHours, Prisma, Venue, Votes } from '@prisma';
 import { GetVenuesDto } from '../dto/get-venues.dto';
+import { VenueHelperService } from './venue-helper.service';
 
 @Injectable()
 export class GetVenuesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly helper: VenueHelperService,
+  ) {}
 
   @HandleError('Failed to get venues')
   async getCreatedVenues(dto: GetVenuesDto) {
@@ -160,8 +164,13 @@ export class GetVenuesService {
       (v) => !v.isOpen && v.createdAt >= startOfToday,
     ).length;
 
+    const mappedOperatingHours = this.helper.mapOperatingHoursWithLabels(
+      venue.operatingHours,
+    );
+
     return {
       ...venue,
+      operatingHours: mappedOperatingHours,
       stats: {
         total,
         openPercent,
