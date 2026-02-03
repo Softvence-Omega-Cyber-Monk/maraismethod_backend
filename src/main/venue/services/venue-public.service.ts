@@ -170,7 +170,9 @@ export class VenuePublicService {
             venue.longitude,
             venue.operatingHours,
           )),
-          operatingHours: venue.operatingHours,
+          operatingHours: this.helper.mapOperatingHoursWithLabels(
+            venue.operatingHours,
+          ),
           distance: parseFloat(distance.toFixed(2)),
 
           status: venueStatus,
@@ -422,7 +424,9 @@ export class VenuePublicService {
           venue.longitude,
           venue.operatingHours,
         )),
-        operatingHours: venue.operatingHours,
+        operatingHours: this.helper.mapOperatingHoursWithLabels(
+          venue.operatingHours,
+        ),
         distance,
         status: venueStatus,
         lastVoteUpdate,

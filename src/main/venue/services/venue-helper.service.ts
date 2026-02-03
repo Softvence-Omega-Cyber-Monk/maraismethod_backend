@@ -230,6 +230,25 @@ export class VenueHelperService {
     return closedDays;
   }
 
+  mapOperatingHoursWithLabels(operatingHours: any[]): any[] {
+    if (!operatingHours || operatingHours.length === 0) return [];
+
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+
+    return operatingHours.map((oh) => ({
+      ...oh,
+      label: dayNames[oh.day],
+    }));
+  }
+
   extractTodayHoursFromOperatingHours(
     operatingHours: any[],
     timezone: string,
