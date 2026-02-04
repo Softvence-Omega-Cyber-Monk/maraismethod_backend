@@ -246,6 +246,8 @@ export class VenueHelperService {
     return operatingHours.map((oh) => ({
       ...oh,
       label: dayNames[oh.day],
+      startTime: this.formatTimeToAmPm(oh.startTime),
+      endTime: this.formatTimeToAmPm(oh.endTime),
     }));
   }
 
@@ -345,7 +347,9 @@ export class VenueHelperService {
       startTime: this.formatTimeToAmPm(startTime),
       endTime: this.formatTimeToAmPm(endTime),
       closedDays: this.extractClosedDays(place.operatingHours),
-      operatingHours: place.operatingHours,
+      operatingHours: this.mapOperatingHoursWithLabels(
+        place.operatingHours || [],
+      ),
     };
   }
 
