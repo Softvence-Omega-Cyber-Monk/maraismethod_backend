@@ -134,6 +134,8 @@ export class VenueVoteService {
       userLongitude,
     );
 
+    console.log('goolge places----------', googlePlace);
+
     if (!googlePlace) {
       throw new AppError(
         404,

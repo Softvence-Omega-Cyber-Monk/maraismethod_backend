@@ -114,6 +114,7 @@ export class VenueCacheService {
     userLatitude?: number,
     userLongitude?: number,
   ): Promise<GooglePlaceResult | null> {
+    console.log('hit in the getCachedPlaceById ', placeId);
     const cacheKey = this.getPlaceCacheKey(placeId);
 
     // Try to get from individual place cache
@@ -135,6 +136,8 @@ export class VenueCacheService {
       // This will fetch and cache all nearby places
       const places = await this.getCachedPlaces(userLatitude, userLongitude);
 
+      console.log('places 2', places);
+
       // Find the specific place
       const place = places.find((p) => p.placeId === placeId);
 
@@ -149,6 +152,7 @@ export class VenueCacheService {
       `Cache miss for place ${placeId}, fetching directly from Google Places API`,
     );
     const details = await this.googlePlacesService.getPlaceDetails(placeId);
+    console.log('details 3', details);
 
     if (details) {
       // Map to GooglePlaceResult

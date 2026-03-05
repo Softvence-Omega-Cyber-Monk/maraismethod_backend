@@ -283,11 +283,14 @@ export class VenuePublicService {
 
     // If found in database, return database version with full details
     if (dbVenue) {
+      console.log('dbVenue -----------------------------------------', dbVenue);
       return this.getDatabaseVenueDetails(dbVenue, dto);
     }
 
     // Fetch full details from Google for specific venue
     const details = await this.googleMapsService.getPlaceDetails(googlePlaceId);
+
+    console.log('details', details);
 
     if (!details) {
       throw new AppError(404, 'Venue details not found from Google');
@@ -313,9 +316,11 @@ export class VenuePublicService {
       openNow: details.opening_hours?.open_now ?? null,
       openingHours: details.opening_hours,
       operatingHours: this.googleMapsService.extractAllWeekHours(
-        details.opening_hours?.periods,
+        details?.opening_hours?.periods,
       ),
     };
+
+    console.log('venue data', googlePlaceResult);
 
     const venueResponse = await this.helper.transformGooglePlaceToVenue(
       googlePlaceResult,

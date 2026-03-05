@@ -13,20 +13,20 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/${PACKAGE_NAME}_db
       REDIS_HOST: redis-master
       REDIS_PORT: 6379
-      BASE_URL: http://0.0.0.0:3000
-      PORT: 3000
+      BASE_URL: http://0.0.0.0:3001
+      PORT: 3001
     ports:
-      - '3000:3000'
+      - '3001:3000'
     volumes:
       # Mount source code for live reload
-      - ./src:/usr/src/app/src:cached
-      - ./prisma:/usr/src/app/prisma:cached
-      - ./prisma.config.ts:/usr/src/app/prisma.config.ts:cached
-      - ./tsconfig.json:/usr/src/app/tsconfig.json:cached
-      - ./nest-cli.json:/usr/src/app/nest-cli.json:cached
+      # - ./src:/usr/src/app/src:cached
+      # - ./prisma:/usr/src/app/prisma:cached
+      # - ./prisma.config.ts:/usr/src/app/prisma.config.ts:cached
+      # - ./tsconfig.json:/usr/src/app/tsconfig.json:cached
+      # - ./nest-cli.json:/usr/src/app/nest-cli.json:cached
 
       # Keep node_modules in container
-      - /usr/src/app/node_modules
+      # - /usr/src/app/node_modules
 
       # Mount uploads temp & logs directories
       - ./uploads:/usr/src/app/uploads
