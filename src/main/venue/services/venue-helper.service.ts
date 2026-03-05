@@ -59,9 +59,9 @@ export class VenueHelperService {
     const periods = this.convertDBHoursToPeriods(venue);
     const isStrictlyOpen = this.isWithinPeriods(periods, timezone);
 
-    if (!isStrictlyOpen) {
-      return VenueStatusEnum.CLOSED;
-    }
+    // if (!isStrictlyOpen) {
+    //  return VenueStatusEnum.CLOSED;
+    //}
 
     // 2. Voting Logic - Restarts at 8 AM Eastern Time (ET)
     const etZone = 'America/New_York';
