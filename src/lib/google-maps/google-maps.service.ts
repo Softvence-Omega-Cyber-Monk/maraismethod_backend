@@ -118,6 +118,7 @@ export class GoogleMapsService {
           response.data.predictions.slice(0, 20).map(async (prediction) => {
             try {
               const details = await this.getPlaceDetails(prediction.place_id);
+              console.log('details from google map', details);
               if (details) {
                 // Skip if it's a political boundary or other non-venue
                 // if (this.shouldSkipPlace(details.types || [])) return;
@@ -330,18 +331,50 @@ export class GoogleMapsService {
     }
   }
 
-  async getPlaceDetails(placeId: string): Promise<any> {
+  // async getPlaceDetails(placeId: string): Promise<any> {
+  //   try {
+  //     const url = `${this.baseUrl}/place/details/json`;
+  //     const params = {
+  //       place_id: placeId,
+  //       fields:
+  //         'place_id,name,geometry,vicinity,formatted_address,photos,types,opening_hours,business_status,rating,user_ratings_total,website,formatted_phone_number',
+  //       key: this.apiKey,
+  //     };
+
+  //     const response = await axios.get(url, { params });
+
+  //     if (response.data.status !== 'OK') {
+  //       this.logger.warn(
+  //         `Google Places Details API returned status: ${response.data.status} for place ${placeId}`,
+  //       );
+  //       return null;
+  //     }
+
+  //     console.log('response', response.data.result);
+  //     return response.data.result;
+  //   } catch (error) {
+  //     this.logger.error(
+  //       `Error fetching place details for ${placeId}: ${(error as Error).message}`,
+  //     );
+  //     return null;
+  //   }
+  // }
+
+  async getPlaceDetails(
+    placeId: string,
+    latitude?: number,
+    longitude?: number,
+  ): Promise<any> {
     try {
       const url = `${this.baseUrl}/place/details/json`;
       const params = {
         place_id: placeId,
         fields:
-          'place_id,name,geometry,vicinity,formatted_address,photos,types,opening_hours,business_status,rating,user_ratings_total,website,formatted_phone_number',
+          'place_id,name,geometry,vicinity,formatted_address,photos,types,opening_hours,opening_hours.periods,opening_hours.weekday_text,business_status,rating,user_ratings_total,website,formatted_phone_number',
         key: this.apiKey,
       };
 
       const response = await axios.get(url, { params });
-
       if (response.data.status !== 'OK') {
         this.logger.warn(
           `Google Places Details API returned status: ${response.data.status} for place ${placeId}`,
@@ -349,7 +382,30 @@ export class GoogleMapsService {
         return null;
       }
 
-      return response.data.result;
+      const result = response.data.result;
+
+      console.log('result of place details', result);
+
+      // If opening_hours is missing and we have lat/lng, try Nearby Search fallback
+      if (!result.opening_hours && latitude && longitude) {
+        const nearbyUrl = `${this.baseUrl}/nearbysearch/json`;
+        const nearbyParams = {
+          key: this.apiKey,
+          location: `${latitude},${longitude}`,
+          radius: 50, // small radius around the place
+          keyword: result.name,
+        };
+
+        const nearbyResp = await axios.get(nearbyUrl, { params: nearbyParams });
+        console.log('nearby response', nearbyResp);
+        if (nearbyResp.data.status === 'OK' && nearbyResp.data.results.length) {
+          const nearbyPlace = nearbyResp.data.results[0];
+          if (nearbyPlace.opening_hours) {
+            result.opening_hours = nearbyPlace.opening_hours;
+          }
+        }
+      }
+      return result;
     } catch (error) {
       this.logger.error(
         `Error fetching place details for ${placeId}: ${(error as Error).message}`,
@@ -421,6 +477,8 @@ export class GoogleMapsService {
     startTime: string | null;
     endTime: string | null;
   }[] {
+    console.log('period', periods);
+
     if (!periods || periods.length === 0) {
       return [];
     }
@@ -459,6 +517,36 @@ export class GoogleMapsService {
 
     return results;
   }
+
+  // extractAllWeekHours(periods?: OpeningHoursPeriod[], venueId?: string) {
+  //   const dayNames = [
+  //     'Sunday',
+  //     'Monday',
+  //     'Tuesday',
+  //     'Wednesday',
+  //     'Thursday',
+  //     'Friday',
+  //     'Saturday',
+  //   ];
+
+  //   return dayNames.map((label, day) => {
+  //     // Find period for this day
+  //     const period = periods?.find((p) => p.open?.day === day);
+
+  //     return {
+  //       id: crypto.randomUUID(),
+  //       venueId: venueId || '',
+  //       day,
+  //       label,
+  //       startTime: period?.open?.time
+  //         ? this.formatGoogleTime(period.open.time)
+  //         : null, // null if Google doesn't provide time
+  //       endTime: period?.close?.time
+  //         ? this.formatGoogleTime(period.close.time)
+  //         : null, // null if Google doesn't provide time
+  //     };
+  //   });
+  // }
 
   /**
    * Extract opening hours for today from Google's periods array

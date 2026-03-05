@@ -50,9 +50,9 @@ export class VenueHelperService {
     if (!venue) return VenueStatusEnum.CLOSED;
 
     // const timezone = await this.googleMapsService.getTimezone(
-     // venue.latitude,
-     // venue.longitude,
-   // );
+    // venue.latitude,
+    // venue.longitude,
+    // );
 
     // 1. Check STRICT operating hours
     // Convert DB hours to Google-like periods for unified logic
