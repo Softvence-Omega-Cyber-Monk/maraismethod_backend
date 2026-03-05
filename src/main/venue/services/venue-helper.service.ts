@@ -57,7 +57,7 @@ export class VenueHelperService {
     // 1. Check STRICT operating hours
     // Convert DB hours to Google-like periods for unified logic
     const periods = this.convertDBHoursToPeriods(venue);
-    const isStrictlyOpen = this.isWithinPeriods(periods, timezone);
+    // const isStrictlyOpen = this.isWithinPeriods(periods, timezone);
 
     // if (!isStrictlyOpen) {
     //  return VenueStatusEnum.CLOSED;
