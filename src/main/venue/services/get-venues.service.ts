@@ -5,7 +5,7 @@ import {
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { OperatingHours, Prisma, Venue, Votes } from '@prisma';
+import { OperatingHours, Prisma, Venue, Votes } from '@prisma/client';
 import { GetVenuesDto } from '../dto/get-venues.dto';
 import { VenueHelperService } from './venue-helper.service';
 

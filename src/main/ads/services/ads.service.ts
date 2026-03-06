@@ -5,7 +5,7 @@ import { S3Service } from '@/lib/file/services/s3.service';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { AdvertisementStatus, FileInstance } from '@prisma';
+import { AdvertisementStatus, FileInstance } from '@prisma/client';
 import { CreateAdDto } from '../dto/create-ad.dto';
 import { UpdateAdDto } from '../dto/update-ad.dto';
 

@@ -1,4 +1,4 @@
-import { User } from '@prisma';
+import { User } from '@prisma/client';
 
 export interface GenericPayload {
   adminId: string;

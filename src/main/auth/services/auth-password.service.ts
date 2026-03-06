@@ -5,7 +5,7 @@ import { AuthMailService } from '@/lib/mail/services/auth-mail.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { AuthUtilsService } from '@/lib/utils/services/auth-utils.service';
 import { Injectable } from '@nestjs/common';
-import { OtpType } from '@prisma';
+import { OtpType } from '@prisma/client';
 import { ChangePasswordDto, ResetPasswordDto } from '../dto/password.dto';
 
 @Injectable()

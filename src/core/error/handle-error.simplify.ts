@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma';
+import { Prisma } from '@prisma/client';
 import { AxiosError } from 'axios';
 import { AppError } from './handle-error.app';
 

@@ -8,7 +8,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileType } from '@prisma';
+import { FileType } from '@prisma/client';
 import * as fs from 'fs';
 import path from 'node:path';
 import { v4 as uuid } from 'uuid';

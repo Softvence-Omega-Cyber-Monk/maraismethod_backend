@@ -5,7 +5,7 @@ import {
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma';
+import { Prisma } from '@prisma/client';
 import { GetAdsDto } from '../dto/get-ads.dto';
 
 @Injectable()
