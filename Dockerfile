@@ -24,8 +24,12 @@ RUN pnpm install --frozen-lockfile
 # Copy rest of the project files
 COPY . .
 
-# Build the app (NestJS -> dist/)
-RUN pnpm build
+# Set engine types to library for stability in Docker
+ENV PRISMA_CLIENT_ENGINE_TYPE=library
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE=library
+
+# Generate Prisma Client and Build the app
+RUN DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy pnpm db:generate && pnpm build
 
 # ====== PRODUCTION STAGE ======
 FROM node:24-slim AS production
@@ -35,6 +39,10 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Set working directory
 WORKDIR /app
+
+# Set engine types to library for stability in Docker
+ENV PRISMA_CLIENT_ENGINE_TYPE=library
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE=library
 
 # Install system dependencies needed at runtime
 RUN apt update && apt install -y openssl curl
@@ -48,6 +56,9 @@ COPY --from=builder /app/prisma ./prisma
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
+
+# Generate Prisma Client for Production
+RUN DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy pnpm db:generate
 
 # Expose the port
 EXPOSE 3000

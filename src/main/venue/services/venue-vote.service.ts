@@ -5,7 +5,7 @@ import { S3Service } from '@/lib/file/services/s3.service';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { FileInstance } from '@prisma';
+import { FileInstance } from '@prisma/client';
 import { VoteVenueDto } from '../dto/vote-venue.dto';
 import { VenueCacheService } from './venue-cache.service';
 import { VenueHelperService } from './venue-helper.service';

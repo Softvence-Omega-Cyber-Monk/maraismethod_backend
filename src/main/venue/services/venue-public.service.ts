@@ -7,7 +7,7 @@ import {
 } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma';
+import { Prisma } from '@prisma/client';
 import { QueryMode } from 'prisma/generated/internal/prismaNamespace';
 import { GetPublicVenuesDto, GetSingleVenueDto } from '../dto/get-venues.dto';
 import { VenueResponse } from '../interfaces/venue-response.interface';

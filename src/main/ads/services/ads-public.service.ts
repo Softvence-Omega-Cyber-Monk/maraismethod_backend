@@ -5,7 +5,7 @@ import { HandleError } from '@/core/error/handle-error.decorator';
 import { GoogleMapsService } from '@/lib/google-maps/google-maps.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma';
+import { Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
 import { GetAdsDto } from '../dto/get-ads.dto';
 import { AdsService } from './ads.service';

@@ -5,7 +5,7 @@ import { S3Service } from '@/lib/file/services/s3.service';
 import { PrismaService } from '@/lib/prisma/prisma.service';
 import { AuthUtilsService } from '@/lib/utils/services/auth-utils.service';
 import { Injectable } from '@nestjs/common';
-import { FileInstance } from '@prisma';
+import { FileInstance } from '@prisma/client';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
 
 @Injectable()

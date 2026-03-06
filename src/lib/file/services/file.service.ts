@@ -2,7 +2,7 @@ import { AppError } from '@/core/error/handle-error.app';
 import { HandleError } from '@/core/error/handle-error.decorator';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileType } from '@prisma';
+import { FileType } from '@prisma/client';
 import * as fs from 'fs';
 import mime from 'mime-types';
 import * as path from 'path';

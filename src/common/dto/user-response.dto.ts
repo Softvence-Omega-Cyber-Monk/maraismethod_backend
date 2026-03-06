@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@prisma';
+import { UserRole, UserStatus } from '@prisma/client';
 import { Expose } from 'class-transformer';
 
 export class UserResponseDto {
